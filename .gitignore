@@ -2,3 +2,6 @@
 __pycache__/
 *.py[cod]
 .DS_Store
+*.log
+secrets/
+telemetry-live.json

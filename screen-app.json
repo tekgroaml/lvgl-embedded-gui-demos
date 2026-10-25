@@ -1,0 +1,108 @@
+{
+  "manifest_version": 1,
+  "contract_version": 1,
+  "id": "dual-instrument-dashboard",
+  "name": "单线双屏汽车与工业仪表异显",
+  "version": "0.2.0",
+  "release_status": "preview",
+  "repository_url": "https://github.com/tekgroaml/lvgl-embedded-gui-demos",
+  "command": {
+    "entrypoint": [
+      "./app"
+    ]
+  },
+  "topology": "single-link-dual",
+  "panel_count": 2,
+  "default_view": "automotive-industrial",
+  "views": [
+    {
+      "id": "automotive-industrial",
+      "data_sources": [
+        "demo",
+        "live"
+      ]
+    }
+  ],
+  "content_modes": [
+    "different"
+  ],
+  "layouts": [
+    "layouts/automotive-industrial-sbs-480.json",
+    "layouts/automotive-industrial-sbs-720.json",
+    "layouts/automotive-industrial-sbs-800.json"
+  ],
+  "capabilities": {
+    "multi_instance": true,
+    "read_only": true
+  },
+  "runtime": {
+    "renderer": "python-gtk-cairo",
+    "platform": "linux",
+    "desktop": "Bookworm/labwc Wayland with GTK layer-shell",
+    "graphical_session_required": true,
+    "output_targeting_required": true,
+    "output_scale": 1,
+    "output_transform": "normal",
+    "dependencies": [
+      "python3",
+      "python3-gi",
+      "python3-gi-cairo",
+      "python3-cairo",
+      "gir1.2-gtk-3.0",
+      "gir1.2-gtklayershell-0.1",
+      "wlr-randr"
+    ]
+  },
+  "profiles": [
+    {
+      "id": "sbs-automotive-industrial",
+      "topology": "single-link-dual",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "automotive-industrial"
+      ],
+      "data_sources": [
+        "demo",
+        "live"
+      ],
+      "content_modes": [
+        "different"
+      ],
+      "layout_ids": [
+        "automotive-industrial-sbs-480",
+        "automotive-industrial-sbs-720",
+        "automotive-industrial-sbs-800"
+      ]
+    }
+  ],
+  "verification": {
+    "status": "software-preview",
+    "hardware_verified": false,
+    "notes": [
+      "Native Cairo adapter reuses existing automotive and industrial view logic; no browser, LVGL, Pygame, pip or virtual environment is needed for ./app.",
+      "A software-verified layout describes rendering geometry only, not a matched product or physical driver-board certification.",
+      "Only left-round/right-square SBS is declared. Dual-round, touch, same-content and arbitrary resolutions are rejected.",
+      "Legacy Pygame run.sh remains separate; its SDL indexes are not connector numbers."
+    ]
+  }
+}

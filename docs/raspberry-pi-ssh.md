@@ -1,22 +1,25 @@
-# 将单线双屏仪表部署到树莓派，通过SSH运行
+# 将双屏异显应用复制到树莓派，通过SSH运行
 
-本指南独立于application总仓库，不要求安装pi-setting或未来screen-app。复制的是应用文件，不是重新烧录TF卡。
+本指南与本仓库一起发布，可单独使用，不依赖application总仓库、圆形看板、pi-setting或未来screen-app。复制的是应用程序，**不是重新烧录TF卡**。
 
-[English](raspberry-pi-ssh_EN.md) · [项目说明](../README_CN.md)
+[English](raspberry-pi-ssh_EN.md) · [项目README](../README_CN.md) · [标准命令](standard-app.md)
 
-当前真实入口是run.sh，**尚未提供标准./app命令**。实际渲染器为Pygame；--sbs是一张宽画布，左汽车仪表、右工业面板，固定异显，没有同显或触摸操作逻辑。
+## 1. 准备和执行位置
 
-## 1. 准备
+Pi已经联网、启用SSH，并用同一普通用户登录Bookworm/labwc Wayland图形桌面。SSH/控制台本身不会创建桌面。驱动板已按产品资料配置正确输入与左右区域，100%缩放、不旋转整张画布。
 
-以下步骤以Raspberry Pi OS Bookworm桌面、labwc/Wayland为例。Pi联网并启用SSH，目标用户已登录图形桌面；SSH本身不会创建桌面。
+本项目当前左圆形汽车仪表、右方形工业面板，不支持双圆、触摸或同显。以双480软件布局举例，完整输入为960×480、60Hz；必须确认真实驱动板支持，不能只因有两块480面板就假设它接受960×480。
 
-双480×480的SBS软件模式要求桌面为960×480、100%缩放、不旋转整张画布。单线双屏驱动板须真正支持该输入/分割方式；实际产品可能需要其他模式，先按厂家说明配置，不从两个面板尺寸直接推断。右工业页面使用方形四角，双圆面板可能裁掉内容。
+下例pi@raspberrypi.local是部署占位，替换成自己的用户名、主机名/IP。第一次连接核对主机指纹并正常认证，不把密码写进命令。
 
-Mac负责复制文件和建立SSH连接；安装、运行和日志命令在Pi的SSH终端中执行。下例pi@raspberrypi.local必须替换成实际Pi用户名与主机名/IP，文档不包含密码。
+| 执行位置 | 用途 |
+| --- | --- |
+| Mac终端 | 上传项目、建立SSH |
+| Pi的SSH终端 | 安装、预检、启动、日志、停止与更新 |
 
-## 2. Mac：复制完整项目
+## 2. Mac：复制整个项目
 
-Mac终端进入包含lvgl-embedded-gui-demos目录的父目录：
+在Mac进入包含lvgl-embedded-gui-demos文件夹的父目录：
 
 ```bash
 ssh pi@raspberrypi.local 'mkdir -p ~/apps/lvgl-embedded-gui-demos'
@@ -24,11 +27,9 @@ rsync -av --exclude=.git --exclude=.venv --exclude=__pycache__ --exclude=secrets
 ssh pi@raspberrypi.local
 ```
 
-不要只传gauges中的某一个.py。项目依赖run.sh、gauges包及requirements.txt；不要复制Mac上的.venv，Pi需要安装自身架构的依赖。首次SSH请按本机提示核对指纹并认证。
+必须复制app、scene_app、gauges、layouts和screen-app.json等完整代码，不只复制一张图或一个.py。源目录尾部/表示复制内容；不复制Mac虚拟环境。私有采集数据放在Pi用户目录的单独位置。
 
-远端已发布时也可在Pi安装git后，使用`git clone https://github.com/tekgroaml/lvgl-embedded-gui-demos.git ~/apps/lvgl-embedded-gui-demos`替代复制。目标目录必须尚不存在；未推送的本地代码无法通过clone/pull获取。
-
-若选择GitHub获取方式，先在Pi SSH终端执行下面步骤；不要在已完成rsync的同名目录再次clone：
+只有远端已发布的版本才可通过Git取得。若选择Git方式，作为rsync的替代，在Pi执行：
 
 ```bash
 sudo apt-get update
@@ -37,109 +38,108 @@ mkdir -p ~/apps
 git clone https://github.com/tekgroaml/lvgl-embedded-gui-demos.git ~/apps/lvgl-embedded-gui-demos
 ```
 
-## 3. Pi：安装，不自动启动
+只在目标目录不存在时clone。尚未推送的本地改造必须复制，不能假设git pull已经能下载。
 
-现在位于Pi的SSH终端：
+## 3. Pi SSH：安装和核对版本
 
 ```bash
 cd ~/apps/lvgl-embedded-gui-demos
-chmod +x setup.sh run.sh
+chmod +x app setup.sh run.sh
 ./setup.sh --install-only
-.venv/bin/python -c 'import pygame; print(pygame.version.ver)'
+./app --version
+./app info --json
 ```
 
-安装器通过sudo安装APT依赖并创建Pi本地.venv，必要时安装固定版本Pygame。运行不要加sudo，不要把Pi虚拟环境复制回Mac。没有--install-only时旧安装器会立即启动单屏，初次SSH部署不要省略。
+本版版本0.2.0。安装器只补缺失的发行版Python/GTK/Cairo/layer-shell/wlr-randr包；全部已有则无需下载。APT可能请求sudo，但运行app不要sudo。默认不安装Pygame，不创建虚拟环境，也不自动启动。
 
-## 4. Pi：明确目标Wayland桌面
-
-本项目还没有自动发现会话的标准入口。先查看当前用户真正存在的Wayland socket：
-
-```bash
-export XDG_RUNTIME_DIR="/run/user/$(id -u)"
-python3 - <<'PY'
-import os
-from pathlib import Path
-for item in sorted(Path(os.environ['XDG_RUNTIME_DIR']).glob('wayland-*')):
-    if item.is_socket():
-        print(item.name)
-PY
-```
-
-如果输出wayland-0，下面可按原样使用；否则将其替换为实际目标socket名。多个会话需先确认目标，无socket需先登录桌面，不能通过猜测变量创建桌面。
-
-```bash
-export WAYLAND_DISPLAY=wayland-0
-export SDL_VIDEODRIVER=wayland
-export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
-```
-
-不使用ssh -X，不填猜测的DISPLAY=:0。本说明只覆盖Wayland；X11需要另外核实实际DISPLAY/XAUTHORITY，不能照抄这里的会话变量。
-
-读取SDL能看到的画布：
-
-```bash
-.venv/bin/python - <<'PY'
-import pygame
-pygame.display.init()
-for index, size in enumerate(pygame.display.get_desktop_sizes()):
-    print(index, size)
-pygame.display.quit()
-PY
-```
-
-下面示例假设**已确认SDL索引0是960×480的目标**。--display从0开始，是SDL索引，不等于Linux HDMI编号；不能用接口1减一自动认定目标。相同尺寸多个输出时，当前程序不能提供可靠的连接器映射，需先人工确认，首轮可只连接待测产品。
-
-## 5. Pi：前台运行，确认实际画面
-
-```bash
-./run.sh automotive --sbs --size 480 --display 0
-```
-
-确认左汽车/右工业、边缘完整。此命令占用SSH前台；Ctrl+C或屏幕上的键盘Esc/Q退出，SSH断开后不承诺继续运行。
-
---size 720要求实际桌面/驱动板支持1440×720。--fps 30只限制渲染负载，不是HDMI刷新率设置，不能用来修复信号闪烁。没有--input-file时使用模拟遥测，不控制实际车辆或工业设备。
-
-## 6. Pi：后台运行，断开SSH后继续
-
-确认前台已退出后，用用户systemd托管**本项目**。仍在同一个已设置Wayland变量的Pi SSH终端与项目目录执行：
-
-```bash
-systemd-run --user --unit=tekgroaml-instruments --collect --property=Type=exec --property="WorkingDirectory=$PWD" --setenv="XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR" --setenv="WAYLAND_DISPLAY=$WAYLAND_DISPLAY" --setenv="SDL_VIDEODRIVER=$SDL_VIDEODRIVER" --setenv="DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" "$PWD/run.sh" automotive --sbs --size 480 --display 0
-```
-
-创建的是临时用户服务，不是项目已实现./app，也不是开机自启动。命令返回表示进程已执行，不证明图像正确；仍需查看实体屏幕和日志。桌面保持登录时，断开SSH后服务可继续运行。Pi重启或用户桌面退出后的恢复不在此方案承诺内。
-
-```bash
-systemctl --user status tekgroaml-instruments.service
-journalctl --user -u tekgroaml-instruments.service -n 50 --no-pager
-journalctl --user -u tekgroaml-instruments.service -f
-```
-
-日志跟随按Ctrl+C退出不会停止服务。停止本项目：
+如果以前使用过旧文档的临时Pygame服务，先停止该服务；没有旧服务则跳过：
 
 ```bash
 systemctl --user stop tekgroaml-instruments.service
 ```
 
---collect使停止后的临时unit可被回收；status提示unit不存在可表示它已结束，历史journal仍可查询。再次启动可重新执行本节systemd-run命令；不要重复启动同名仍运行unit，也不使用killall python。若改变配置，先stop再重新启动。
+前台旧run.sh也应正常退出，避免不经过标准租约的旧窗口覆盖新画面。新版./app能发现旧临时服务活跃并拒绝冲突。
 
-## 7. 更新与排查
+## 4. Pi SSH：预检与启动
 
-更新前在Pi停止上述unit及前台实例，回Mac重复rsync，再SSH进入项目。依赖变化时重跑安装步骤，重新设置/确认实际会话与SDL索引，再运行。
+假设信号线接在接口1、硬件已设置960×480、60Hz：
 
 ```bash
-# 无桌面软件检查，不会显示实体屏幕
-./run.sh automotive --sbs --headless --frames 180 --screenshot /tmp/instruments-sbs.png
+./app check --port 1 --shape round,square --panels 2 --input none --layout automotive-industrial-sbs-480 --content different
+./app start --port 1 --shape round,square --panels 2 --input none --layout automotive-industrial-sbs-480 --content different --data-source demo
 ```
 
-| 现象 | 检查 |
-| --- | --- |
-| 找不到Pygame/.venv | 在Pi执行安装，不复制Mac虚拟环境 |
-| SSH运行无显示设备 | 当前用户是否已登录Wayland桌面，socket和SDL变量是否正确 |
-| 桌面尺寸不符 | SDL所选输出是否为960×480/1440×720，缩放与驱动板模式是否正确 |
-| 左右内容裁切或颠倒 | 对照驱动板A/B区域及接线；右工业页不是圆形安全布局 |
-| 临时unit已存在 | 查看旧服务状态，停止后再启动 |
-| systemctl --user无法连接总线 | 确认是桌面同一普通用户、有用户systemd/DBus会话，不改用sudo运行 |
-| JSON数据过期 | 检查真实采集快照的内容、权限和持续原子更新，示例文件不是数据采集器 |
+端口1/2对应Linux HDMI-A-1/2（Pi4板子HDMI0/1）。如果接接口2，将所有命令--port改为2。panels2是同一信号口内的左右面板，不是连接两个HDMI。
 
-真实遥测协议与告警边界见[README](../README_CN.md#通过-json-快照接入真实遥测)。本指南没有自动配置显示时序或触摸映射，也不代表已通过特定Pi/驱动板实测。
+双720/双800软件布局分别用automotive-industrial-sbs-720/800，完整画布分别1440×720/1600×800，均要求实际60Hz、100%缩放。只在驱动板和产品实际支持时选择。check不改分辨率，错误模式会打印期望值并拒绝，不强制套用兼容时序。
+
+新版不需要指定SDL --display，也不需要虚拟环境。启动自动寻找同用户唯一Wayland会话。如多会话，可只读列出socket：
+
+```bash
+python3 - <<'PY'
+import os
+from pathlib import Path
+for item in sorted((Path('/run/user')/str(os.getuid())).glob('wayland-*')):
+    if item.is_socket():
+        print(item.name)
+PY
+```
+
+确认目标后设置实际的WAYLAND_DISPLAY，例如export WAYLAND_DISPLAY=wayland-0；无socket则先登录桌面，不猜DISPLAY=:0，不用ssh -X。仅有SSH连接不代表图形应用可用。
+
+## 5. 状态、日志和停止
+
+```bash
+./app status --port 1
+./app logs --port 1 --follow
+```
+
+日志跟随Ctrl+C只退出查看，应用不停止。继续执行：
+
+```bash
+./app restart --port 1
+./app stop --port 1
+```
+
+start在后台等待实际绘图、数据和窗口定位就绪后返回。保持桌面用户登录时，SSH断开后可继续运行；重新SSH进入同目录即可管理。Pi重启或退出桌面后不承诺恢复，本版不自动安装开机启动。
+
+前台调试可先stop，再把同一启动参数中的start换成run；Ctrl+C结束前台run。不要把run当作断开SSH后的持续方案，也不要killall python。stop关闭该口的整个SBS画布，即两面板一起退出，只影响本项目拥有的实例。
+
+## 6. 先测试显示，再切换到演示
+
+若已装可选screen-test，可先./app stop --port 1，再screen-test pattern --screen 1或screen-test cycle --screen 1 --interval 5。手动观察完整画布和实体面板；测试完成后：
+
+```bash
+screen-test stop --screen 1
+./app start --port 1 --shape round,square --panels 2 --input none --layout automotive-industrial-sbs-480 --content different --data-source demo
+```
+
+工具只是可选准备方法，程序不依赖它。单线双屏的--screen 1仍指一个HDMI输出，不是panel1。若另一个项目正在该口运行，先用原项目的正常停止命令退出，本项目不会强杀。
+
+## 7. 真实遥测、更新与排查
+
+live通过--config指定的JSON中input_file读取采集快照，示例examples/live.json。路径相对该配置文件目录，需用户填写真实位置；六个字段须持续原子更新。examples/telemetry.json是静态样本，三秒后会变旧，不能作为真实采集器。首次无有效新鲜数据不ready，运行后失效标DATA STALE，不换模拟。完整协议见[数据文档](telemetry.md)。
+
+更新先在Pi停止本项目，再回Mac重复rsync；重新SSH检查版本、布局和依赖，执行check/start。不要更新正在运行的代码后声称还能恢复旧二进制；保留采集器及私有配置。
+
+| 现象 | 处理 |
+| --- | --- |
+| 缺依赖 | 在Pi运行新版安装脚本；不要复制Mac的.venv或改用sudo运行 |
+| SSH能连但无桌面 | 确认同一用户已登录Wayland桌面，socket真实存在 |
+| 输出/模式不符 | 按实际产品资料先配置完整SBS信号，应用不会强制修改 |
+| 布局不支持 | 使用info声明的左圆右方布局，双圆/触摸/同显尚未实现 |
+| 口被别的应用占用 | 用原项目正常stop，不能用本项目强制替换它 |
+| 旧临时服务冲突 | 停止tekgroaml-instruments.service；不重复创建旧systemd-run服务 |
+| 左右颠倒、边缘缺失 | 对照驱动板分区/排线；物理映射未认证，不能只凭软件PNG判断 |
+| JSON过期 | 检查真实采集器的六字段、范围、文件时间与持续更新 |
+
+## 8. 软件验证与旧入口
+
+```bash
+python3 -m unittest discover -s tests -v
+python3 tests/render_native.py --size 480 --output /tmp/instruments-480.png
+```
+
+离屏生成PNG不显示在实体面板，也不证明驱动板拆分正确。当前只有软件预览，物理双屏窗口及长期表现待验收。
+
+仍需原有Pygame时，显式./setup.sh --legacy-pygame，随后./run.sh automotive --sbs --size 480。这个旧路径仍依赖SDL从0枚举，不能将其--display直接按port减一映射；默认./app不使用它。详情见[标准命令](standard-app.md)。

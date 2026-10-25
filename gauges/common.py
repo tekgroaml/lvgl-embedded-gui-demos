@@ -6,6 +6,7 @@ import math
 import os
 from pathlib import Path
 import sys
+import stat
 import time
 
 BG = (9, 15, 23)
@@ -49,7 +50,10 @@ class TelemetrySource:
         if elapsed - self.last_poll < .2: return self.last
         self.last_poll = elapsed
         try:
-            with self.path.open('rb') as stream:
+            descriptor = os.open(self.path, os.O_RDONLY | os.O_NONBLOCK)
+            with os.fdopen(descriptor, 'rb') as stream:
+                if not stat.S_ISREG(os.fstat(stream.fileno()).st_mode):
+                    raise ValueError("Snapshot must be a regular file.")
                 raw = stream.read(65537)
                 modified = os.fstat(stream.fileno()).st_mtime
             if len(raw) > 65536: raise ValueError("Snapshot exceeds 64 KiB.")

@@ -1,0 +1,54 @@
+{
+  "layout_version": 1,
+  "id": "automotive-industrial-sbs-800",
+  "version": "1.0.0",
+  "topology": "single-link-dual",
+  "coordinate_space": "output-signal-pixels",
+  "verification": {
+    "status": "software-verified",
+    "hardware_verified": false,
+    "note": "Explicit software SBS mapping only. Confirm this exact signal and panel mapping with the driver-board specification before use."
+  },
+  "product_match": null,
+  "signal_mode": {
+    "width": 1600,
+    "height": 800,
+    "refresh_hz": 60
+  },
+  "viewport": {
+    "width": 1600,
+    "height": 800,
+    "scale": 1,
+    "rotation_deg": 0
+  },
+  "panels": [
+    {
+      "panel": 1,
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 800,
+        "height": 800
+      },
+      "shape": "round",
+      "input": "none",
+      "visual_rotation_deg": 0,
+      "safe_inset_percent": 0,
+      "view": "automotive"
+    },
+    {
+      "panel": 2,
+      "rect": {
+        "x": 800,
+        "y": 0,
+        "width": 800,
+        "height": 800
+      },
+      "shape": "square",
+      "input": "none",
+      "visual_rotation_deg": 0,
+      "safe_inset_percent": 0,
+      "view": "industrial"
+    }
+  ]
+}
