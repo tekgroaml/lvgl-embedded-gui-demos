@@ -2,7 +2,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue) ![Renderer](https://img.shields.io/badge/renderer-Pygame%202-green) ![Input](https://img.shields.io/badge/telemetry-JSON-orange)
 
-[简体中文](README_CN.md)
+[简体中文](README_CN.md) · [Copy to Raspberry Pi and run over SSH](docs/raspberry-pi-ssh_EN.md)
 
 A circular automotive speedometer/tachometer and a square industrial panel for small HDMI screens. Despite the repository's historical `lvgl-embedded-gui-demos` name, **the delivered renderer is Pygame, not LVGL or Python-LVGL bindings**. This follows the Python/Pygame stack option and avoids platform-specific LVGL binding builds on Pi. The data/render boundary is designed to be portable to an LVGL application later.
 

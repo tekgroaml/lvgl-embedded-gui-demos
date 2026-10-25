@@ -2,7 +2,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue) ![Renderer](https://img.shields.io/badge/renderer-Pygame%202-green) ![Input](https://img.shields.io/badge/telemetry-JSON-orange)
 
-[English](README.md)
+[English](README.md) · [复制到树莓派与SSH运行](docs/raspberry-pi-ssh.md)
 
 面向小型 HDMI 屏幕的圆形汽车速度/转速仪表与方形工业面板。虽然仓库沿用 `lvgl-embedded-gui-demos` 名称，**实际交付的渲染器是 Pygame，并非 LVGL 或 Python-LVGL 绑定**。这是按需求允许的 Python/Pygame 技术栈实现，避免树莓派上的平台相关 LVGL 绑定编译。数据与渲染边界便于后续移植到 LVGL。
 
