@@ -1,10 +1,36 @@
 # Single-cable dual-panel instrumentation demos
 
-**v0.3.1 software preview.** A standard ./app entrypoint now renders the existing automotive and industrial views with native Python/GTK3/Cairo. No browser, WebKit, LVGL, Pygame, pip or virtual environment is required by this path. Legacy Pygame scripts remain optional.
+**v0.5.0 software preview.** A standard ./app entrypoint now renders the existing automotive and industrial views with native Python/GTK3/Cairo. No browser, WebKit, LVGL, Pygame, pip or virtual environment is required by this path. Legacy Pygame scripts remain optional.
 
 ![Native SBS offscreen preview](docs/preview-native-sbs.png)
 
 [中文](README_CN.md) · [Copy to Pi and run over SSH](docs/raspberry-pi-ssh_EN.md) · [Command reference](docs/standard-app.md) · [Telemetry protocol](docs/telemetry_EN.md) · [Verification](docs/verification.md)
+
+## PC-case CPU/GPU display
+
+New --view pc-monitor displays CPU/RAM on one circular panel and GPU/cooling on the other. Demo automatically transitions through idle, CPU rendering, gaming and cooling, with delayed temperatures/fans. Live consumes a timestamped JSON snapshot from the monitored PC, never the Pi's own metrics. Missing sensors remain unavailable, not fabricated zeroes.
+
+```bash
+./app stop --port 1
+./app start --port 1 --shape round --panels 2 --input none --view pc-monitor --layout pc-monitor-sbs-480 --content different --data-source demo
+```
+
+![PC case display](docs/preview-pc-monitor-480.png)
+
+An optional Windows PowerShell collector uses built-in CIM for CPU/RAM and an existing nvidia-smi for available GPU fields. It can upload atomic snapshots over already-configured SSH key access. It does not require Windows Python. CPU temperatures, fan RPM and unsupported GPU metrics stay null unless supplied by another real adapter. Real Windows/NVIDIA/transport acceptance is pending; see [full PC-monitor guide and protocol](docs/pc-monitor.md).
+
+## Dedicated dual-round automotive scene
+
+Left: road speed, RPM, gear and trip. Right: coolant temperature, fuel, voltage and oil pressure. Autonomous demo data follows an idle/accelerate/cruise/brake cycle with thermal lag, integrated fuel use and trip distance. No real OBD/vehicle control is declared.
+
+```bash
+./app stop --port 1
+./app start --port 1 --shape round --panels 2 --input none --view automotive --layout automotive-sbs-480 --content different --data-source demo
+```
+
+![Dual-round automotive](docs/preview-automotive-480.png)
+
+The480 layout accepts60Hz and the observed native~62.825Hz at960×480 without changing hardware timing. Other sizes720/800 remain explicit60Hz layouts. Physical automotive acceptance remains pending; the existing flight app was not replaced in this change. See [car details and animation](docs/automotive.md).
 
 ## Observed dual-480 input
 
@@ -78,3 +104,9 @@ Only the original automotive-industrial view accepts live JSON. A real adapter m
 scene_app contains the CLI, lifecycle, configuration, output matching and Cairo painter; gauges preserves existing view/telemetry logic, layouts holds versioned SBS maps, and tests covers the standard contract and data/lifecycle regressions.
 
 The previous mixed-view release passed actual Pi Cairo offscreen checks at 960×480/1440×720/1600×800. The new release passed 38 unit tests, six scene/size offscreen renders and multi-phase animated-preview checks; see the verification record. The new on-screen dual-panel surface, physical driver-board mapping and long-duration performance remain unverified. See the self-contained SSH guide and verification record.
+
+## Per-scene architecture
+
+Each scenes/<id>/ owns scene.py, model.py, panels (or panel modules) and layouts/. registry.py selects factories. common/ contains the shared theme, Cairo renderer, components, simulation helpers and bounded JSON telemetry. scene_app/ owns the standard CLI, HDMI binding, locks and GTK lifecycle without per-scene branches. gauges/ and scene_app/painter.py retain thin compatibility exports.
+
+Existing flight, industrial and automotive-industrial commands/layout IDs remain valid. Capabilities are generated from the registry with python3 scripts/update_manifest.py (--check verifies synchronization). Copy the full project including common/ and scenes/ when updating; no adjacent repository is required. See [architecture and adding scenes](docs/architecture.md).

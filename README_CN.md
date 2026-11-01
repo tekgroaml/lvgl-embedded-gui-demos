@@ -1,16 +1,42 @@
 # 单线双屏汽车与工业仪表演示
 
-**v0.3.1 软件预览版**：已按统一规范提供./app入口，默认采用原生Python+GTK/Cairo，和圆形触摸看板使用同类运行方式。无需浏览器、WebKit、LVGL、Pygame、pip或虚拟环境；只有旧run.sh路径需要另装Pygame。
+**v0.5.0 软件预览版**：已按统一规范提供./app入口，默认采用原生Python+GTK/Cairo，和圆形触摸看板使用同类运行方式。无需浏览器、WebKit、LVGL、Pygame、pip或虚拟环境；只有旧run.sh路径需要另装Pygame。
 
 ![原生双屏离屏预览](docs/preview-native-sbs.png)
 
-[English](README.md) · [复制到Pi并通过SSH运行](docs/raspberry-pi-ssh.md) · [标准命令](docs/standard-app.md) · [遥测协议](docs/telemetry.md) · [验证记录](docs/verification.md) · [版本记录](CHANGELOG.md)
+[English](README.md) · [复制到Pi并通过SSH运行](docs/raspberry-pi-ssh.md) · [标准命令](docs/standard-app.md) · [遥测协议](docs/telemetry.md) · [验证记录](docs/verification.md) · [版本记录](CHANGELOG.md) · [双圆汽车](docs/automotive.md) · [场景目录与公共代码](docs/architecture.md)
+
+## 新增：电脑机箱状态屏
+
+--view pc-monitor，双圆左CPU/内存、右GPU/散热，可自主模拟，也可显示被监控PC的真实JSON。温度与风扇随负载有延迟地变化；缺传感器显示“—”，不会拿Pi数据冒充台式机数据。
+
+```bash
+./app stop --port 1
+./app start --port 1 --shape round --panels 2 --input none --view pc-monitor --layout pc-monitor-sbs-480 --content different --data-source demo
+```
+
+![机箱电脑状态屏](docs/preview-pc-monitor-480.png)
+
+[机箱场景、可选Windows采集与live协议](docs/pc-monitor.md)。Windows脚本只使用系统CIM及已有NVIDIA工具，不要求Python；Pi仍是原生GTK/Cairo。真实Windows/NVIDIA和新实体场景尚待测试。
+
+## 双圆汽车仪表
+
+左屏车速、RPM、挡位和里程；右屏水温、油量、电压和油压。启动demo后自动经历怠速/加速/巡航/制动，数据按场景联动；详情和动态预览见[汽车场景](docs/automotive.md)。
+
+```bash
+./app stop --port 1
+./app start --port 1 --shape round --panels 2 --input none --view automotive --layout automotive-sbs-480 --content different --data-source demo
+```
+
+![双圆汽车](docs/preview-automotive-480.png)
+
+新汽车480布局已接受当前双圆屏960×480@约62.825Hz和60Hz，不强制改信号。汽车实体显示尚待验证，本轮未切换设备上的飞行演示。
 
 ## 已接入双480圆屏的实际模式
 
 本次屏幕在接口1上报960×480、约62.825Hz，EDID像素时钟44.43MHz。flight-sbs-480布局v1.1.0已增加对此原生刷新率的接受，不强行改为60Hz。当前树莓派已成功启动飞行演示，用户已确认两屏完整、内容不同且数据自动变化；结果仅适用于这次实测配置，见[验证记录](docs/verification.md)。
 
-## 新增两种自动演示
+## 飞行与泵站自动演示
 
 | 形状 | --view | 双屏内容 | 自动数据逻辑 |
 | --- | --- | --- | --- |
@@ -28,7 +54,7 @@
 ./app start --port 1 --shape square --panels 2 --input none --view industrial --layout industrial-sbs-480 --content different --data-source demo
 ```
 
-新flight/industrial仅demo；旧混合视图仍支持demo和live JSON。每种layout另有720/800版本，完整输入为1440×720/1600×800、60Hz。flight-sbs-480另允许本次观察到的约62.825Hz；实体驱动板映射按实测范围确认。
+新automotive/flight/industrial仅demo；旧混合视图仍支持demo和live JSON。每种layout另有720/800版本，完整输入为1440×720/1600×800、60Hz。flight-sbs-480另允许本次观察到的约62.825Hz；实体驱动板映射按实测范围确认。
 
 ![双圆飞行仪表](docs/preview-flight-480.png)
 
@@ -101,16 +127,19 @@ nano ~/instruments-live.json
 ## 代码结构与旧入口
 
 ```text
-app / screen-app.json       标准入口和精确能力声明
-scene_app/
-  cli.py / runtime.py       命令、后台监督、共享口租约和控制socket
-  config.py / display.py    显式布局、配置与真实输出匹配
-  worker.py / painter.py    GTK全屏生命周期和Cairo绘图适配
-layouts/                   版本固定的三份SBS分区
-examples/                  模拟配置、live配置、静态协议样本
-gauges/                    汽车/工业/飞行/泵站视图、场景联动模拟与遥测逻辑
-tests/                     合同/归属/布局/遥测检查和离屏绘图
-run.sh / requirements.txt   保留旧Pygame入口（可选）
+app / screen-app.json       标准入口、从注册表生成的精确能力
+scene_app/                 通用命令、进程/锁、HDMI与GTK运行管理
+common/                    公共配色、Cairo绘图、组件、时间/遥测校验
+scenes/
+  pc_monitor/              机箱PC状态、demo/live、可选Windows采集
+  automotive/              双圆汽车：scene/model/panels/layouts
+  flight/                  双圆飞行：scene/model/panels/layouts
+  industrial/              双方形泵站：scene/model/panels/layouts
+  automotive_industrial/    原混合场景及demo/live声明
+  registry.py              统一场景注册和工厂
+gauges/                    旧导入路径转接和Pygame兼容入口
+scripts/update_manifest.py 同步能力清单，支持--check
+tests/                     场景关系、公共运行管理与真实绘图检查
 ```
 
 如需旧路径，显式./setup.sh --legacy-pygame，再./run.sh automotive --sbs --size 480；该路径仍用SDL索引，不能声称支持标准--port定位。旧临时服务tekgroaml-instruments.service运行时，先systemctl --user stop tekgroaml-instruments.service，再用./app。

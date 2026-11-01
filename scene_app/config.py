@@ -10,12 +10,9 @@ from . import APP_ID, VERSION
 from .errors import AppError
 
 ROOT = Path(__file__).resolve().parents[1]
-SCENES = {
-    'automotive-industrial': {'shapes': ['round','square'], 'prefix': 'automotive-industrial-sbs', 'sources': ['demo','live'], 'panels': ['automotive','industrial']},
-    'flight': {'shapes': ['round','round'], 'prefix': 'flight-sbs', 'sources': ['demo'], 'panels': ['attitude','air-data']},
-    'industrial': {'shapes': ['square','square'], 'prefix': 'industrial-sbs', 'sources': ['demo'], 'panels': ['pump','process-trends']},
-}
-LAYOUT_IDS = tuple(f"{scene['prefix']}-{size}" for scene in SCENES.values() for size in (480,720,800))
+from scenes.registry import SCENES, DEFINITIONS, LAYOUTS, definition
+
+LAYOUT_IDS = tuple(LAYOUTS)
 
 
 def read_json(path, limit=65536):
@@ -42,26 +39,26 @@ def manifest():
 def load_layout(layout_id):
     if layout_id not in LAYOUT_IDS:
         raise AppError('Unknown SBS layout. Use ./app info --json for supported IDs.', 3)
-    scene = next(scene for scene in SCENES.values() if layout_id.startswith(scene['prefix']+'-'))
-    data, _ = read_json(ROOT / 'layouts' / (layout_id + '.json'))
+    scene, expected_size = LAYOUTS[layout_id]
+    data, _ = read_json(ROOT / scene.layout_path(expected_size))
     def require(condition):
         if not condition:
             raise ValueError('Incompatible layout')
     try:
         require(data['layout_version'] == 1 and data['topology'] == 'single-link-dual')
-        expected_version = '1.1.0' if layout_id == 'flight-sbs-480' else '1.0.0'
+        expected_version = scene.layout_version(expected_size)
         require(data['id'] == layout_id and data['version'] == expected_version)
         require(data['verification']['status'] == 'software-verified')
         signal = data['signal_mode']; viewport = data['viewport']; panels = data['panels']
         size = signal['height']
-        require(size in (480, 720, 800) and signal['width'] == size * 2 and signal['refresh_hz'] == 60)
-        expected_rates = [60, 62.825226] if layout_id == 'flight-sbs-480' else [60]
+        require(size == expected_size and signal['width'] == size * 2 and signal['refresh_hz'] == 60)
+        expected_rates = scene.rates(expected_size)
         require(signal.get('accepted_refresh_hz', [signal['refresh_hz']]) == expected_rates)
         require(viewport == {'width': size*2, 'height': size, 'scale': 1, 'rotation_deg': 0})
         require(len(panels) == 2)
-        for index, (panel, shape) in enumerate(zip(panels, scene['shapes'])):
+        for index, (panel, shape) in enumerate(zip(panels, scene.shapes)):
             require(panel['panel'] == index+1 and panel['shape'] == shape and panel['input'] == 'none')
-            require(panel['view'] == scene['panels'][index])
+            require(panel['view'] == scene.panel_ids[index])
             require(panel['rect'] == {'x': index*size, 'y': 0, 'width': size, 'height': size})
             require(panel['visual_rotation_deg'] == 0 and panel['safe_inset_percent'] == 0)
     except (ValueError, KeyError, TypeError):
@@ -86,18 +83,17 @@ def normalize(values):
         raise AppError('This project supports two panels without touch interaction.', 3)
     if values.get('content') != 'different':
         raise AppError('Specify --content different; same-content mode is not implemented.', 3)
-    matching = [name for name,scene in SCENES.items() if scene['shapes']==shapes]
-    view = values.get('view') or (matching[0] if len(matching)==1 else None)
-    if view not in SCENES or SCENES[view]['shapes']!=shapes:
-        raise AppError('Use round/round + flight, square/square + industrial, or round/square + automotive-industrial.', 3)
-    source = values.get('data_source','demo')
+    layout_id=values.get('layout')
+    layout=load_layout(layout_id)
+    scene,_=LAYOUTS[layout_id]
+    view=values.get('view') or scene.id
+    if view not in DEFINITIONS or view != scene.id or shapes != list(scene.shapes):
+        raise AppError('The shape, view and layout must belong to the same scene. See ./app info --json.', 3)
+    source=values.get('data_source','demo')
     if source not in ('demo','live'):
-        raise AppError('Use --data-source demo or live.', 2)
-    if source not in SCENES[view]['sources']:
-        raise AppError('Flight and pump-station scenes currently support explicit demo data only.', 3)
-    layout = load_layout(values.get('layout'))
-    if [panel['shape'] for panel in layout['panels']]!=shapes or not layout['id'].startswith(SCENES[view]['prefix']+'-'):
-        raise AppError('The selected layout does not match the scene and requested panel shapes.', 3)
+        raise AppError('Use --data-source demo or live.',2)
+    if source not in scene.sources:
+        raise AppError(f'{view} currently supports demo data only.',3)
     requested_version = values.get('layout_version', layout['version'])
     if requested_version != layout['version']:
         raise AppError('Saved layout version changed; start the new layout explicitly.', 6)
@@ -125,8 +121,6 @@ def context(path):
 
 
 def prepare(spec):
-    from gauges.common import TelemetrySource
-    from gauges.scenarios import make_scene
     config, digest = ({'config_version':1,'fps':30,'demo_speed':1.0}, 'default')
     if spec['config']:
         supplied, digest = read_json(spec['config'])
@@ -148,5 +142,5 @@ def prepare(spec):
             path = Path(spec['config']).parent / path
         path = path.resolve()
     # Demo explicitly ignores configured input_file; no implicit live source.
-    source=TelemetrySource(path) if spec['view']=='automotive-industrial' else make_scene(spec['view'])[1]
+    source=definition(spec['view']).create_source(spec['data_source'],path)
     return config, digest, source

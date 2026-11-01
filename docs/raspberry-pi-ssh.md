@@ -27,7 +27,7 @@ rsync -av --exclude=.git --exclude=.venv --exclude=__pycache__ --exclude=secrets
 ssh pi@raspberrypi.local
 ```
 
-必须复制app、scene_app、gauges、layouts和screen-app.json等完整代码，不只复制一张图或一个.py。源目录尾部/表示复制内容；不复制Mac虚拟环境。私有采集数据放在Pi用户目录的单独位置。
+必须复制app、scene_app、common、scenes、gauges和screen-app.json等完整代码，不只复制一张图或一个.py。源目录尾部/表示复制内容；不复制Mac虚拟环境。私有采集数据放在Pi用户目录的单独位置。
 
 只有远端已发布的版本才可通过Git取得。若选择Git方式，作为rsync的替代，在Pi执行：
 
@@ -50,7 +50,7 @@ chmod +x app setup.sh run.sh
 ./app info --json
 ```
 
-本版版本0.3.1。安装器只补缺失的发行版Python/GTK/Cairo/layer-shell/wlr-randr包；全部已有则无需下载。APT可能请求sudo，但运行app不要sudo。默认不安装Pygame，不创建虚拟环境，也不自动启动。
+本版版本0.5.0。安装器只补缺失的发行版Python/GTK/Cairo/layer-shell/wlr-randr包；全部已有则无需下载。APT可能请求sudo，但运行app不要sudo。默认不安装Pygame，不创建虚拟环境，也不自动启动。
 
 如果以前使用过旧文档的临时Pygame服务，先停止该服务；没有旧服务则跳过：
 
@@ -105,6 +105,18 @@ PY
 ```
 
 每种另有720和800布局，完整输入仍须先按实际产品设置正确。数据联动、模拟周期和可选加速配置见[场景说明](scenarios.md)。
+
+### 双圆汽车（v0.4.0）
+
+先用旧项目代码正常stop正在运行的实例，再更新整个项目，尤其不能漏传common/和scenes/。布局文件改为各场景目录维护，但公开ID与旧命令不变。Pi SSH中执行：
+
+```bash
+./app --version
+./app check --port 1 --shape round --panels 2 --input none --view automotive --layout automotive-sbs-480 --content different --data-source demo
+./app start --port 1 --shape round --panels 2 --input none --view automotive --layout automotive-sbs-480 --content different --data-source demo
+```
+
+左车速/RPM/挡位/里程，右水温/燃油/电压/油压，启动后数据随行驶阶段自动联动。当前双480屏的960×480@约62.825Hz已被汽车布局接受，不强改60Hz。新汽车场景只支持demo，不把模拟当真实OBD。见[完整说明](automotive.md)与[目录架构](architecture.md)。
 
 ## 5. 状态、日志和停止
 
@@ -164,3 +176,14 @@ python3 tests/render_native.py --size 480 --output /tmp/instruments-480.png
 仍需原有Pygame时，显式./setup.sh --legacy-pygame，随后./run.sh automotive --sbs --size 480。这个旧路径仍依赖SDL从0枚举，不能将其--display直接按port减一映射；默认./app不使用它。详情见[标准命令](standard-app.md)。
 
 本次双480圆屏实测补充（2026-11-01）：实际完整输入960×480、约62.825Hz，flight-sbs-480布局1.1.0已接受该原生模式，不需要为了应用强制改60Hz。接口1的check/start已通过，实体分区边缘仍需物理观察。
+
+## 机箱电脑状态屏（v0.5.0）
+
+更新项目后在Pi执行：
+
+```bash
+./app stop --port 1
+./app start --port 1 --shape round --panels 2 --input none --view pc-monitor --layout pc-monitor-sbs-480 --content different --data-source demo
+```
+
+演示无需外接电脑；真实PC数据用examples/pc-monitor-live.json，并由目标电脑持续采集JSON。可选Windows脚本不要求Python，缺温度/风扇等传感器显示“—”；不拿Pi本机数据冒充PC。完整采集/SSH传输和live步骤见[机箱状态屏指南](pc-monitor.md)，本轮尚未完成真实Windows及新实体场景验收。

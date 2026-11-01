@@ -1,0 +1,57 @@
+{
+  "layout_version": 1,
+  "id": "automotive-sbs-800",
+  "version": "1.0.0",
+  "topology": "single-link-dual",
+  "coordinate_space": "output-signal-pixels",
+  "verification": {
+    "status": "software-verified",
+    "hardware_verified": false,
+    "note": "Dedicated dual-round automotive demo; 480 geometry matches the observed 960x480 dual-round input at 60 or ~62.825226Hz. Automotive physical acceptance is separate from flight."
+  },
+  "product_match": null,
+  "signal_mode": {
+    "width": 1600,
+    "height": 800,
+    "refresh_hz": 60,
+    "accepted_refresh_hz": [
+      60
+    ]
+  },
+  "viewport": {
+    "width": 1600,
+    "height": 800,
+    "scale": 1,
+    "rotation_deg": 0
+  },
+  "panels": [
+    {
+      "panel": 1,
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 800,
+        "height": 800
+      },
+      "shape": "round",
+      "input": "none",
+      "visual_rotation_deg": 0,
+      "safe_inset_percent": 0,
+      "view": "drive-speed"
+    },
+    {
+      "panel": 2,
+      "rect": {
+        "x": 800,
+        "y": 0,
+        "width": 800,
+        "height": 800
+      },
+      "shape": "round",
+      "input": "none",
+      "visual_rotation_deg": 0,
+      "safe_inset_percent": 0,
+      "view": "engine-status"
+    }
+  ]
+}

@@ -2,8 +2,8 @@
   "manifest_version": 1,
   "contract_version": 1,
   "id": "dual-instrument-dashboard",
-  "name": "单线双屏场景仪表：飞行与泵站",
-  "version": "0.3.1",
+  "name": "单线双屏场景：机箱监控、汽车、飞行与泵站",
+  "version": "0.5.0",
   "release_status": "preview",
   "repository_url": "https://github.com/tekgroaml/lvgl-embedded-gui-demos",
   "command": {
@@ -33,21 +33,40 @@
       "data_sources": [
         "demo"
       ]
+    },
+    {
+      "id": "automotive",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "pc-monitor",
+      "data_sources": [
+        "demo",
+        "live"
+      ]
     }
   ],
   "content_modes": [
     "different"
   ],
   "layouts": [
-    "layouts/automotive-industrial-sbs-480.json",
-    "layouts/automotive-industrial-sbs-720.json",
-    "layouts/automotive-industrial-sbs-800.json",
-    "layouts/flight-sbs-480.json",
-    "layouts/flight-sbs-720.json",
-    "layouts/flight-sbs-800.json",
-    "layouts/industrial-sbs-480.json",
-    "layouts/industrial-sbs-720.json",
-    "layouts/industrial-sbs-800.json"
+    "scenes/automotive_industrial/layouts/automotive-industrial-sbs-480.json",
+    "scenes/automotive_industrial/layouts/automotive-industrial-sbs-720.json",
+    "scenes/automotive_industrial/layouts/automotive-industrial-sbs-800.json",
+    "scenes/flight/layouts/flight-sbs-480.json",
+    "scenes/flight/layouts/flight-sbs-720.json",
+    "scenes/flight/layouts/flight-sbs-800.json",
+    "scenes/industrial/layouts/industrial-sbs-480.json",
+    "scenes/industrial/layouts/industrial-sbs-720.json",
+    "scenes/industrial/layouts/industrial-sbs-800.json",
+    "scenes/automotive/layouts/automotive-sbs-480.json",
+    "scenes/automotive/layouts/automotive-sbs-720.json",
+    "scenes/automotive/layouts/automotive-sbs-800.json",
+    "scenes/pc_monitor/layouts/pc-monitor-sbs-480.json",
+    "scenes/pc_monitor/layouts/pc-monitor-sbs-720.json",
+    "scenes/pc_monitor/layouts/pc-monitor-sbs-800.json"
   ],
   "capabilities": {
     "multi_instance": true,
@@ -189,18 +208,97 @@
         "industrial-sbs-720",
         "industrial-sbs-800"
       ]
+    },
+    {
+      "id": "sbs-automotive",
+      "topology": "single-link-dual",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "automotive"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "different"
+      ],
+      "layout_ids": [
+        "automotive-sbs-480",
+        "automotive-sbs-720",
+        "automotive-sbs-800"
+      ]
+    },
+    {
+      "id": "sbs-pc-monitor",
+      "topology": "single-link-dual",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "pc-monitor"
+      ],
+      "data_sources": [
+        "demo",
+        "live"
+      ],
+      "content_modes": [
+        "different"
+      ],
+      "layout_ids": [
+        "pc-monitor-sbs-480",
+        "pc-monitor-sbs-720",
+        "pc-monitor-sbs-800"
+      ]
     }
   ],
   "verification": {
-    "status": "dual480-user-verified-preview",
-    "hardware_verified": true,
+    "status": "software-preview",
+    "hardware_verified": false,
     "notes": [
-      "Native GTK/Cairo runtime, no browser, LVGL, Pygame, pip or virtual environment required.",
-      "Flight: dual-round, linked attitude/heading/airspeed/altitude/VSI, demo only.",
-      "Industrial: dual-square pump overview and process trends; linked duty cycle with pressure and thermal inertia, demo only.",
-      "Legacy automotive-industrial round/square supports demo and live JSON.",
-      "Explicit software SBS mappings only; physical driver-board mapping and signal support must be confirmed. No same-content or touch support.",
-      "flight-sbs-480 layout v1.1.0 also accepts the observed native ~62.825Hz EDID input without changing the display mode."
+      "Native Python GTK/Cairo runtime; common/ provides shared drawing, theme, telemetry and scene definitions; scenes/ owns each scenario.",
+      "Automotive: dedicated dual-round drive-speed and engine-status panels; demo-only linked speed/gear/RPM/temperature/fuel/voltage/trip data.",
+      "Automotive dual480 accepts 60Hz and the observed native ~62.825226Hz without changing hardware modes. Its physical scene acceptance is pending.",
+      "Flight/industrial/mixed commands remain compatible; prior physical flight evidence is historical and does not certify the new automotive scene.",
+      "No touch or same-content support; no real OBD/vehicle control or automotive live protocol is declared.",
+      "PC-monitor scene: simulated linked CPU/GPU workloads or explicit JSON from a monitored computer; missing sensors are unavailable, not invented or replaced with local Pi metrics."
     ],
     "tested_configurations": [
       {

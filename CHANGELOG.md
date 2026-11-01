@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.5.0 — 2026-11-01 (PC-case monitoring scene)
+
+- Add dual-round PC-monitor CPU/RAM and GPU/cooling pages, with480/720/800 layouts and native~62.825Hz acceptance on the480 layout.
+- Model idle, CPU rendering, gaming and cooling with correlated power, thermal inertia, fan response and bounded memory/VRAM usage.
+- Add explicit timestamped monitored-PC JSON input. Missing sensors remain unavailable; stale/invalid uploads never turn into synthetic data or local Pi measurements.
+- Extract shared bounded regular-file snapshot reading, preserving the existing mixed-scene protocol.
+- Include an optional Windows PowerShell CPU/RAM and available NVIDIA collector, with atomic local output and optional SSH-key-based Pi transfer. No Windows/NVIDIA runtime acceptance is claimed.
+- Preserve the existing native Python/GTK/Cairo dependency set and standard command/lifecycle interface.
+
+## 0.4.0 — 2026-11-01 (dual-round automotive and scene modules)
+
+- Add automotive view with dedicated round speed/RPM/gear/trip and engine/fuel/voltage/oil-pressure panels.
+- Link simulated driving phases, gears, RPM, load, thermal lag, fuel consumption and distance; demo only, no OBD or vehicle control.
+- Accept60Hz and the observed~62.825Hz input in automotive-sbs-480 without changing display timing; add720/800 layouts.
+- Split all four scenarios into scenes/<id>/ with declarations, models, panels and scene-owned layouts.
+- Extract common drawing/theme/components, telemetry and simulation helpers; standard worker uses declarative scene factories instead of scene-name branches.
+- Preserve legacy gauges imports, Pygame paths, existing public commands and layout IDs. Derive missing view from the explicit layout so two dual-round scenes are unambiguous.
+- Generate manifest capabilities from the scene registry and retain independent deployment/SSH instructions.
+- Keep live initialization free of simulated placeholders and retain old mixed-scene JSON behavior.
+
 ## 0.3.1 — 2026-11-01 (dual480 native input acceptance)
 
 - Accept the observed960×480 native dual-round input at~62.825226Hz alongside60Hz in flight-sbs-480 layout v1.1.0; keep other layout timing lists unchanged.

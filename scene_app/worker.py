@@ -13,9 +13,8 @@ import uuid
 from . import APP_ID, VERSION, display, runtime
 from .config import normalize, prepare, load_layout
 from .errors import AppError
-from .painter import draw_scene
-from gauges.common import Telemetry
-from gauges.scenarios import make_scene
+from common.drawing import draw_scene
+from scenes.registry import definition
 
 
 class Worker:
@@ -27,8 +26,9 @@ class Worker:
         self.exit_code=0
         self.quitting=self.ready=self.drawn=self.polling=self.has_data=False
         self.control=self.window=self.executor=self.lease=None
-        self.views, initial_source=make_scene(self.spec['view'])
-        self.data=initial_source.read(0) if self.spec['data_source']=='demo' else Telemetry(stale=True,simulated=False)
+        scene=definition(self.spec['view'])
+        self.views=scene.create_panels()
+        self.data=scene.create_source().read(0) if self.spec['data_source']=='demo' else None
         self.state={'app_id':APP_ID,'version':VERSION,'contract_version':1,'instance_id':self.instance_id,
                     'owner':os.getuid(),'port':self.port,'connector':f'HDMI-A-{self.port}',
                     'status':'starting','health':'starting','renderer':'python-gtk-cairo',
@@ -92,7 +92,7 @@ class Worker:
         return False
 
     def paint(self,area,context):
-        if self.quitting:return False
+        if self.quitting or self.data is None:return False
         try:
             draw_scene(context,self.layout,*self.views,self.data)
             self.drawn=True
@@ -106,6 +106,7 @@ class Worker:
         if self.quitting:return False
         now=time.monotonic();dt=min(now-self.previous,.1);self.previous=now
         if self.spec['data_source']=='demo':dt*=self.config['demo_speed']
+        if self.data is None:return True
         for view in self.views:view.update(dt,self.data)
         self.area.queue_draw()
         return True
@@ -127,6 +128,10 @@ class Worker:
         self.polling=False
         if self.quitting:return False
         if error:
+            if self.data is None:
+                self.state['health']='degraded-stale-telemetry'
+                self.persist()
+                return False
             self.data.stale=True
         else:
             self.data=value

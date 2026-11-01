@@ -22,7 +22,7 @@ rsync -av --exclude=.git --exclude=.venv --exclude=__pycache__ --exclude=secrets
 ssh pi@raspberrypi.local
 ```
 
-Copy the full app, scene_app, gauges, layouts and screen-app.json, not one Python file. Do not upload a Mac virtual environment. Keep private capture data/configuration elsewhere in the Pi home directory.
+Copy the full app, scene_app, common, scenes, gauges and screen-app.json, not one Python file. Do not upload a Mac virtual environment. Keep private capture data/configuration elsewhere in the Pi home directory.
 
 For already-published versions, Git is an alternative to the upload. On the Pi, with a nonexistent target directory:
 
@@ -45,7 +45,7 @@ chmod +x app setup.sh run.sh
 ./app info --json
 ```
 
-This native preview is 0.3.1. Only missing distribution Python/GTK/Cairo/layer-shell/wlr-randr packages are installed; existing dependencies need no download. No Pygame, browser, pip, compilation or virtual environment is required. The installer may use sudo for APT; never use sudo for ./app.
+This native preview is 0.5.0. Only missing distribution Python/GTK/Cairo/layer-shell/wlr-randr packages are installed; existing dependencies need no download. No Pygame, browser, pip, compilation or virtual environment is required. The installer may use sudo for APT; never use sudo for ./app.
 
 If you previously launched the old transient service, stop it before the standard app:
 
@@ -99,6 +99,18 @@ Switch to the square pump-station demo:
 ```
 
 These demo-only views move autonomously using correlated scene data, not random independent needles. Both also have720/800 software mappings. See the [scenario reference](scenarios.md) for phase timing and optional demo_speed acceleration.
+
+### Dual-round automotive (v0.4.0)
+
+After stopping the previously running version, copy/update the complete project including common/ and scenes/. Existing layout IDs remain stable even though layout files moved into each scene directory. Then on the Pi:
+
+```bash
+./app --version
+./app check --port 1 --shape round --panels 2 --input none --view automotive --layout automotive-sbs-480 --content different --data-source demo
+./app start --port 1 --shape round --panels 2 --input none --view automotive --layout automotive-sbs-480 --content different --data-source demo
+```
+
+The dedicated car view displays speed/RPM/gear/trip and coolant/fuel/voltage/oil pressure. It automatically cycles through realistic linked showroom states, always marked simulated, and explicitly rejects live/OBD. Its480 layout accepts60Hz and the observed~62.825Hz. No display timing is changed. See [car details](automotive.md) and [directory architecture](architecture.md).
 
 ## 5. Manage and disconnect SSH
 
@@ -156,3 +168,14 @@ The offscreen PNG creates no desktop window and does not prove physical splittin
 For the retained old renderer explicitly install ./setup.sh --legacy-pygame, then ./run.sh automotive --sbs --size 480. That optional path still uses zero-based SDL display indexes, which are not connector numbers. Standard ./app never launches it. See the telemetry reference for data protocol and hardware-integration boundaries.
 
 Observed product note (2026-11-01): flight-sbs-480 v1.1.0 also accepts the connected dual480 driver input at960×480/~62.825226Hz (±0.1Hz). The native mode is preserved, not forced to60Hz. Full Pi startup was confirmed; inspect physical splitting and edges separately.
+
+## PC-case display (v0.5.0)
+
+After copying the updated project, on the Pi:
+
+```bash
+./app stop --port 1
+./app start --port 1 --shape round --panels 2 --input none --view pc-monitor --layout pc-monitor-sbs-480 --content different --data-source demo
+```
+
+CPU/RAM and GPU/cooling animate automatically in demo. Live uses examples/pc-monitor-live.json and a snapshot from the monitored PC, never Pi host stats. An optional Windows PowerShell collector and key-based SSH upload procedure are documented in the [PC-monitor guide](pc-monitor.md); unsupported sensors remain unavailable. The new scene and Windows collector have not been physically accepted in this change.

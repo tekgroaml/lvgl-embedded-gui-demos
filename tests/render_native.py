@@ -5,9 +5,9 @@ from pathlib import Path
 import struct
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from gauges.scenarios import make_scene
+from scenes.registry import make_scene
 from scene_app.config import load_layout,SCENES
-from scene_app.painter import draw_scene
+from common.drawing import draw_scene
 
 
 def main():

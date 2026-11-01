@@ -1,76 +1,13 @@
-"""Shared display lifecycle, drawing helpers and validated telemetry snapshots."""
+"""Legacy Pygame launcher; native/shared implementation lives in common/."""
 import argparse
-from dataclasses import dataclass
-import json
 import math
 import os
 from pathlib import Path
 import sys
-import stat
-import time
 
-BG = (9, 15, 23)
-PANEL = (17, 28, 40)
-TEXT = (222, 233, 241)
-MUTED = (118, 142, 160)
-CYAN = (74, 218, 219)
-RED = (255, 96, 99)
-AMBER = (245, 185, 91)
-
-
-@dataclass
-class Telemetry:
-    speed: float = 0.0
-    rpm: float = 0.0
-    temperature: float = 0.0
-    pressure: float = 0.0
-    voltage: float = 0.0
-    signal: float = 0.0
-    stale: bool = False
-    simulated: bool = True
-
-
-class TelemetrySource:
-    """Read atomic JSON snapshots at up to 5 Hz, keeping last good values on failure."""
-    LIMITS = {"speed": (0, 300), "rpm": (0, 9000), "temperature": (-40, 150),
-              "pressure": (0, 20), "voltage": (0, 60), "signal": (-1, 1)}
-
-    def __init__(self, path=None):
-        self.path = path
-        self.last_poll = -1.0
-        self.last = Telemetry(stale=path is not None, simulated=path is None)
-
-    def read(self, elapsed):
-        if self.path is None:
-            speed = 98 + 75*math.sin(elapsed*.25 - 1)
-            rpm = 950 + speed*29 + 1050*(.5+.5*math.sin(elapsed*.47))
-            return Telemetry(speed, rpm, 76+23*math.sin(elapsed*.12),
-                             4.2+math.sin(elapsed*.7)*.8, 13.7+.3*math.sin(elapsed),
-                             .7*math.sin(elapsed*5)+.12*math.sin(elapsed*17))
-        if elapsed - self.last_poll < .2: return self.last
-        self.last_poll = elapsed
-        try:
-            descriptor = os.open(self.path, os.O_RDONLY | os.O_NONBLOCK)
-            with os.fdopen(descriptor, 'rb') as stream:
-                if not stat.S_ISREG(os.fstat(stream.fileno()).st_mode):
-                    raise ValueError("Snapshot must be a regular file.")
-                raw = stream.read(65537)
-                modified = os.fstat(stream.fileno()).st_mtime
-            if len(raw) > 65536: raise ValueError("Snapshot exceeds 64 KiB.")
-            values = json.loads(raw)
-            if not isinstance(values, dict): raise ValueError("Expected an object.")
-            fields = {}
-            for name, (low, high) in self.LIMITS.items():
-                value = values[name]
-                if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value) or not low <= value <= high:
-                    raise ValueError("Invalid telemetry field.")
-                fields[name] = float(value)
-            age = time.time() - modified
-            self.last = Telemetry(**fields, stale=not -1 <= age <= 3, simulated=False)
-        except (OSError, ValueError, KeyError, TypeError):
-            self.last.stale = True
-            self.last.simulated = False
-        return self.last
+from common.theme import BG, PANEL, TEXT, MUTED, CYAN, RED, AMBER
+from common.telemetry import Telemetry
+from scenes.automotive_industrial.model import TelemetrySource
 
 
 class Painter:

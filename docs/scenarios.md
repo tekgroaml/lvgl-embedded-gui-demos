@@ -1,6 +1,16 @@
-# v0.3.1：双圆飞行仪表与双方形泵站演示
+# 场景目录：双圆汽车、双圆飞行与双方形泵站
 
 两种新场景都在本项目内实现，使用同一./app标准入口和原生Python/GTK/Cairo。默认选择demo后，数据随运行时间自动变化；无需接传感器、飞行模拟器或网页服务。所有面板显示DEMO/SIMULATED标记，数据是用于展示的联动模型。
+
+## 机箱电脑状态屏（v0.5.0新增）
+
+--view pc-monitor提供CPU/内存与GPU/散热两页，既有自主负载演示，也有目标PC专用JSON。可选Windows脚本不要求Python；未提供的温度/风扇显示缺失，不把Pi指标当PC数据。[完整说明](pc-monitor.md)。
+
+## 双圆汽车（v0.4.0新增）
+
+--view automotive提供双圆车速/RPM和发动机状态，--layout automotive-sbs-480适配当前960×480@约62.825Hz双圆屏；启动后自动行驶阶段联动，详细命令和数据关系见[双圆汽车](automotive.md)。
+
+四个场景各自位于scenes/automotive、flight、industrial、automotive_industrial；公共代码见[架构说明](architecture.md)。旧场景命令保持不变。
 
 ## 1. 双圆：飞行仪表盘
 

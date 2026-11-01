@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "sampled_at": 0,
+  "pc_name": "DESKTOP-PC",
+  "workload": "LIVE PC",
+  "cpu_load_pct": 38,
+  "memory_used_gb": 12.5,
+  "memory_total_gb": 32,
+  "cpu_temp_c": null,
+  "cpu_power_w": null,
+  "gpu_load_pct": null,
+  "gpu_temp_c": null,
+  "gpu_power_w": null,
+  "vram_used_gb": null,
+  "vram_total_gb": null,
+  "cpu_fan_rpm": null,
+  "gpu_fan_rpm": null,
+  "download_mbps": null,
+  "upload_mbps": null
+}
