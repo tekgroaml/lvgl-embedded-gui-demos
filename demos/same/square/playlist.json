@@ -1,0 +1,40 @@
+{
+  "playlist_version": 1,
+  "intro_seconds": 3,
+  "effect_seconds": 10,
+  "stages": [
+    {
+      "view": "store-signage",
+      "icon": "store",
+      "title": "RETAIL PROMOTION",
+      "subtitle": "One offer. Seen from both sides.",
+      "panel_labels": [
+        "PROMOTIONS / SAMPLE PRICES",
+        "COUNTER / STORE DISPLAY"
+      ],
+      "demo_start_seconds": 4
+    },
+    {
+      "view": "meeting-room",
+      "icon": "room",
+      "title": "MEETING ROOM STATUS",
+      "subtitle": "Know the room before you enter.",
+      "panel_labels": [
+        "ROOM AVAILABILITY",
+        "DEMO BOOKING STATUS"
+      ],
+      "demo_start_seconds": 8
+    },
+    {
+      "view": "parcel-status",
+      "icon": "parcel",
+      "title": "PARCEL PICKUP",
+      "subtitle": "A clear status at every step.",
+      "panel_labels": [
+        "SHIPMENT / COLLECTION",
+        "SAMPLE PICKUP REFERENCE"
+      ],
+      "demo_start_seconds": 12
+    }
+  ]
+}

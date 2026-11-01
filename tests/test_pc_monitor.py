@@ -9,8 +9,8 @@ import time
 import unittest
 from unittest.mock import Mock,patch
 
-from scenes.pc_monitor.model import PcDemo,PcJsonSource,decode_snapshot,targets
-from scenes.pc_monitor.panels import value
+from scenes.different.pc_monitor.model import PcDemo,PcJsonSource,decode_snapshot,targets
+from scenes.different.pc_monitor.panels import value
 from scene_app.config import normalize,prepare,load_layout
 from scene_app.display import geometry
 from scene_app.worker import Worker

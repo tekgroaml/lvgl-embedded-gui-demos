@@ -16,12 +16,14 @@ def update(data):
     scenes=tuple(DEFINITIONS.values())
     data['version']=VERSION
     data['views']=[{'id':scene.id,'data_sources':list(scene.sources)} for scene in scenes]
+    data['content_modes']=list(dict.fromkeys(mode for scene in scenes for mode in scene.content_modes))
+    data['topologies']=list(dict.fromkeys(scene.topology for scene in scenes))
     data['layouts']=[scene.layout_path(size) for scene in scenes for size in scene.sizes]
     data['profiles']=[{
-        'id':'sbs-'+scene.id,'topology':'single-link-dual','panel_count':2,
+        'id':scene.profile_id,'topology':scene.topology,'panel_count':2,
         'panels':[{'panel':i+1,'shape':shape,'input':'none','min_viewport':{'width':min(scene.sizes),'height':min(scene.sizes)}}
                   for i,shape in enumerate(scene.shapes)],
-        'views':[scene.id],'data_sources':list(scene.sources),'content_modes':['different'],
+        'views':[scene.id],'data_sources':list(scene.sources),'content_modes':list(scene.content_modes),
         'layout_ids':[f'{scene.prefix}-{size}' for size in scene.sizes]
     } for scene in scenes]
     return data

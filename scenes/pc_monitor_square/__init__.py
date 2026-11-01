@@ -1,1 +1,1 @@
-"""Square PC dashboard using the shared PC simulation model."""
+"""Compatibility imports; implementation lives in scenes/different/pc_monitor_square."""

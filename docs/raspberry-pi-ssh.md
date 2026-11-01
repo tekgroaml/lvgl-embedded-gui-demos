@@ -1,213 +1,96 @@
-# 将双屏异显应用复制到树莓派，通过SSH运行
+# 将完整项目写入树莓派并通过SSH运行
 
-本指南与本仓库一起发布，可单独使用，不依赖application总仓库、圆形看板、pi-setting或未来screen-app。复制的是应用程序，**不是重新烧录TF卡**。
+[English](raspberry-pi-ssh_EN.md) · [四类演示](../demos/README.md) · [标准命令](standard-app.md)
 
-[English](raspberry-pi-ssh_EN.md) · [项目README](../README_CN.md) · [标准命令](standard-app.md)
+v0.10.0应用代码已经区分同显／异显、圆形／方形。先按驱动板说明配置正确HDMI完整输入；本项目不修改显示分辨率、时序、EDID或触摸映射。
 
-## 1. 准备和执行位置
+## 1. 前提
 
-Pi已经联网、启用SSH，并用同一普通用户登录Bookworm/labwc Wayland图形桌面。SSH/控制台本身不会创建桌面。驱动板已按产品资料配置正确输入与左右区域，100%缩放、不旋转整张画布。
+树莓派安装带桌面的Raspberry Pi OS Bookworm/labwc，普通用户已登录Wayland桌面。SSH与桌面使用同一用户。无鼠标也可由SSH操作，但只有SSH登录不能代替图形桌面登录。当前仅实现两个无触摸面板共享一个HDMI输入。
 
-本项目现有双圆flight、双方形industrial和左圆右方automotive-industrial三种独立布局，仍不支持触摸或同显。新场景demo会自动生成联动数据，不需要外部采集器。以双480软件布局举例，完整输入为960×480、60Hz；必须确认真实驱动板支持，不能只因有两块480面板就假设它接受960×480。
+--port 1/2对应HDMI-A-1/2（Pi4板标HDMI0/1），不是左／右屏。SBS和硬件clone需要不同输入，详见后文。
 
-下例pi@raspberrypi.local是部署占位，替换成自己的用户名、主机名/IP。第一次连接核对主机指纹并正常认证，不把密码写进命令。
+## 2. 首次从GitHub安装
 
-| 执行位置 | 用途 |
-| --- | --- |
-| Mac终端 | 上传项目、建立SSH |
-| Pi的SSH终端 | 安装、预检、启动、日志、停止与更新 |
-
-## 2. Mac：复制整个项目
-
-在Mac进入包含lvgl-embedded-gui-demos文件夹的父目录：
+SSH到自己的Pi地址后：
 
 ```bash
-ssh pi@raspberrypi.local 'mkdir -p ~/apps/lvgl-embedded-gui-demos'
-rsync -av --exclude=.git --exclude=.venv --exclude=__pycache__ --exclude=secrets lvgl-embedded-gui-demos/ pi@raspberrypi.local:~/apps/lvgl-embedded-gui-demos/
-ssh pi@raspberrypi.local
-```
-
-必须复制app、scene_app、common、scenes、demos、gauges和screen-app.json等完整代码，不只复制一张图或一个.py。源目录尾部/表示复制内容；不复制Mac虚拟环境。私有采集数据放在Pi用户目录的单独位置。
-
-只有远端已发布的版本才可通过Git取得。若选择Git方式，作为rsync的替代，在Pi执行：
-
-```bash
-sudo apt-get update
-sudo apt-get install -y git
-mkdir -p ~/apps
 git clone https://github.com/tekgroaml/lvgl-embedded-gui-demos.git ~/apps/lvgl-embedded-gui-demos
-```
-
-只在目标目录不存在时clone。尚未推送的本地改造必须复制，不能假设git pull已经能下载。
-
-## 3. Pi SSH：安装和核对版本
-
-```bash
 cd ~/apps/lvgl-embedded-gui-demos
-chmod +x app setup.sh run.sh
 ./setup.sh --install-only
 ./app --version
 ./app info --json
 ```
 
-本版版本0.7.0。安装器只补缺失的发行版Python/GTK/Cairo/layer-shell/wlr-randr包；全部已有则无需下载。APT可能请求sudo，但运行app不要sudo。默认不安装Pygame，不创建虚拟环境，也不自动启动。
+须为包含所选场景的版本，方形同显需要0.10.0及后续兼容版。安装器只补缺失的系统Python、GTK、Cairo、layer-shell和wlr-randr，全部已有时无需下载。安装APT可能请求sudo；运行app不用sudo。默认不安装Pygame、pip、浏览器或虚拟环境。
 
-如果以前使用过旧文档的临时Pygame服务，先停止该服务；没有旧服务则跳过：
+## 3. 已有安装升级
 
-```bash
-systemctl --user stop tekgroaml-instruments.service
-```
-
-前台旧run.sh也应正常退出，避免不经过标准租约的旧窗口覆盖新画面。新版./app能发现旧临时服务活跃并拒绝冲突。
-
-## 4. Pi SSH：预检与启动
-
-假设信号线接在接口1、硬件已设置960×480、60Hz：
-
-```bash
-./app check --port 1 --shape round,square --panels 2 --input none --layout automotive-industrial-sbs-480 --content different
-./app start --port 1 --shape round,square --panels 2 --input none --layout automotive-industrial-sbs-480 --content different --data-source demo
-```
-
-端口1/2对应Linux HDMI-A-1/2（Pi4板子HDMI0/1）。如果接接口2，将所有命令--port改为2。panels2是同一信号口内的左右面板，不是连接两个HDMI。
-
-双720/双800软件布局分别用automotive-industrial-sbs-720/800，完整画布分别1440×720/1600×800，均要求实际60Hz、100%缩放。只在驱动板和产品实际支持时选择。check不改分辨率，错误模式会打印期望值并拒绝，不强制套用兼容时序。
-
-新版不需要指定SDL --display，也不需要虚拟环境。启动自动寻找同用户唯一Wayland会话。如多会话，可只读列出socket：
-
-```bash
-python3 - <<'PY'
-import os
-from pathlib import Path
-for item in sorted((Path('/run/user')/str(os.getuid())).glob('wayland-*')):
-    if item.is_socket():
-        print(item.name)
-PY
-```
-
-确认目标后设置实际的WAYLAND_DISPLAY，例如export WAYLAND_DISPLAY=wayland-0；无socket则先登录桌面，不猜DISPLAY=:0，不用ssh -X。仅有SSH连接不代表图形应用可用。
-
-### 双圆或双方形的实际命令
-
-下面仍在Pi项目目录执行；先停止同口旧场景，再从两个启动方案中选择一个。每面板480时完整画布为960×480。
-
-```bash
-./app stop --port 1
-# 双圆飞行仪表，自动爬升/巡航/下降/平飞
-./app start --port 1 --shape round --panels 2 --input none --view flight --layout flight-sbs-480 --content different --data-source demo
-```
-
-切换双方形泵站：
-
-```bash
-./app stop --port 1
-./app start --port 1 --shape square --panels 2 --input none --view industrial --layout industrial-sbs-480 --content different --data-source demo
-```
-
-每种另有720和800布局，完整输入仍须先按实际产品设置正确。数据联动、模拟周期和可选加速配置见[场景说明](scenarios.md)。
-
-### 双圆汽车（v0.4.0）
-
-先用旧项目代码正常stop正在运行的实例，再更新整个项目，尤其不能漏传common/和scenes/。布局文件改为各场景目录维护，但公开ID与旧命令不变。Pi SSH中执行：
-
-```bash
-./app --version
-./app check --port 1 --shape round --panels 2 --input none --view automotive --layout automotive-sbs-480 --content different --data-source demo
-./app start --port 1 --shape round --panels 2 --input none --view automotive --layout automotive-sbs-480 --content different --data-source demo
-```
-
-左车速/RPM/挡位/里程，右水温/燃油/电压/油压，启动后数据随行驶阶段自动联动。当前双480屏的960×480@约62.825Hz已被汽车布局接受，不强改60Hz。新汽车场景只支持demo，不把模拟当真实OBD。见[完整说明](automotive.md)与[目录架构](architecture.md)。
-
-## 5. 状态、日志和停止
-
-```bash
-./app status --port 1
-./app logs --port 1 --follow
-```
-
-日志跟随Ctrl+C只退出查看，应用不停止。继续执行：
-
-```bash
-./app restart --port 1
-./app stop --port 1
-```
-
-start在后台等待实际绘图、数据和窗口定位就绪后返回。保持桌面用户登录时，SSH断开后可继续运行；重新SSH进入同目录即可管理。Pi重启或退出桌面后不承诺恢复，本版不自动安装开机启动。
-
-前台调试可先stop，再把同一启动参数中的start换成run；Ctrl+C结束前台run。不要把run当作断开SSH后的持续方案，也不要killall python。stop关闭该口的整个SBS画布，即两面板一起退出，只影响本项目拥有的实例。
-
-## 6. 先测试显示，再切换到演示
-
-若已装可选screen-test，可先./app stop --port 1，再screen-test pattern --screen 1或screen-test cycle --screen 1 --interval 5。手动观察完整画布和实体面板；测试完成后：
-
-```bash
-screen-test stop --screen 1
-./app start --port 1 --shape round,square --panels 2 --input none --layout automotive-industrial-sbs-480 --content different --data-source demo
-```
-
-工具只是可选准备方法，程序不依赖它。单线双屏的--screen 1仍指一个HDMI输出，不是panel1。若另一个项目正在该口运行，先用原项目的正常停止命令退出，本项目不会强杀。
-
-## 7. 真实遥测、更新与排查
-
-只有原有automotive-industrial混合视图支持live；新的flight/industrial仅demo，传入live会明确拒绝。混合视图live通过--config指定的JSON中input_file读取采集快照，示例examples/live.json。路径相对该配置文件目录，需用户填写真实位置；六个字段须持续原子更新。examples/telemetry.json是静态样本，三秒后会变旧，不能作为真实采集器。首次无有效新鲜数据不ready，运行后失效标DATA STALE，不换模拟。完整协议见[数据文档](telemetry.md)。
-
-更新先在Pi停止本项目，再回Mac重复rsync；重新SSH检查版本、布局和依赖，执行check/start。不要更新正在运行的代码后声称还能恢复旧二进制；保留采集器及私有配置。
-
-| 现象 | 处理 |
-| --- | --- |
-| 缺依赖 | 在Pi运行新版安装脚本；不要复制Mac的.venv或改用sudo运行 |
-| SSH能连但无桌面 | 确认同一用户已登录Wayland桌面，socket真实存在 |
-| 输出/模式不符 | 按实际产品资料先配置完整SBS信号，应用不会强制修改 |
-| 布局不支持 | 使用info声明的形状/view/layout组合；触摸/同显尚未实现 |
-| 口被别的应用占用 | 用原项目正常stop，不能用本项目强制替换它 |
-| 旧临时服务冲突 | 停止tekgroaml-instruments.service；不重复创建旧systemd-run服务 |
-| 左右颠倒、边缘缺失 | 对照驱动板分区/排线；物理映射未认证，不能只凭软件PNG判断 |
-| JSON过期 | 检查真实采集器的六字段、范围、文件时间与持续更新 |
-
-## 8. 软件验证与旧入口
-
-```bash
-python3 -m unittest discover -s tests -v
-python3 tests/render_native.py --size 480 --output /tmp/instruments-480.png
-```
-
-离屏生成PNG不显示在实体面板，也不证明驱动板拆分正确。当前只有软件预览，物理双屏窗口及长期表现待验收。
-
-仍需原有Pygame时，显式./setup.sh --legacy-pygame，随后./run.sh automotive --sbs --size 480。这个旧路径仍依赖SDL从0枚举，不能将其--display直接按port减一映射；默认./app不使用它。详情见[标准命令](standard-app.md)。
-
-本次双480圆屏实测补充（2026-11-01）：实际完整输入960×480、约62.825Hz，flight-sbs-480布局1.1.0已接受该原生模式，不需要为了应用强制改60Hz。接口1的check/start已通过，实体分区边缘仍需物理观察。
-
-## 机箱电脑状态屏（v0.5.0）
-
-更新项目后在Pi执行：
-
-```bash
-./app stop --port 1
-./app start --port 1 --shape round --panels 2 --input none --view pc-monitor --layout pc-monitor-sbs-480 --content different --data-source demo
-```
-
-演示无需外接电脑；真实PC数据用examples/pc-monitor-live.json，并由目标电脑持续采集JSON。可选Windows脚本不要求Python，缺温度/风扇等传感器显示“—”；不拿Pi本机数据冒充PC。完整采集/SSH传输和live步骤见[机箱状态屏指南](pc-monitor.md)，本轮尚未完成真实Windows及新实体场景验收。
-
-## 产品用途串联拍摄（v0.6.0）
-
-完整复制包含demos/目录后，在Pi SSH执行：
-
-```bash
-./app stop --port 1
-./demos/product_showcase/demo check --port 1
-./demos/product_showcase/demo start --port 1
-```
-
-按飞机仪表→汽车/摩托仪表→PC机箱顺序，每段图标文案3秒、模拟效果10秒，一轮39秒循环，同一窗口无意图性桌面切换。拍摄结束单独执行./demos/product_showcase/demo stop --port 1。文案与时长、预览见[独立演示目录说明](../demos/product_showcase/README.md)。全部模拟，不会控制真实设备或读取真实PC数据。
-
-## 方形双屏串联演示（0.7.0）
-
-先在旧版本正常停止，再按上文更新完整项目，SSH中：
+先在Pi用旧版本正常停止，不要覆盖正在运行的代码：
 
 ```bash
 cd ~/apps/lvgl-embedded-gui-demos
-./demos/square_showcase/demo check --port 1
-./demos/square_showcase/demo start --port 1
+./app stop --port 1
+# 另一接口若也运行本项目，则也先正常stop
 ```
 
-智能家居→PC机箱→工业泵站，每段3秒品牌／应用分屏介绍、10秒动态效果，一轮39秒。[完整方屏说明](../demos/square_showcase/README.md)。停止时单独执行./demos/square_showcase/demo stop --port 1。
+Git克隆副本可git pull --ff-only，再./setup.sh --install-only。建议备份旧目录，出错时可恢复。若有自己的改动先保存，不用强制reset。
+
+开发副本可从Mac／Linux完整仓库根目录复制，用自己的Pi地址替换raspberrypi.local：
+
+```bash
+ssh pi@raspberrypi.local 'mkdir -p ~/apps/lvgl-embedded-gui-demos'
+rsync -av --exclude=.git --exclude=.venv --exclude=__pycache__ --exclude=secrets ./ pi@raspberrypi.local:~/apps/lvgl-embedded-gui-demos/
+```
+
+必须包含common、scenes、demos、scene_app、scripts和screen-app.json，不能只复制一个程序文件。旧目录中的多余文件不会作为布局来源，新注册表只引用canonical目录。不要将运行数据、密码或私有配置放入公共仓库。
+
+## 4. 选择四类演示
+
+| 形状／显示关系 | 脚本 | 三种用途 |
+| --- | --- | --- |
+| 圆形同显 | ./demos/same/round/demo | 音乐、RGB氛围、信息钟 |
+| 方形同显 | ./demos/same/square/demo | 门店促销、会议室、物流取件 |
+| 圆形异显 | ./demos/different/round/demo | 飞机、汽车、PC机箱 |
+| 方形异显 | ./demos/different/square/demo | 家居、PC机箱、工业泵站 |
+
+每种都有独立README安装说明。统一为品牌与场景介绍3秒、动态应用10秒、三组39秒循环。例如方形同显：
+
+```bash
+cd ~/apps/lvgl-embedded-gui-demos
+./demos/same/square/demo check --port 1
+./demos/same/square/demo start --port 1
+```
+
+同显默认--signal clone，单幅480×480由板子复制到两屏。实际是960×480 SBS板时，两条命令都加--signal sbs。异显始终使用SBS。同显介绍和效果两屏相同；异显保留左品牌、右用途介绍。
+
+--size 480/720/800表示每面板尺寸，完整输入分别是size×size（clone）或2×size×size（SBS）。方形同显软件只声明60Hz，尚未实测硬件；圆形480保留历史实测的clone约62.811Hz或SBS约62.825Hz。不同硬件先按实际信号匹配，程序不会自动调整。要求缩放100%、输出不旋转。
+
+## 5. 状态、日志、重启和停止
+
+```bash
+./demos/same/square/demo status --port 1
+./demos/same/square/demo logs --port 1 --follow
+./demos/same/square/demo restart --port 1
+```
+
+start后台启动并等待真实窗口、数据及定位就绪。SSH退出后继续播放，图形桌面须保持登录。Ctrl+C退出日志查看，不停止应用。restart按保存的配置，不按新硬件自动更换布局。换板先stop，再check/start。结束时单独执行：
+
+```bash
+./app stop --port 1
+```
+
+同项目同版本可显式--replace；失败尝试恢复旧场景。不同app版本先正常停止旧版，不能以--replace绕过升级规则。另一个项目占端口时由原项目正常stop，不强杀不明进程。没有安装开机自动启动。
+
+## 6. 常见问题
+
+- 无唯一Wayland会话：先登录图形桌面。同一用户有多个会话时检查/run/user/自己的UID/wayland-*，明确设置实际WAYLAND_DISPLAY，不猜DISPLAY=:0，也不用ssh -X。
+- 输入宽高不匹配：确认是SBS还是clone；单幅480×480和双宽960×480不可混用。错误时应用拒绝启动，不自动拉伸。
+- 刷新率／缩放不匹配：先按驱动板资料配置系统输出，再运行应用；不要因为面板尺寸相同而复制另一个产品时序。
+- 端口占用：先正常停止旧场景。若装有可选screen-test，先screen-test stop --screen 1；pi-setting不是本项目依赖。
+- layout/app_version变化：重新明确选择新布局启动；私有context仍要求当前版本，不直接改版本字段绕过校验。
+- 同显只有一块亮：软件截图不能证明两个实体面板都收到了信号。检查供电、驱动板和两面板排线；硬件clone只有一个逻辑输出是正常的。
+
+所有产品脚本使用标识清楚的模拟数据，不读取真实音乐、天气、价格、日历或订单。需要真实PC数据时使用专门的[PC JSON协议与采集说明](pc-monitor.md)，不要把demo当真实传感器。[验证范围](verification.md)区分软件预览和实体验收。
+
+0.10.0本轮在显示屏断开后仅本地实现、验证和提交，未连接、更新或启动树莓派。

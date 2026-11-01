@@ -10,7 +10,7 @@
 
 --view automotive提供双圆车速/RPM和发动机状态，--layout automotive-sbs-480适配当前960×480@约62.825Hz双圆屏；启动后自动行驶阶段联动，详细命令和数据关系见[双圆汽车](automotive.md)。
 
-四个场景各自位于scenes/automotive、flight、industrial、automotive_industrial；公共代码见[架构说明](architecture.md)。旧场景命令保持不变。
+四个场景各自位于scenes/different/automotive、flight、industrial、automotive_industrial；公共代码见[架构说明](architecture.md)。旧场景命令保持不变。
 
 ## 1. 双圆：飞行仪表盘
 
@@ -93,6 +93,6 @@ examples/demo-fast.json设置demo_speed=2，将六分钟飞行循环压到三分
 ./app logs --port 1 --follow
 ```
 
-同应用同版本也可显式--replace，失败时尝试恢复原场景；不同版本升级先stop再更新代码。触摸和同显仍未声明，不会因为新增形状自动变为支持。
+同应用同版本也可显式--replace，失败时尝试恢复原场景；不同版本升级先stop再更新代码。这些仪表场景不支持触摸或同显。0.8.0新增的music-ambient是独立同显场景，不能给原仪表直接传same。
 
 具体复制到Pi、安装依赖和SSH命令见[独立部署指南](raspberry-pi-ssh.md)。

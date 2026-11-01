@@ -1,0 +1,58 @@
+{
+  "layout_version": 1,
+  "id": "music-ambient-clone-720",
+  "version": "1.0.0",
+  "topology": "single-link-clone",
+  "coordinate_space": "output-signal-pixels",
+  "verification": {
+    "status": "software-verified",
+    "hardware_verified": false,
+    "note": "One square input is duplicated by the hardware driver board. The application draws one circle; physical display acceptance requires observation."
+  },
+  "product_match": null,
+  "signal_mode": {
+    "width": 720,
+    "height": 720,
+    "refresh_hz": 60,
+    "accepted_refresh_hz": [
+      60
+    ]
+  },
+  "viewport": {
+    "width": 720,
+    "height": 720,
+    "scale": 1,
+    "rotation_deg": 0
+  },
+  "panels": [
+    {
+      "panel": 1,
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 720,
+        "height": 720
+      },
+      "shape": "round",
+      "input": "none",
+      "visual_rotation_deg": 0,
+      "safe_inset_percent": 0,
+      "view": "music"
+    },
+    {
+      "panel": 2,
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 720,
+        "height": 720
+      },
+      "shape": "round",
+      "input": "none",
+      "visual_rotation_deg": 0,
+      "safe_inset_percent": 0,
+      "view": "music"
+    }
+  ],
+  "content_mode": "same"
+}

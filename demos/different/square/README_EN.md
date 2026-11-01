@@ -1,6 +1,6 @@
 # Dual-square product showcase
 
-[中文](README.md) · [SSH installation](../../docs/raspberry-pi-ssh_EN.md)
+[中文](README.md) · [SSH installation](../../../docs/raspberry-pi-ssh_EN.md)
 
 Version0.7.0. One HDMI signal drives two square panels side by side. The default is two480×480 panels in a960×480 canvas. Native Python/GTK/Cairo; no new dependencies.
 
@@ -23,22 +23,22 @@ cd ~/apps/lvgl-embedded-gui-demos
 ./app --version
 ```
 
-For existing Git installations, stop the old application first, then git pull --ff-only and rerun setup. For local unpublished changes, transfer the complete project using the [SSH guide](../../docs/raspberry-pi-ssh_EN.md).
+For existing Git installations, stop the old application first, then git pull --ff-only and rerun setup. For local unpublished changes, transfer the complete project using the [SSH guide](../../../docs/raspberry-pi-ssh_EN.md).
 
 ```bash
 cd ~/apps/lvgl-embedded-gui-demos
 ./app stop --port 1
-./demos/square_showcase/demo check --port 1
-./demos/square_showcase/demo start --port 1
+./demos/different/square/demo check --port 1
+./demos/different/square/demo start --port 1
 ```
 
 Run stop separately when finished:
 
 ```bash
-./demos/square_showcase/demo stop --port 1
+./demos/different/square/demo stop --port 1
 ```
 
-Use status --port 1, logs --port 1 --follow, or restart --port 1. start runs in the background and survives SSH disconnection while the desktop remains logged in. The shared wrapper also accepts./demos/product_showcase/demo start --port 1 --shape square. The original default remains round.
+Use status --port 1, logs --port 1 --follow, or restart --port 1. start runs in the background and survives SSH disconnection while the desktop remains logged in. The shared wrapper also accepts./demos/different/round/demo start --port 1 --shape square. The original default remains round.
 
 ## Display requirements
 
@@ -62,7 +62,7 @@ Stop the current demo first. For a standalone scene use the same standard comman
 
 All three square scenes support demo data only. PC telemetry follows the existing CPU/GPU thermal model; smart-home solar+grid balances household consumption; pump temperature lags load and delivered volume accumulates. Fans, flows, values and histories change automatically.
 
-Edit playlist.json for bounded copy and3s/10s durations. Its digest participates in instance identity; restart after edits. demo_speed must remain1. Scene data/pages live in scenes/; common/square.py shares dashboard drawing helpers. Timeline, title roles and lifecycle reuse the existing round showcase without changing its playlist. See[verification](../../docs/verification.md); physical square-panel acceptance still requires observation.
+Edit playlist.json for bounded copy and3s/10s durations. Its digest participates in instance identity; restart after edits. demo_speed must remain1. Scene data/pages live in scenes/; common/square.py shares dashboard drawing helpers. Timeline, title roles and lifecycle reuse the existing round showcase without changing its playlist. See[verification](../../../docs/verification.md); physical square-panel acceptance still requires observation.
 
 ![Smart home](preview-home.png)
 

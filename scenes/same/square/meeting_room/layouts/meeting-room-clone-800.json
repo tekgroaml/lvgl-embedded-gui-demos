@@ -1,0 +1,58 @@
+{
+  "layout_version": 1,
+  "id": "meeting-room-clone-800",
+  "version": "1.0.0",
+  "topology": "single-link-clone",
+  "coordinate_space": "output-signal-pixels",
+  "verification": {
+    "status": "software-verified",
+    "hardware_verified": false,
+    "note": "Software-only square same-content mapping. 60Hz input requires hardware support; no square-board physical acceptance is recorded."
+  },
+  "product_match": null,
+  "signal_mode": {
+    "width": 800,
+    "height": 800,
+    "refresh_hz": 60,
+    "accepted_refresh_hz": [
+      60
+    ]
+  },
+  "viewport": {
+    "width": 800,
+    "height": 800,
+    "scale": 1,
+    "rotation_deg": 0
+  },
+  "panels": [
+    {
+      "panel": 1,
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 800,
+        "height": 800
+      },
+      "shape": "square",
+      "input": "none",
+      "visual_rotation_deg": 0,
+      "safe_inset_percent": 0,
+      "view": "meeting-room"
+    },
+    {
+      "panel": 2,
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 800,
+        "height": 800
+      },
+      "shape": "square",
+      "input": "none",
+      "visual_rotation_deg": 0,
+      "safe_inset_percent": 0,
+      "view": "meeting-room"
+    }
+  ],
+  "content_mode": "same"
+}

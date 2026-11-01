@@ -55,7 +55,7 @@ cd ~/apps/lvgl-embedded-gui-demos
 ## 场景目录
 
 ```text
-scenes/automotive/
+scenes/different/automotive/
 ├── scene.py          精确形状/能力、面板与数据工厂
 ├── model.py          行驶阶段、挡位、温度、燃油与里程
 ├── panels.py         双圆汽车页面

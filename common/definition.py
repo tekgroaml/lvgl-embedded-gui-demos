@@ -17,10 +17,21 @@ class SceneDefinition:
     sizes: tuple = (480,720,800)
     layout_versions: tuple = ()
     package: str = None
+    content_modes: tuple = ('different',)
+    topology: str = 'single-link-dual'
+    refresh_overrides: tuple = ()
+
+    @property
+    def input_columns(self):
+        return 1 if self.topology=='single-link-clone' else 2
+
+    @property
+    def profile_id(self):
+        return ('clone-' if self.topology=='single-link-clone' else 'sbs-')+self.id
 
     @property
     def owner_package(self):
-        return self.package or 'scenes.'+self.id.replace('-', '_')
+        return self.package or self.demo_factory.split(':')[0].rsplit('.',1)[0]
 
     @property
     def sources(self):
@@ -33,6 +44,7 @@ class SceneDefinition:
         return dict(self.layout_versions).get(size,'1.0.0')
 
     def rates(self,size):
+        if size in dict(self.refresh_overrides):return list(dict(self.refresh_overrides)[size])
         return [60,62.825226] if self.native_dual480 and size==480 else [60]
 
     def create_panels(self):

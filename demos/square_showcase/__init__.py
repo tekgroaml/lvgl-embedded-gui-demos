@@ -1,1 +1,1 @@
-"""Three product-use demonstrations for dual square panels."""
+"""Compatibility imports; implementation lives in demos/different/square."""

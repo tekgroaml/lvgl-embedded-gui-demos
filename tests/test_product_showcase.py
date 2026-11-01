@@ -8,9 +8,9 @@ import tempfile
 import unittest
 from unittest.mock import Mock,patch
 
-from demos.product_showcase.cli import command,parser
-from demos.product_showcase.playback import Timeline,ShowcaseSource,load_playlist
-from demos.product_showcase.panels import LeftPanel,RightPanel
+from demos.different.round.cli import command,parser
+from demos.different.round.playback import Timeline,ShowcaseSource,load_playlist
+from demos.different.round.panels import LeftPanel,RightPanel
 from scene_app.config import normalize,prepare,load_layout
 from scene_app.display import geometry
 from scene_app.worker import Worker
@@ -125,7 +125,7 @@ class PlaylistTests(unittest.TestCase):
     def test_playlist_changes_participate_in_idempotent_instance_digest(self):
         _,first,_=prepare(request())
         original=load_playlist()
-        with patch('demos.product_showcase.playback.load_playlist',return_value=(original[0],'different-copy')):
+        with patch('demos.different.round.playback.load_playlist',return_value=(original[0],'different-copy')):
             _,second,_=prepare(request())
         self.assertNotEqual(first,second)
 
@@ -136,8 +136,8 @@ class RenderingAndCommandTests(unittest.TestCase):
         for elapsed in (0,13,26):
             data=source.read(elapsed)
             left_painter,right_painter=Mock(),Mock()
-            with patch('demos.product_showcase.panels.fitted_text') as fitted,\
-                 patch('demos.product_showcase.panels.draw_icon') as icon:
+            with patch('demos.shared.panels.fitted_text') as fitted,\
+                 patch('demos.shared.panels.draw_icon') as icon:
                 LeftPanel().draw(left_painter,data)
                 icon.assert_called_once_with(left_painter,data.icon)
                 texts=[call.args[1] for call in fitted.call_args_list]
@@ -179,7 +179,7 @@ class RenderingAndCommandTests(unittest.TestCase):
         output={'enabled':True,'position':[0,0],'scale':1,'transform':'normal',
                 'mode':{'width':960,'height':480,'refresh_hz':62.825001}}
         self.assertEqual(geometry(output,load_layout('product-showcase-sbs-480')),(0,0,960,480))
-        self.assertTrue(definition('product-showcase').layout_path(480).startswith('demos/product_showcase/'))
+        self.assertTrue(definition('product-showcase').layout_path(480).startswith('demos/different/round/'))
         with self.assertRaises(AppError):request(data_source='live')
 
     def test_worker_status_exposes_stage_and_phase_for_ssh_observation(self):

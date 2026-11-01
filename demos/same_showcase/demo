@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+legacy_root=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+exec "$legacy_root/demos/same/round/demo" "$@"

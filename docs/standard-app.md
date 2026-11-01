@@ -1,115 +1,104 @@
-# v0.7.0 双屏标准命令
+# v0.10.0 双屏标准命令
 
-本项目与圆形看板遵循相同./app接口，独立安装，不导入相邻项目。内部租约/socket/JSON协议保持一致；启动与停止都按app-id和instance-id识别归属。当前实现作为软件预览，不等于具体产品已实测。
+[演示总目录](../demos/README.md) · [架构](architecture.md) · [安装指南](raspberry-pi-ssh.md)
 
-## 命令与特性
+## 先选择关系和形状
+
+| 关系／形状 | 示例启动命令 | 默认完整输入 |
+| --- | --- | --- |
+| 同显圆形 | ./demos/same/round/demo start --port 1 | 480×480硬件clone |
+| 同显方形 | ./demos/same/square/demo start --port 1 | 480×480硬件clone |
+| 异显圆形 | ./demos/different/round/demo start --port 1 | 960×480 SBS |
+| 异显方形 | ./demos/different/square/demo start --port 1 | 960×480 SBS |
+
+四种脚本均为品牌与场景介绍3秒、动态效果10秒、三场景39秒循环。同显介绍／效果两屏一致；异显介绍左品牌、右用途，效果两屏不同。方形同显为门店促销、会议室状态和物流取件；圆形同显为音乐、RGB氛围、信息钟。
+
+## 生命周期
+
+完整仓库根目录、已登录桌面的普通用户在SSH中执行：
 
 ```bash
-./app --help
 ./app --version
 ./app info --json
-./app check --port 1 --shape round,square --panels 2 --input none --layout automotive-industrial-sbs-480 --content different
-./app start --port 1 --shape round,square --panels 2 --input none --layout automotive-industrial-sbs-480 --content different --data-source demo
-./app status --port 1 --json
-./app logs --port 1 --follow
-./app restart --port 1
+# 切换前停止原实例
 ./app stop --port 1
+./demos/same/square/demo check --port 1
+./demos/same/square/demo start --port 1
 ```
 
-run接受同样启动参数，供前台调试，与start二选一。panels必须2、input none广播到两面板、content必须different。三份独立profile要求shape、view和layout一致：
-
-| 形状 | --view | 布局前缀 | 数据源 |
-| --- | --- | --- | --- |
-| round,round（可简写round） | pc-monitor | pc-monitor-sbs-* | demo/live（PC专用JSON） |
-| round,round（可简写round） | automotive | automotive-sbs-* | demo |
-| round,round（可简写round） | flight | flight-sbs-* | demo |
-| square,square（可简写square） | industrial | industrial-sbs-* | demo |
-| round,square | automotive-industrial | automotive-industrial-sbs-* | demo/live |
-
-省略--view时按显式layout所属场景推导；双圆已有automotive和flight两个视图，不能只根据shape猜业务。旧flight和其他命令保持兼容，文档建议显式写出。单屏、touch、same和跨场景布局组合拒绝，不静默变换。新场景逻辑见[双圆/双方形场景](scenarios.md)。
-
-port必须1/2，表示HDMI-A-1/2，而不是panel编号或旧SDL索引。双屏一根信号线使用一个端口，不能用两次单屏命令代替。
-
-## 双圆汽车直接启动
+后续按需分别执行：
 
 ```bash
-./app start --port 1 --shape round --panels 2 --input none --view automotive --layout automotive-sbs-480 --content different --data-source demo
+./demos/same/square/demo status --port 1
+./demos/same/square/demo logs --port 1 --follow
+./demos/same/square/demo restart --port 1
+./demos/same/square/demo stop --port 1
 ```
 
-左车速/RPM/挡位/里程，右水温/燃油/电压/油压。两个页面均圆形安全布局，共用同一联动模拟数据，详见[汽车场景](automotive.md)。先正常stop同口当前场景再切换；v0.4.0升级前也应先用旧代码正常停止运行实例，再复制整个项目。
+run与start参数相同，用于前台调试。start后台运行，SSH断开后继续，但桌面要保持登录。restart使用保存参数，不猜新接屏幕；换板先stop、check、start。同项目同版本可显式--replace，失败尝试回退；跨版本先停止旧版。另一个项目占端口时不强杀。
 
-## 原有飞行双圆屏启动
+每个脚本接受--size 480/720/800。同显可加--signal clone或sbs，默认clone；异显始终SBS。--port 1/2指HDMI-A-1/2（Pi4板标HDMI0/1），不是左／右屏，两个面板共享一根HDMI。
 
-实际接在接口1，完整960×480@约62.825Hz，当前无需改显示信号：
+## 标准等价命令
 
 ```bash
-./app start --port 1 --shape round --panels 2 --input none --view flight --layout flight-sbs-480 --content different --data-source demo
+# 方形同显，硬件复制
+./app start --port 1 --shape square --panels 2 --input none --view product-showcase-same-square --layout product-showcase-same-square-clone-480 --content same --data-source demo
 ```
 
-左姿态/航向，右空速/高度/升降率，自动演示。stop/status/logs仍使用--port 1。
-
-## 软件布局与硬件
-
-480/720/800布局的单面板宽高分别480/720/800，完整画布960×480/1440×720/1600×800，信号60Hz（容差0.1Hz），scale1、输出normal。布局结构layout_version=1，具体映射默认version=1.0.0；flight-sbs-480为1.1.0，automotive-sbs-480为1.0.0，两者接受60Hz及本次EDID上报的约62.825226Hz（±0.1Hz），scene restart锁定该版本，不自动套用变更后的映射。
-
-verification.status=software-verified是明确的软件分区，只允许用户显式选择，不根据EDID自动匹配。hardware_verified=false、product_match=null表示尚无对应SKU/驱动板认证。与纯draft的任意布局不同，软件几何和绘图路径已有实现与检查，允许preview试用；是否支持此信号仍须按真实硬件确认。程序不强制改模式。
-
-真实输出位置和宽高通过wlr-randr读取，与GDK monitor唯一匹配后由GTK layer-shell绑定，实际窗口分配宽高也需确认才ready。模式/位置变化、断开或测试程序后来占口会故障退出，需要先恢复正确状态再start/restart。
-
-## 配置与数据
-
-examples/demo.json和examples/live.json均config_version1。fps为10～60整数，默认30；demo_speed为0.25～4的有限数，默认1，只影响demo的共享模拟时间。examples/demo-fast.json为2倍速。这些都不改HDMI刷新。live的input_file相对配置文件目录解析，CLI --config相对调用目录。
-
-原混合automotive-industrial视图的实时快照六个字段、范围、三秒新鲜度及原子更新规范见[遥测协议](telemetry.md)。demo不读取配置的input_file。live缺路径返回8，初次文件缺失/失效不报告ready，约30秒超时失败；运行后变旧显示DATA STALE、健康degraded并等待新鲜数据恢复，不回退模拟。
-
-混合live数据以5Hz后台读取，波形按30Hz保留六秒。demo每50ms更新同一场景状态，渲染帧率独立；flight有高度/VSI与航向/倾角关系，industrial有热惯性和累计流量。新automotive/flight/industrial场景拒绝live，避免将合成值冒充真实数据。FIFO/设备/目录等非普通文件被拒绝，不让GUI阻塞在特殊输入。场景只读，不写车辆/工业设备。
-
-## 后台管理、归属与旧脚本
-
-start通过私有运行请求启动一个worker，等待ready后返回；使用用户XDG_RUNTIME_DIR下screen-app共享连接器租约，并与圆形看板识别相同协议。其他项目占口时返回冲突，stop/replace不会杀别人的实例。相同参数/配置重复启动幂等。
-
-同项目同版本--replace失败时尝试原配置和布局恢复，其他版本/其他项目需先正常停止。回退不恢复外部编辑的配置或数据文件。run和start互斥；不按过期PID文件发信号，不killall、不退出桌面。
-
-日志位于XDG_STATE_HOME（默认~/.local/state）下screen-app/dual-instrument-dashboard目录；status含完整特性、布局/面板、真实模式/viewport、renderer、帧数、遥测及health。CLI查询JSON，run生命周期和logs --follow --json按行JSON。
-
-旧run.sh保留Pygame路径，明确./setup.sh --legacy-pygame安装后才用。之前文档中的tekgroaml-instruments.service如果还运行，先systemctl --user stop tekgroaml-instruments.service；新预检会报告其占用。默认安装只补原生依赖，不自动运行任何应用或开机服务。
-
-SSH断开后start可继续运行，前提是同用户图形桌面保持登录；重启/退出桌面不承诺自动恢复。完整[复制与SSH指南](raspberry-pi-ssh.md)可独立使用，不依赖application总目录。
-
-## 返回码与内部上下文
-
-0成功/幂等；2参数；3能力/模式/布局；4占用/归属；5会话/依赖；6配置/版本；7启动/健康；8缺少live配置。
-
-内部run --context <file>与公开启动参数互斥。上下文须当前用户拥有、私有权限、contract_version1、app-id和app_version匹配，仍重新规范化和校验所有特性/布局。正常客户直接使用公开参数，不需要生成上下文。
-
-## 目录与维护
-
-布局物理文件迁移到各scenes/<id>/layouts/，公开布局ID和既有版本不变。scene_app通用运行管理只依赖scenes/registry.py声明，不为每个新场景增加分支。common/复用绘图、卡片、时间和JSON数据校验。旧gauges路径只做兼容转接。详见[架构规范](architecture.md)。
-
-## 机箱电脑状态屏
-
 ```bash
-./app start --port 1 --shape round --panels 2 --input none --view pc-monitor --layout pc-monitor-sbs-480 --content different --data-source demo
+# 圆形同显，硬件复制
+./app start --port 1 --shape round --panels 2 --input none --view product-showcase-same --layout product-showcase-same-clone-480 --content same --data-source demo
 ```
 
-双圆左CPU/内存、右GPU/散热。live用examples/pc-monitor-live.json，读取目标电脑的专用schema_version1快照；要求来源pc_name和采样Unix时间，超过5秒或超前2秒视为过期。缺传感器为“—”，不使用Pi本地数据。PC480布局接受60和约62.825Hz，其他尺寸60Hz。详情与可选Windows采集见[PC指南](pc-monitor.md)。
-
-## 产品用途演示
+```bash
+# 方形异显
+./app start --port 1 --shape square --panels 2 --input none --view product-showcase-square --layout product-showcase-square-sbs-480 --content different --data-source demo
+```
 
 ```bash
+# 圆形异显
 ./app start --port 1 --shape round --panels 2 --input none --view product-showcase --layout product-showcase-sbs-480 --content different --data-source demo
 ```
 
-独立目录的./demos/product_showcase/demo start --port 1是此命令的简写。每段标题3秒/效果10秒，三场景39秒循环。只能demo，普通demo_speed必须1；文案/节奏通过playlist.json维护。复用同一租约与窗口，保持标准status/logs/stop接口；完整使用见[演示指南](../demos/product_showcase/README.md)。
+每条命令是独立选择，切换前stop；不要整段全部粘贴。旧入口demos/product_showcase/demo、square_showcase/demo、same_showcase/demo仍可用，推荐新分组路径。
 
-## 方形双屏产品演示（0.7.0）
+## 单独应用
+
+所有应用使用--panels 2 --input none，shape/content必须与profile匹配。省略view可从显式layout推导，不能仅按形状猜业务。
+
+| 形状／content | view | layout前缀 | source |
+| --- | --- | --- | --- |
+| 圆形／same | music-ambient | music-ambient-sbs-* | demo |
+| 圆形／same | ambient-light | ambient-light-sbs-* | demo |
+| 圆形／same | ambient-clock | ambient-clock-sbs-* | demo |
+| 方形／same | store-signage | store-signage-sbs-* | demo |
+| 方形／same | meeting-room | meeting-room-sbs-* | demo |
+| 方形／same | parcel-status | parcel-status-sbs-* | demo |
+| 圆形／different | flight | flight-sbs-* | demo |
+| 圆形／different | automotive | automotive-sbs-* | demo |
+| 圆形／different | pc-monitor | pc-monitor-sbs-* | demo/live |
+| 方形／different | smart-home | smart-home-sbs-* | demo |
+| 方形／different | pc-monitor-square | pc-monitor-square-sbs-* | demo |
+| 方形／different | industrial | industrial-sbs-* | demo |
+| round,square／different | automotive-industrial | automotive-industrial-sbs-* | demo/live |
+
+同显应用均另有view=<名称>-clone和layout=<名称>-clone-*，输入单幅方形图像。比如：
 
 ```bash
-./app stop --port 1
-./demos/square_showcase/demo check --port 1
-./demos/square_showcase/demo start --port 1
+./app start --port 1 --shape square --panels 2 --input none --view meeting-room-clone --layout meeting-room-clone-480 --content same --data-source demo
 ```
 
-单独启动用--shape square、--panels 2、--input none、--content different、--data-source demo：smart-home搭配smart-home-sbs-480，pc-monitor-square搭配pc-monitor-square-sbs-480，industrial搭配industrial-sbs-480。完整命令、安装与播放列表见[方形演示](../demos/square_showcase/README.md)。
+## 几何和刷新率
 
-统一演示入口也接受./demos/product_showcase/demo start --port 1 --shape square。round默认保持不变。两种演示切换前先stop。方形480布局接受60和约62.825Hz，industrial-sbs-480映射版本升为1.1.0；保存的旧版本映射不自动迁移，升级后用显式start重新选择。
+SBS完整尺寸为960×480／1440×720／1600×800；clone为480×480／720×720／800×800。同显矩形通过硬件复制或同一软件光栅保证同帧；异显为两个独立区域。
+
+方形同显只声明60Hz，尚无硬件验收。圆形同显480保留已观察的clone约62.811Hz、SBS约62.825Hz；新版本不将这些速率自动用于方形。其他具体profile以info清单与布局为准。scale必须1、输出无旋转。程序不修改HDMI时序、EDID、分辨率、背光或USB触摸映射。
+
+同显／异显、形状、view、布局、source不匹配会拒绝。单屏和触摸暂不实现。布局version与app_version独立，旧私有context仍受版本校验。方形硬件需先配置正确完整输入，不能把软件布局当硬件识别。
+
+## 数据与可选工具
+
+demo始终使用模拟值，不联网真实价格、日历、物流、天气或声音。产品脚本demo_speed须为1。独立PC和混合场景的live为显式JSON协议，失效标记stale，不回退demo，详见[PC指南](pc-monitor.md)与[遥测](telemetry.md)。
+
+可选screen-test已占用时先screen-test stop --screen 1，再启动应用。pi-setting并非本项目依赖。

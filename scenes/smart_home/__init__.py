@@ -1,1 +1,1 @@
-"""Dual-square smart-home environment and energy demo."""
+"""Compatibility imports; implementation lives in scenes/different/smart_home."""

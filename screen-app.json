@@ -3,7 +3,7 @@
   "contract_version": 1,
   "id": "dual-instrument-dashboard",
   "name": "单线双屏应用与产品用途演示",
-  "version": "0.7.0",
+  "version": "0.10.0",
   "release_status": "preview",
   "repository_url": "https://github.com/tekgroaml/lvgl-embedded-gui-demos",
   "command": {
@@ -70,39 +70,184 @@
       "data_sources": [
         "demo"
       ]
+    },
+    {
+      "id": "music-ambient",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "music-ambient-clone",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "ambient-light",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "ambient-light-clone",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "ambient-clock",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "ambient-clock-clone",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "product-showcase-same",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "product-showcase-same-sbs",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "store-signage",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "store-signage-clone",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "meeting-room",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "meeting-room-clone",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "parcel-status",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "parcel-status-clone",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "product-showcase-same-square",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "product-showcase-same-square-sbs",
+      "data_sources": [
+        "demo"
+      ]
     }
   ],
   "content_modes": [
-    "different"
+    "different",
+    "same"
   ],
   "layouts": [
-    "scenes/automotive_industrial/layouts/automotive-industrial-sbs-480.json",
-    "scenes/automotive_industrial/layouts/automotive-industrial-sbs-720.json",
-    "scenes/automotive_industrial/layouts/automotive-industrial-sbs-800.json",
-    "scenes/flight/layouts/flight-sbs-480.json",
-    "scenes/flight/layouts/flight-sbs-720.json",
-    "scenes/flight/layouts/flight-sbs-800.json",
-    "scenes/industrial/layouts/industrial-sbs-480.json",
-    "scenes/industrial/layouts/industrial-sbs-720.json",
-    "scenes/industrial/layouts/industrial-sbs-800.json",
-    "scenes/automotive/layouts/automotive-sbs-480.json",
-    "scenes/automotive/layouts/automotive-sbs-720.json",
-    "scenes/automotive/layouts/automotive-sbs-800.json",
-    "scenes/pc_monitor/layouts/pc-monitor-sbs-480.json",
-    "scenes/pc_monitor/layouts/pc-monitor-sbs-720.json",
-    "scenes/pc_monitor/layouts/pc-monitor-sbs-800.json",
-    "demos/product_showcase/layouts/product-showcase-sbs-480.json",
-    "demos/product_showcase/layouts/product-showcase-sbs-720.json",
-    "demos/product_showcase/layouts/product-showcase-sbs-800.json",
-    "scenes/smart_home/layouts/smart-home-sbs-480.json",
-    "scenes/smart_home/layouts/smart-home-sbs-720.json",
-    "scenes/smart_home/layouts/smart-home-sbs-800.json",
-    "scenes/pc_monitor_square/layouts/pc-monitor-square-sbs-480.json",
-    "scenes/pc_monitor_square/layouts/pc-monitor-square-sbs-720.json",
-    "scenes/pc_monitor_square/layouts/pc-monitor-square-sbs-800.json",
-    "demos/square_showcase/layouts/product-showcase-square-sbs-480.json",
-    "demos/square_showcase/layouts/product-showcase-square-sbs-720.json",
-    "demos/square_showcase/layouts/product-showcase-square-sbs-800.json"
+    "scenes/different/automotive_industrial/layouts/automotive-industrial-sbs-480.json",
+    "scenes/different/automotive_industrial/layouts/automotive-industrial-sbs-720.json",
+    "scenes/different/automotive_industrial/layouts/automotive-industrial-sbs-800.json",
+    "scenes/different/flight/layouts/flight-sbs-480.json",
+    "scenes/different/flight/layouts/flight-sbs-720.json",
+    "scenes/different/flight/layouts/flight-sbs-800.json",
+    "scenes/different/industrial/layouts/industrial-sbs-480.json",
+    "scenes/different/industrial/layouts/industrial-sbs-720.json",
+    "scenes/different/industrial/layouts/industrial-sbs-800.json",
+    "scenes/different/automotive/layouts/automotive-sbs-480.json",
+    "scenes/different/automotive/layouts/automotive-sbs-720.json",
+    "scenes/different/automotive/layouts/automotive-sbs-800.json",
+    "scenes/different/pc_monitor/layouts/pc-monitor-sbs-480.json",
+    "scenes/different/pc_monitor/layouts/pc-monitor-sbs-720.json",
+    "scenes/different/pc_monitor/layouts/pc-monitor-sbs-800.json",
+    "demos/different/round/layouts/product-showcase-sbs-480.json",
+    "demos/different/round/layouts/product-showcase-sbs-720.json",
+    "demos/different/round/layouts/product-showcase-sbs-800.json",
+    "scenes/different/smart_home/layouts/smart-home-sbs-480.json",
+    "scenes/different/smart_home/layouts/smart-home-sbs-720.json",
+    "scenes/different/smart_home/layouts/smart-home-sbs-800.json",
+    "scenes/different/pc_monitor_square/layouts/pc-monitor-square-sbs-480.json",
+    "scenes/different/pc_monitor_square/layouts/pc-monitor-square-sbs-720.json",
+    "scenes/different/pc_monitor_square/layouts/pc-monitor-square-sbs-800.json",
+    "demos/different/square/layouts/product-showcase-square-sbs-480.json",
+    "demos/different/square/layouts/product-showcase-square-sbs-720.json",
+    "demos/different/square/layouts/product-showcase-square-sbs-800.json",
+    "scenes/same/round/music_ambient/layouts/music-ambient-sbs-480.json",
+    "scenes/same/round/music_ambient/layouts/music-ambient-sbs-720.json",
+    "scenes/same/round/music_ambient/layouts/music-ambient-sbs-800.json",
+    "scenes/same/round/music_ambient/layouts/music-ambient-clone-480.json",
+    "scenes/same/round/music_ambient/layouts/music-ambient-clone-720.json",
+    "scenes/same/round/music_ambient/layouts/music-ambient-clone-800.json",
+    "scenes/same/round/ambient_light/layouts/ambient-light-sbs-480.json",
+    "scenes/same/round/ambient_light/layouts/ambient-light-sbs-720.json",
+    "scenes/same/round/ambient_light/layouts/ambient-light-sbs-800.json",
+    "scenes/same/round/ambient_light/layouts/ambient-light-clone-480.json",
+    "scenes/same/round/ambient_light/layouts/ambient-light-clone-720.json",
+    "scenes/same/round/ambient_light/layouts/ambient-light-clone-800.json",
+    "scenes/same/round/ambient_clock/layouts/ambient-clock-sbs-480.json",
+    "scenes/same/round/ambient_clock/layouts/ambient-clock-sbs-720.json",
+    "scenes/same/round/ambient_clock/layouts/ambient-clock-sbs-800.json",
+    "scenes/same/round/ambient_clock/layouts/ambient-clock-clone-480.json",
+    "scenes/same/round/ambient_clock/layouts/ambient-clock-clone-720.json",
+    "scenes/same/round/ambient_clock/layouts/ambient-clock-clone-800.json",
+    "demos/same/round/layouts/product-showcase-same-clone-480.json",
+    "demos/same/round/layouts/product-showcase-same-clone-720.json",
+    "demos/same/round/layouts/product-showcase-same-clone-800.json",
+    "demos/same/round/layouts/product-showcase-same-sbs-480.json",
+    "demos/same/round/layouts/product-showcase-same-sbs-720.json",
+    "demos/same/round/layouts/product-showcase-same-sbs-800.json",
+    "scenes/same/square/store_signage/layouts/store-signage-sbs-480.json",
+    "scenes/same/square/store_signage/layouts/store-signage-sbs-720.json",
+    "scenes/same/square/store_signage/layouts/store-signage-sbs-800.json",
+    "scenes/same/square/store_signage/layouts/store-signage-clone-480.json",
+    "scenes/same/square/store_signage/layouts/store-signage-clone-720.json",
+    "scenes/same/square/store_signage/layouts/store-signage-clone-800.json",
+    "scenes/same/square/meeting_room/layouts/meeting-room-sbs-480.json",
+    "scenes/same/square/meeting_room/layouts/meeting-room-sbs-720.json",
+    "scenes/same/square/meeting_room/layouts/meeting-room-sbs-800.json",
+    "scenes/same/square/meeting_room/layouts/meeting-room-clone-480.json",
+    "scenes/same/square/meeting_room/layouts/meeting-room-clone-720.json",
+    "scenes/same/square/meeting_room/layouts/meeting-room-clone-800.json",
+    "scenes/same/square/parcel_status/layouts/parcel-status-sbs-480.json",
+    "scenes/same/square/parcel_status/layouts/parcel-status-sbs-720.json",
+    "scenes/same/square/parcel_status/layouts/parcel-status-sbs-800.json",
+    "scenes/same/square/parcel_status/layouts/parcel-status-clone-480.json",
+    "scenes/same/square/parcel_status/layouts/parcel-status-clone-720.json",
+    "scenes/same/square/parcel_status/layouts/parcel-status-clone-800.json",
+    "demos/same/square/layouts/product-showcase-same-square-clone-480.json",
+    "demos/same/square/layouts/product-showcase-same-square-clone-720.json",
+    "demos/same/square/layouts/product-showcase-same-square-clone-800.json",
+    "demos/same/square/layouts/product-showcase-same-square-sbs-480.json",
+    "demos/same/square/layouts/product-showcase-same-square-sbs-720.json",
+    "demos/same/square/layouts/product-showcase-same-square-sbs-800.json"
   ],
   "capabilities": {
     "multi_instance": true,
@@ -479,6 +624,630 @@
         "product-showcase-square-sbs-720",
         "product-showcase-square-sbs-800"
       ]
+    },
+    {
+      "id": "sbs-music-ambient",
+      "topology": "single-link-dual",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "music-ambient"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "same"
+      ],
+      "layout_ids": [
+        "music-ambient-sbs-480",
+        "music-ambient-sbs-720",
+        "music-ambient-sbs-800"
+      ]
+    },
+    {
+      "id": "clone-music-ambient-clone",
+      "topology": "single-link-clone",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "music-ambient-clone"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "same"
+      ],
+      "layout_ids": [
+        "music-ambient-clone-480",
+        "music-ambient-clone-720",
+        "music-ambient-clone-800"
+      ]
+    },
+    {
+      "id": "sbs-ambient-light",
+      "topology": "single-link-dual",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "ambient-light"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "same"
+      ],
+      "layout_ids": [
+        "ambient-light-sbs-480",
+        "ambient-light-sbs-720",
+        "ambient-light-sbs-800"
+      ]
+    },
+    {
+      "id": "clone-ambient-light-clone",
+      "topology": "single-link-clone",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "ambient-light-clone"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "same"
+      ],
+      "layout_ids": [
+        "ambient-light-clone-480",
+        "ambient-light-clone-720",
+        "ambient-light-clone-800"
+      ]
+    },
+    {
+      "id": "sbs-ambient-clock",
+      "topology": "single-link-dual",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "ambient-clock"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "same"
+      ],
+      "layout_ids": [
+        "ambient-clock-sbs-480",
+        "ambient-clock-sbs-720",
+        "ambient-clock-sbs-800"
+      ]
+    },
+    {
+      "id": "clone-ambient-clock-clone",
+      "topology": "single-link-clone",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "ambient-clock-clone"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "same"
+      ],
+      "layout_ids": [
+        "ambient-clock-clone-480",
+        "ambient-clock-clone-720",
+        "ambient-clock-clone-800"
+      ]
+    },
+    {
+      "id": "clone-product-showcase-same",
+      "topology": "single-link-clone",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "product-showcase-same"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "same"
+      ],
+      "layout_ids": [
+        "product-showcase-same-clone-480",
+        "product-showcase-same-clone-720",
+        "product-showcase-same-clone-800"
+      ]
+    },
+    {
+      "id": "sbs-product-showcase-same-sbs",
+      "topology": "single-link-dual",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "product-showcase-same-sbs"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "same"
+      ],
+      "layout_ids": [
+        "product-showcase-same-sbs-480",
+        "product-showcase-same-sbs-720",
+        "product-showcase-same-sbs-800"
+      ]
+    },
+    {
+      "id": "sbs-store-signage",
+      "topology": "single-link-dual",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "store-signage"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "same"
+      ],
+      "layout_ids": [
+        "store-signage-sbs-480",
+        "store-signage-sbs-720",
+        "store-signage-sbs-800"
+      ]
+    },
+    {
+      "id": "clone-store-signage-clone",
+      "topology": "single-link-clone",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "store-signage-clone"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "same"
+      ],
+      "layout_ids": [
+        "store-signage-clone-480",
+        "store-signage-clone-720",
+        "store-signage-clone-800"
+      ]
+    },
+    {
+      "id": "sbs-meeting-room",
+      "topology": "single-link-dual",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "meeting-room"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "same"
+      ],
+      "layout_ids": [
+        "meeting-room-sbs-480",
+        "meeting-room-sbs-720",
+        "meeting-room-sbs-800"
+      ]
+    },
+    {
+      "id": "clone-meeting-room-clone",
+      "topology": "single-link-clone",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "meeting-room-clone"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "same"
+      ],
+      "layout_ids": [
+        "meeting-room-clone-480",
+        "meeting-room-clone-720",
+        "meeting-room-clone-800"
+      ]
+    },
+    {
+      "id": "sbs-parcel-status",
+      "topology": "single-link-dual",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "parcel-status"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "same"
+      ],
+      "layout_ids": [
+        "parcel-status-sbs-480",
+        "parcel-status-sbs-720",
+        "parcel-status-sbs-800"
+      ]
+    },
+    {
+      "id": "clone-parcel-status-clone",
+      "topology": "single-link-clone",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "parcel-status-clone"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "same"
+      ],
+      "layout_ids": [
+        "parcel-status-clone-480",
+        "parcel-status-clone-720",
+        "parcel-status-clone-800"
+      ]
+    },
+    {
+      "id": "clone-product-showcase-same-square",
+      "topology": "single-link-clone",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "product-showcase-same-square"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "same"
+      ],
+      "layout_ids": [
+        "product-showcase-same-square-clone-480",
+        "product-showcase-same-square-clone-720",
+        "product-showcase-same-square-clone-800"
+      ]
+    },
+    {
+      "id": "sbs-product-showcase-same-square-sbs",
+      "topology": "single-link-dual",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "product-showcase-same-square-sbs"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "same"
+      ],
+      "layout_ids": [
+        "product-showcase-same-square-sbs-480",
+        "product-showcase-same-square-sbs-720",
+        "product-showcase-same-square-sbs-800"
+      ]
     }
   ],
   "verification": {
@@ -489,9 +1258,12 @@
       "Automotive: dedicated dual-round drive-speed and engine-status panels; demo-only linked speed/gear/RPM/temperature/fuel/voltage/trip data.",
       "Automotive dual480 accepts 60Hz and the observed native ~62.825226Hz without changing hardware modes. Its physical scene acceptance is pending.",
       "Flight/industrial/mixed commands remain compatible; prior physical flight evidence is historical and does not certify the new automotive scene.",
-      "No touch or same-content support; no real OBD/vehicle control or automotive live protocol is declared.",
+      "No touch support or real OBD/vehicle control. Same-content is declared by round music/lighting/clock, square retail/meeting/parcel and their showcases; existing instrument/showcase views remain different-content.",
       "PC-monitor scene: simulated linked CPU/GPU workloads or explicit JSON from a monitored computer; missing sensors are unavailable, not invented or replaced with local Pi metrics.",
-      "Product showcase is an independent demo-only playlist: flight, automotive, PC-monitor; title3s/effect10s; one39s loop in one surface. No live data or device control."
+      "Product showcase is an independent demo-only playlist: flight, automotive, PC-monitor; title3s/effect10s; one39s loop in one surface. No live data or device control.",
+      "Music scenes use simulated beat envelopes with no audio capture/output. SBS copies one raster to two round regions; clone uses one square input duplicated by the hardware board. Physical acceptance is separate from software checks.",
+      "Same-content showcase: simulated music, RGB light and demo time/weather;3s identical intros +10s effects,39s loop. Default hardware clone or explicit SBS. No audio, network weather or physical lighting control.",
+      "Version0.10.0 groups canonical code by same/different content and shape. Square same-content uses retail promotions, room status and parcel pickup; all simulated,60Hz mappings, no physical square acceptance. Legacy command/import adapters preserve IDs. Local-only validation; no Pi deployment this release."
     ],
     "tested_configurations": [
       {
@@ -509,5 +1281,9 @@
         "scope": "One physical setup; no universal SKU matching, touch or long-duration certification."
       }
     ]
-  }
+  },
+  "topologies": [
+    "single-link-dual",
+    "single-link-clone"
+  ]
 }

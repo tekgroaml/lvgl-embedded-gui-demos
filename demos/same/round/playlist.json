@@ -1,0 +1,40 @@
+{
+  "playlist_version": 1,
+  "intro_seconds": 3,
+  "effect_seconds": 10,
+  "stages": [
+    {
+      "view": "music-ambient",
+      "icon": "music",
+      "title": "MUSIC VISUALIZER",
+      "subtitle": "Feel the rhythm. See the color.",
+      "panel_labels": [
+        "SYNCHRONIZED SPECTRUM",
+        "SIMULATED MUSIC PULSE"
+      ],
+      "demo_start_seconds": 12
+    },
+    {
+      "view": "ambient-light",
+      "icon": "light",
+      "title": "RGB AMBIENT LIGHT",
+      "subtitle": "A colorful mood for your space.",
+      "panel_labels": [
+        "FLOWING RGB RIBBONS",
+        "BREATHING COLOR HALO"
+      ],
+      "demo_start_seconds": 4
+    },
+    {
+      "view": "ambient-clock",
+      "icon": "clock",
+      "title": "DESKTOP INFO CLOCK",
+      "subtitle": "Time and style at a glance.",
+      "panel_labels": [
+        "ANALOG / DIGITAL CLOCK",
+        "DEMO TIME / SAMPLE WEATHER"
+      ],
+      "demo_start_seconds": 0
+    }
+  ]
+}

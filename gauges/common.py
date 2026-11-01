@@ -7,7 +7,7 @@ import sys
 
 from common.theme import BG, PANEL, TEXT, MUTED, CYAN, RED, AMBER
 from common.telemetry import Telemetry
-from scenes.automotive_industrial.model import TelemetrySource
+from scenes.different.automotive_industrial.model import TelemetrySource
 
 
 class Painter:

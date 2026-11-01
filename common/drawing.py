@@ -60,18 +60,46 @@ class CairoPainter:
 def draw_scene(context, layout, left, right, data, paused=False):
     context.save()
     context.set_source_rgb(0,0,0);context.paint()
-    for panel, view in zip(layout['panels'],(left,right)):
-        rect=panel['rect']
+    if layout.get('content_mode')=='same':
+        # Render one raster tile, then copy it at integer-pixel offsets. This
+        # avoids independent animation state and subpixel rounding differences.
+        first=layout['panels'][0]
+        rect=first['rect']
         context.save()
-        context.translate(rect['x'],rect['y'])
-        context.scale(rect['width']/480,rect['height']/480)
-        context.new_path()
-        if panel['shape']=='round':
-            context.arc(240,240,240,0,math.tau)
-        else:
-            context.rectangle(0,0,480,480)
-        context.clip()
-        context.set_source_rgb(9/255,15/255,23/255);context.paint()
-        view.draw(CairoPainter(context),data,paused)
+        context.rectangle(rect['x'],rect['y'],rect['width'],rect['height']);context.clip()
+        context.push_group()
+        draw_panel(context,first,left,data,paused)
+        tile=context.pop_group()
         context.restore()
+        painted=set()
+        for panel in layout['panels']:
+            target=panel['rect']
+            key=tuple(target[k] for k in ('x','y','width','height'))
+            if key in painted:continue
+            painted.add(key)
+            context.save()
+            context.translate(target['x']-rect['x'],target['y']-rect['y'])
+            context.rectangle(rect['x'],rect['y'],rect['width'],rect['height']);context.clip()
+            context.set_source(tile);context.paint()
+            context.restore()
+        context.restore()
+        return
+    for panel, view in zip(layout['panels'],(left,right)):
+        draw_panel(context,panel,view,data,paused)
+    context.restore()
+
+
+def draw_panel(context,panel,view,data,paused=False):
+    rect=panel['rect']
+    context.save()
+    context.translate(rect['x'],rect['y'])
+    context.scale(rect['width']/480,rect['height']/480)
+    context.new_path()
+    if panel['shape']=='round':
+        context.arc(240,240,240,0,math.tau)
+    else:
+        context.rectangle(0,0,480,480)
+    context.clip()
+    context.set_source_rgb(9/255,15/255,23/255);context.paint()
+    view.draw(CairoPainter(context),data,paused)
     context.restore()

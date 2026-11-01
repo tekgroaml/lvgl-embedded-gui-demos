@@ -1,1 +1,1 @@
-"""Three-use-case, single-window product showcase."""
+"""Compatibility imports; implementation lives in demos/different/round."""

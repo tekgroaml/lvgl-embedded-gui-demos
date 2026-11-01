@@ -1,1 +1,1 @@
-"""scenes automotive_industrial package."""
+"""Compatibility imports; implementation lives in scenes/different/automotive_industrial."""

@@ -45,21 +45,25 @@ def load_layout(layout_id):
         if not condition:
             raise ValueError('Incompatible layout')
     try:
-        require(data['layout_version'] == 1 and data['topology'] == 'single-link-dual')
+        require(scene.topology in ('single-link-dual','single-link-clone'))
+        require(data['layout_version'] == 1 and data['topology'] == scene.topology)
         expected_version = scene.layout_version(expected_size)
         require(data['id'] == layout_id and data['version'] == expected_version)
         require(data['verification']['status'] == 'software-verified')
+        require(data.get('content_mode','different') in scene.content_modes)
+        if scene.topology=='single-link-clone':
+            require(data.get('content_mode')=='same' and scene.shapes[0]==scene.shapes[1])
         signal = data['signal_mode']; viewport = data['viewport']; panels = data['panels']
         size = signal['height']
-        require(size == expected_size and signal['width'] == size * 2 and signal['refresh_hz'] == 60)
+        require(size == expected_size and signal['width'] == size * scene.input_columns and signal['refresh_hz'] == 60)
         expected_rates = scene.rates(expected_size)
         require(signal.get('accepted_refresh_hz', [signal['refresh_hz']]) == expected_rates)
-        require(viewport == {'width': size*2, 'height': size, 'scale': 1, 'rotation_deg': 0})
+        require(viewport == {'width': size*scene.input_columns, 'height': size, 'scale': 1, 'rotation_deg': 0})
         require(len(panels) == 2)
         for index, (panel, shape) in enumerate(zip(panels, scene.shapes)):
             require(panel['panel'] == index+1 and panel['shape'] == shape and panel['input'] == 'none')
             require(panel['view'] == scene.panel_ids[index])
-            require(panel['rect'] == {'x': index*size, 'y': 0, 'width': size, 'height': size})
+            require(panel['rect'] == {'x': index*size if scene.input_columns==2 else 0, 'y': 0, 'width': size, 'height': size})
             require(panel['visual_rotation_deg'] == 0 and panel['safe_inset_percent'] == 0)
     except (ValueError, KeyError, TypeError):
         raise AppError('Installed layout schema/geometry is incompatible.', 6) from None
@@ -81,14 +85,15 @@ def normalize(values):
     inputs = expand(values.get('input','none'), count, ('touch','none'))
     if count != 2 or inputs != ['none','none']:
         raise AppError('This project supports two panels without touch interaction.', 3)
-    if values.get('content') != 'different':
-        raise AppError('Specify --content different; same-content mode is not implemented.', 3)
     layout_id=values.get('layout')
     layout=load_layout(layout_id)
     scene,_=LAYOUTS[layout_id]
     view=values.get('view') or scene.id
     if view not in DEFINITIONS or view != scene.id or shapes != list(scene.shapes):
         raise AppError('The shape, view and layout must belong to the same scene. See ./app info --json.', 3)
+    content=values.get('content')
+    if content not in scene.content_modes or content!=layout.get('content_mode','different'):
+        raise AppError(f'{view} requires --content '+layout.get('content_mode','different')+'.',3)
     source=values.get('data_source','demo')
     if source not in ('demo','live'):
         raise AppError('Use --data-source demo or live.',2)
@@ -101,8 +106,8 @@ def normalize(values):
     if config is not None and not isinstance(config, str):
         raise AppError('Configuration path must be text.', 6)
     return {'contract_version':1,'app_id':APP_ID,'app_version':VERSION,'port':port,'panels':2,
-            'shape':shapes,'input':inputs,'topology':'single-link-dual','profile_id':'sbs-'+view,
-            'view':view,'content':'different','layout':layout['id'],'layout_version':layout['version'],
+            'shape':shapes,'input':inputs,'topology':scene.topology,'profile_id':scene.profile_id,
+            'view':view,'content':content,'layout':layout['id'],'layout_version':layout['version'],
             'data_source':source,'config':str(Path(config).expanduser().resolve()) if config else None}
 
 

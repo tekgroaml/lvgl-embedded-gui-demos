@@ -18,7 +18,7 @@ from . import runtime
 
 
 def parser():
-    p = argparse.ArgumentParser(prog="./app", description="Instruments: one HDMI output carrying registered PC, automotive, flight, pump or mixed scenes")
+    p = argparse.ArgumentParser(prog="./app", description="One HDMI output carrying registered same-content music or different-content dashboard scenes")
     p.add_argument("--version", action="version", version=VERSION)
     commands = p.add_subparsers(dest="action", required=True)
     info = commands.add_parser("info", help="Show version, implemented profiles and verification limits")

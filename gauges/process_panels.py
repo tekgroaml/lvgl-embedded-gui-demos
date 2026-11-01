@@ -1,2 +1,2 @@
-"""Compatibility import; scene code moved to scenes/industrial/panels.py."""
-from scenes.industrial.panels import PumpPanel, ProcessTrends
+"""Compatibility import; scene code moved to scenes/different/industrial/panels.py."""
+from scenes.different.industrial.panels import PumpPanel, ProcessTrends

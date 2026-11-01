@@ -4,8 +4,10 @@
 | --- | --- |
 | definition.py | 场景声明、工厂、数据能力及布局版本/刷新率规则 |
 | theme.py | 公共配色 |
-| drawing.py | CairoPainter、整张SBS画布与各面板形状裁剪 |
+| drawing.py | CairoPainter、整张SBS画布、面板裁剪与same模式单光栅复制 |
 | components.py | 圆形底框、模拟标记和指标卡片 |
+| neon.py | 鲜艳圆形色环、光晕、图标，无音频或媒体依赖 |
+| signage.py | 方形同显看板的视觉时钟、标题、进度和标签 |
 | square.py | 方屏页头、模拟标记、负载条、风扇与有界10秒趋势 |
 | simulation.py | 平滑函数与模拟时间有效性检查 |
 | snapshots.py | 公共有界普通JSON快照读取，拒绝FIFO/设备和超大文件 |

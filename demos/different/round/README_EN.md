@@ -25,8 +25,8 @@ cd ~/apps/lvgl-embedded-gui-demos
 ./setup.sh --install-only
 ./app --version
 ./app stop --port 1
-./demos/product_showcase/demo check --port 1
-./demos/product_showcase/demo start --port 1
+./demos/different/round/demo check --port 1
+./demos/different/round/demo start --port 1
 ```
 
 Port1 meansHDMI-A-1/Pi4 boardHDMI0. Use port2 consistently forHDMI-A-2. Default is two480×480 circular regions in one960×480 output at60Hz or the observed~62.825Hz. Other explicit --size720/800 options require1440×720/1600×800 at60Hz and matching hardware. No signal settings are changed.
@@ -34,9 +34,9 @@ Port1 meansHDMI-A-1/Pi4 boardHDMI0. Use port2 consistently forHDMI-A-2. Default 
 The same user must already own a logged-in Wayland/labwc desktop. SSH alone does not create a graphical session. No browser, player, pip or icon-font download is added.
 
 ```bash
-./demos/product_showcase/demo status --port 1
-./demos/product_showcase/demo logs --port 1 --follow
-./demos/product_showcase/demo stop --port 1
+./demos/different/round/demo status --port 1
+./demos/different/round/demo logs --port 1 --follow
+./demos/different/round/demo stop --port 1
 ```
 
 Ctrl+C in logs only stops following. Background start can continue after SSH disconnect while the desktop remains logged in; no reboot autostart is installed. Foreground debugging uses run instead of start. Existing occupancy/ownership rules apply, so another project is never killed to obtain the connector.
@@ -69,4 +69,4 @@ During each3s introduction, the left panel exclusively presents the TEKGROAML wo
 
 ## Square panels
 
-Use the[separate square showcase](../square_showcase/README_EN.md), or./demos/product_showcase/demo start --port 1 --shape square. Stop before switching. The original default remains round.
+Use the[separate square showcase](../square/README_EN.md), or./demos/different/round/demo start --port 1 --shape square. Stop before switching. The original default remains round.

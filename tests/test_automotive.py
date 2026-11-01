@@ -9,7 +9,7 @@ from unittest.mock import Mock
 
 from common.telemetry import Telemetry,JsonTelemetrySource
 from scenes.registry import DEFINITIONS,LAYOUTS,SCENES,make_scene
-from scenes.automotive.model import AutomotiveDemo,driving_profile,drivetrain
+from scenes.different.automotive.model import AutomotiveDemo,driving_profile,drivetrain
 from scene_app.config import normalize,prepare,load_layout
 from scene_app.display import geometry
 from scene_app.worker import Worker
@@ -143,12 +143,12 @@ class SceneArchitectureTests(unittest.TestCase):
 
     def test_legacy_modules_are_aliases_of_the_same_implementations(self):
         from gauges.scenarios import FlightDemo,ProcessDemo
-        from scenes.flight.model import FlightDemo as NewFlight
-        from scenes.industrial.model import ProcessDemo as NewProcess
+        from scenes.different.flight.model import FlightDemo as NewFlight
+        from scenes.different.industrial.model import ProcessDemo as NewProcess
         from gauges.automotive_gauge import AutomotiveGauge
-        from scenes.automotive_industrial.automotive_panel import AutomotiveGauge as NewAutomotive
+        from scenes.different.automotive_industrial.automotive_panel import AutomotiveGauge as NewAutomotive
         from gauges.industrial_panel import IndustrialPanel
-        from scenes.automotive_industrial.industrial_panel import IndustrialPanel as NewIndustrial
+        from scenes.different.automotive_industrial.industrial_panel import IndustrialPanel as NewIndustrial
         self.assertIs(FlightDemo,NewFlight);self.assertIs(ProcessDemo,NewProcess)
         self.assertIs(AutomotiveGauge,NewAutomotive);self.assertIs(IndustrialPanel,NewIndustrial)
 

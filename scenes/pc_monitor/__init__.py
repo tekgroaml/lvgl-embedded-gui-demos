@@ -1,1 +1,1 @@
-"""PC case dashboard scene, with explicitly separate demo and host telemetry."""
+"""Compatibility imports; implementation lives in scenes/different/pc_monitor."""

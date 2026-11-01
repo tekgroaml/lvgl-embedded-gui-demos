@@ -8,17 +8,17 @@ import unittest
 from unittest.mock import Mock,patch
 
 from common.square import History
-from demos.product_showcase.cli import parser,command
-from demos.product_showcase.playback import ShowcaseSource,Timeline,load_playlist
-from demos.square_showcase.playback import SquareShowcaseSource,PLAYLIST,VIEWS,ICONS
-from demos.square_showcase.panels import LeftPanel,RightPanel
+from demos.shared.cli import parser,command
+from demos.different.round.playback import ShowcaseSource,Timeline,load_playlist
+from demos.different.square.playback import SquareShowcaseSource,PLAYLIST,VIEWS,ICONS
+from demos.different.square.panels import LeftPanel,RightPanel
 from scene_app.config import normalize,prepare,load_layout
 from scene_app.display import geometry
 from scene_app.errors import AppError
 from scenes.registry import definition
-from scenes.smart_home.model import HomeDemo
-from scenes.pc_monitor.model import PcDemo
-from scenes.pc_monitor_square.model import PcSquareDemo
+from scenes.different.smart_home.model import HomeDemo
+from scenes.different.pc_monitor.model import PcDemo
+from scenes.different.pc_monitor_square.model import PcSquareDemo
 
 
 def request(**changes):
@@ -72,9 +72,9 @@ class SquarePlaybackTests(unittest.TestCase):
         source=SquareShowcaseSource()
         for t in (0,13,26):
             data=source.read(t);left,right=LeftPanel(),RightPanel()
-            with patch('demos.product_showcase.panels.fitted_text') as fitted,\
-                 patch('demos.product_showcase.panels.draw_icon') as icon,\
-                 patch('demos.product_showcase.panels.round_frame') as circle:
+            with patch('demos.shared.panels.fitted_text') as fitted,\
+                 patch('demos.shared.panels.draw_icon') as icon,\
+                 patch('demos.shared.panels.round_frame') as circle:
                 left.draw(Mock(),data)
                 self.assertIn('TEKGROAML',[c.args[1] for c in fitted.call_args_list])
                 icon.assert_called_once();circle.assert_not_called()

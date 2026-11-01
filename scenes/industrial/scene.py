@@ -1,8 +1,2 @@
-"""Registration and supported features for the square pump-station scene."""
-from common.definition import SceneDefinition
-
-SCENE=SceneDefinition('industrial','Dual-square pump station',('square','square'),'industrial-sbs',
-                      ('pump','process-trends'),
-                      ('scenes.industrial.panels:PumpPanel','scenes.industrial.panels:ProcessTrends'),
-                      'scenes.industrial.model:ProcessDemo',native_dual480=True,
-                      layout_versions=((480,'1.1.0'),))
+"""Compatibility adapter; use scenes.different.industrial.scene."""
+from scenes.different.industrial.scene import *

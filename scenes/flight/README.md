@@ -1,11 +1,3 @@
-# 双圆飞行
+# 兼容入口
 
-scene.py、model.py、panels.py和layouts/独立维护姿态/航向与空速/高度/VSI场景。原有--view flight、flight-sbs-*布局ID不变。仅demo。
-
-仓库根目录：
-
-```bash
-./app start --port 1 --shape round --panels 2 --input none --view flight --layout flight-sbs-480 --content different --data-source demo
-```
-
-[飞行场景说明](../../docs/scenarios.md) · [代码结构](../../docs/architecture.md)
+实际实现、安装与使用说明已迁移至[新目录](../different/flight/README.md)。旧导入或脚本仍可使用；此目录不保存第二份布局或业务实现。

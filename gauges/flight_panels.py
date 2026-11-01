@@ -1,2 +1,2 @@
-"""Compatibility import; scene code moved to scenes/flight/panels.py."""
-from scenes.flight.panels import AttitudePanel, AirDataPanel
+"""Compatibility import; scene code moved to scenes/different/flight/panels.py."""
+from scenes.different.flight.panels import AttitudePanel, AirDataPanel

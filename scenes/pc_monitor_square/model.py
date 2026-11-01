@@ -1,6 +1,2 @@
-"""Reuse PC thermal/load simulation; no second implementation or host sensors."""
-from scenes.pc_monitor.model import PcDemo
-
-
-class PcSquareDemo(PcDemo):
-    """Scene-owned demo factory sharing the existing PC dynamics."""
+"""Compatibility adapter; use scenes.different.pc_monitor_square.model."""
+from scenes.different.pc_monitor_square.model import *

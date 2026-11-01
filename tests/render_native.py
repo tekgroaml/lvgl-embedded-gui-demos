@@ -42,13 +42,18 @@ def main():
         corner=pixels[start:start+3]
         if panel['shape']=='round':assert set(corner)=={0},'circular panel corners must be black'
         else:assert any(corner),'square panel corners remain usable'
-    left=bytearray();right=bytearray()
-    for row in range(height):
-        start=row*stride
-        left.extend(pixels[start:start+args.size*4])
-        right.extend(pixels[start+args.size*4:start+width*4])
-    assert left!=right,'SBS regions must show different content'
-    print(f'PASS: {args.view}, {width}x{height}, two distinct panels with correct masks -> {args.output}')
+    regions=[]
+    for panel in layout['panels']:
+        rect=panel['rect'];region=bytearray()
+        for row in range(rect['y'],rect['y']+rect['height']):
+            start=row*stride+rect['x']*4
+            region.extend(pixels[start:start+rect['width']*4])
+        regions.append(region)
+    left,right=regions
+    same=layout.get('content_mode')=='same'
+    assert (left==right) if same else (left!=right),'SBS pixels do not match the declared content mode'
+    label='one circle for hardware duplication' if layout['topology']=='single-link-clone' else ('identical' if same else 'distinct')
+    print(f'PASS: {args.view}, {width}x{height}, {label}, correct masks -> {args.output}')
 
 
 if __name__=='__main__':main()

@@ -1,13 +1,3 @@
-# 双方形泵站
+# 兼容入口
 
-scene.py、model.py、panels.py和layouts/维护软启动/运行/卸载/冷却及过程趋势。卡片等基础组件来自common/components.py。仅demo。
-
-仓库根目录：
-
-```bash
-./app start --port 1 --shape square --panels 2 --input none --view industrial --layout industrial-sbs-480 --content different --data-source demo
-```
-
-[泵站场景说明](../../docs/scenarios.md) · [代码结构](../../docs/architecture.md)
-
-0.7.0中industrial-sbs-480映射升为1.1.0，接受60Hz和约62.825Hz；720/800仍60Hz。不改变信号。已保存旧映射的实例需先stop，再显式start。
+实际实现、安装与使用说明已迁移至[新目录](../different/industrial/README.md)。旧导入或脚本仍可使用；此目录不保存第二份布局或业务实现。

@@ -39,7 +39,7 @@ port1/2仍是HDMI-A-1/2，不是panel编号。软件接受这些模式不代表�
 
 ## 真实电脑数据：Windows采集，Pi只负责展示
 
-本仓库提供可选的scenes/pc_monitor/collectors/windows.ps1：
+本仓库提供可选的scenes/different/pc_monitor/collectors/windows.ps1：
 
 - 使用Windows自带Get-CimInstance读取真实CPU使用率与RAM占用/容量，不需要Python或pip。
 - 电脑已安装并可调用nvidia-smi时，读取选定NVIDIA GPU的利用率、温度、显存和可用功耗。
@@ -123,7 +123,7 @@ Pi与Windows应校准时间。数据采样时间落后超过5秒、超前超过2
 ## 文件结构
 
 ```text
-scenes/pc_monitor/
+scenes/different/pc_monitor/
 ├── scene.py                 标准场景注册
 ├── model.py                 PcDemo与PcJsonSource
 ├── panels.py                两块圆形指标页

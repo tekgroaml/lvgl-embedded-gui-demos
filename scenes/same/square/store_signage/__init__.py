@@ -1,0 +1,1 @@
+"""Square retail promotion signage."""

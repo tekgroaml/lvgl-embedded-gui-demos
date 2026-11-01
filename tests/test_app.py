@@ -113,15 +113,17 @@ class LayoutTests(unittest.TestCase):
             self.assertEqual(error.exception.code,4)
             gui.assert_not_called()
 
-    def test_layouts_are_non_overlapping_full_canvas_and_explicitly_unverified_hardware(self):
+    def test_layouts_match_declared_sbs_or_clone_geometry_and_unverified_hardware(self):
         for lid in LAYOUT_IDS:
             layout=load_layout(lid);size=layout['signal_mode']['height']
             self.assertFalse(layout['verification']['hardware_verified'])
             self.assertIsNone(layout['product_match'])
             a,b=layout['panels']
             self.assertEqual(a['rect'],{'x':0,'y':0,'width':size,'height':size})
-            self.assertEqual(b['rect'],{'x':size,'y':0,'width':size,'height':size})
-            self.assertEqual(layout['signal_mode']['width'],size*2)
+            clone=layout['topology']=='single-link-clone'
+            self.assertEqual(b['rect'],{'x':0 if clone else size,'y':0,'width':size,'height':size})
+            self.assertEqual(layout['signal_mode']['width'],size if clone else size*2)
+            if clone:self.assertEqual(layout['content_mode'],'same')
 
     def test_damaged_layout_is_not_accepted(self):
         original=load_layout(LAYOUT_IDS[0]);original['panels'][1]['rect']['x']=0
