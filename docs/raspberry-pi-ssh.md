@@ -27,7 +27,7 @@ rsync -av --exclude=.git --exclude=.venv --exclude=__pycache__ --exclude=secrets
 ssh pi@raspberrypi.local
 ```
 
-必须复制app、scene_app、common、scenes、gauges和screen-app.json等完整代码，不只复制一张图或一个.py。源目录尾部/表示复制内容；不复制Mac虚拟环境。私有采集数据放在Pi用户目录的单独位置。
+必须复制app、scene_app、common、scenes、demos、gauges和screen-app.json等完整代码，不只复制一张图或一个.py。源目录尾部/表示复制内容；不复制Mac虚拟环境。私有采集数据放在Pi用户目录的单独位置。
 
 只有远端已发布的版本才可通过Git取得。若选择Git方式，作为rsync的替代，在Pi执行：
 
@@ -50,7 +50,7 @@ chmod +x app setup.sh run.sh
 ./app info --json
 ```
 
-本版版本0.5.0。安装器只补缺失的发行版Python/GTK/Cairo/layer-shell/wlr-randr包；全部已有则无需下载。APT可能请求sudo，但运行app不要sudo。默认不安装Pygame，不创建虚拟环境，也不自动启动。
+本版版本0.6.1。安装器只补缺失的发行版Python/GTK/Cairo/layer-shell/wlr-randr包；全部已有则无需下载。APT可能请求sudo，但运行app不要sudo。默认不安装Pygame，不创建虚拟环境，也不自动启动。
 
 如果以前使用过旧文档的临时Pygame服务，先停止该服务；没有旧服务则跳过：
 
@@ -187,3 +187,15 @@ python3 tests/render_native.py --size 480 --output /tmp/instruments-480.png
 ```
 
 演示无需外接电脑；真实PC数据用examples/pc-monitor-live.json，并由目标电脑持续采集JSON。可选Windows脚本不要求Python，缺温度/风扇等传感器显示“—”；不拿Pi本机数据冒充PC。完整采集/SSH传输和live步骤见[机箱状态屏指南](pc-monitor.md)，本轮尚未完成真实Windows及新实体场景验收。
+
+## 产品用途串联拍摄（v0.6.0）
+
+完整复制包含demos/目录后，在Pi SSH执行：
+
+```bash
+./app stop --port 1
+./demos/product_showcase/demo check --port 1
+./demos/product_showcase/demo start --port 1
+```
+
+按飞机仪表→汽车/摩托仪表→PC机箱顺序，每段图标文案3秒、模拟效果10秒，一轮39秒循环，同一窗口无意图性桌面切换。拍摄结束单独执行./demos/product_showcase/demo stop --port 1。文案与时长、预览见[独立演示目录说明](../demos/product_showcase/README.md)。全部模拟，不会控制真实设备或读取真实PC数据。

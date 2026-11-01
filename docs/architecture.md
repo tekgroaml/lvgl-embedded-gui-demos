@@ -72,3 +72,11 @@ manifest的layouts路径是包内相对路径；CLI和scene记录引用稳定布
 2026-11-01飞行双480的物理验收是历史记录，只覆盖其flight设置。本轮汽车与结构重构的软件测试/预览不冒充新实体汽车验收，当前hardware_verified=false。应用与布局不会自动改HDMI时序。
 
 v0.5.0新增pc_monitor，demo/live均由本目录model.py实现；真实数据只来自目标电脑快照，不在通用worker读取Pi传感器。common/snapshots.py提取有界文件读取，原混合场景继续使用相同协议和新鲜度规则。
+
+## v0.6.0产品演示目录
+
+普通场景仍在scenes/，面向卖家拍摄的编排放到demos/product_showcase/，独立维护playlist、矢量图标、标题卡和便捷脚本。通过SceneDefinition.package指定其所属目录，沿用同一标准运行管理，不复制进程/锁/HDMI定位代码。
+
+product-showcase仅demo，数据源按单调时钟生成标题或效果状态，效果页用原场景工厂取得模型/面板。三段共享一个surface，不通过sleep和逐个启动子进程切换。可选on_ready数据源钩子让首张标题卡从可见就绪后起算；其他场景没有此钩子，原来时间规则不变。
+
+播放文件摘要参与幂等配置；requires_real_time让普通demo_speed无法意外缩短产品拍摄时长。来源和场景顺序经过校验，不执行客户提供的shell或live数据。详见[脚本目录说明](../demos/product_showcase/README.md)。

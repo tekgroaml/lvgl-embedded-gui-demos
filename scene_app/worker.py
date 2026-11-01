@@ -85,6 +85,8 @@ class Worker:
     def mark_ready(self):
         if self.quitting or self.ready or not self.drawn or not self.has_data:return False
         if self.verify_surface():
+            on_ready=getattr(self.source,'on_ready',None)
+            if on_ready is not None:on_ready(time.monotonic()-self.begin)
             self.ready=True
             self.state.update(status='running',health='ok',started_at=time.time())
             self.persist()

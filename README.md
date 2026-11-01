@@ -1,10 +1,22 @@
 # Single-cable dual-panel instrumentation demos
 
-**v0.5.0 software preview.** A standard ./app entrypoint now renders the existing automotive and industrial views with native Python/GTK3/Cairo. No browser, WebKit, LVGL, Pygame, pip or virtual environment is required by this path. Legacy Pygame scripts remain optional.
+**v0.6.1 software preview.** A standard ./app entrypoint now renders the existing automotive and industrial views with native Python/GTK3/Cairo. No browser, WebKit, LVGL, Pygame, pip or virtual environment is required by this path. Legacy Pygame scripts remain optional.
 
 ![Native SBS offscreen preview](docs/preview-native-sbs.png)
 
 [中文](README_CN.md) · [Copy to Pi and run over SSH](docs/raspberry-pi-ssh_EN.md) · [Command reference](docs/standard-app.md) · [Telemetry protocol](docs/telemetry_EN.md) · [Verification](docs/verification.md)
+
+## Product-use-case showcase
+
+The independent demos/product_showcase directory loops flight → car/motorcycle → PC-case chapters. Each has a3s icon/title card and10s simulated effect,39s per loop, in one continuous native surface.
+
+```bash
+./app stop --port 1
+./demos/product_showcase/demo check --port 1
+./demos/product_showcase/demo start --port 1
+```
+
+After recording, stop with ./demos/product_showcase/demo stop --port 1. All effects remain simulated; the vehicle use-case label is not a motorcycle ECU integration. See the [standalone guide and39s preview](demos/product_showcase/README_EN.md).
 
 ## PC-case CPU/GPU display
 

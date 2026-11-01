@@ -22,7 +22,7 @@ rsync -av --exclude=.git --exclude=.venv --exclude=__pycache__ --exclude=secrets
 ssh pi@raspberrypi.local
 ```
 
-Copy the full app, scene_app, common, scenes, gauges and screen-app.json, not one Python file. Do not upload a Mac virtual environment. Keep private capture data/configuration elsewhere in the Pi home directory.
+Copy the full app, scene_app, common, scenes, demos, gauges and screen-app.json, not one Python file. Do not upload a Mac virtual environment. Keep private capture data/configuration elsewhere in the Pi home directory.
 
 For already-published versions, Git is an alternative to the upload. On the Pi, with a nonexistent target directory:
 
@@ -45,7 +45,7 @@ chmod +x app setup.sh run.sh
 ./app info --json
 ```
 
-This native preview is 0.5.0. Only missing distribution Python/GTK/Cairo/layer-shell/wlr-randr packages are installed; existing dependencies need no download. No Pygame, browser, pip, compilation or virtual environment is required. The installer may use sudo for APT; never use sudo for ./app.
+This native preview is 0.6.1. Only missing distribution Python/GTK/Cairo/layer-shell/wlr-randr packages are installed; existing dependencies need no download. No Pygame, browser, pip, compilation or virtual environment is required. The installer may use sudo for APT; never use sudo for ./app.
 
 If you previously launched the old transient service, stop it before the standard app:
 
@@ -179,3 +179,15 @@ After copying the updated project, on the Pi:
 ```
 
 CPU/RAM and GPU/cooling animate automatically in demo. Live uses examples/pc-monitor-live.json and a snapshot from the monitored PC, never Pi host stats. An optional Windows PowerShell collector and key-based SSH upload procedure are documented in the [PC-monitor guide](pc-monitor.md); unsupported sensors remain unavailable. The new scene and Windows collector have not been physically accepted in this change.
+
+## Product showcase recording (v0.6.0)
+
+After updating the complete project including demos/, use this in the Pi SSH shell:
+
+```bash
+./app stop --port 1
+./demos/product_showcase/demo check --port 1
+./demos/product_showcase/demo start --port 1
+```
+
+The script loops flight → car/motorcycle → PC-case. Each title/icon lasts3s and each simulated effect10s,39s per loop, in one continuous surface. Later stop with ./demos/product_showcase/demo stop --port 1. See the [independent demonstration guide](../demos/product_showcase/README_EN.md) for copy/timing customization and preview. It does not use real devices or PC telemetry.

@@ -133,8 +133,8 @@ class SceneArchitectureTests(unittest.TestCase):
             with self.subTest(scene=name):
                 panels,source=make_scene(name)
                 self.assertEqual(len(panels),2)
-                self.assertTrue(all(type(panel).__module__.startswith('scenes.'+name.replace('-','_')) for panel in panels))
-                self.assertTrue(type(source).__module__.startswith('scenes.'+name.replace('-','_')))
+                self.assertTrue(all(type(panel).__module__.startswith(scene.owner_package) for panel in panels))
+                self.assertTrue(type(source).__module__.startswith(scene.owner_package))
                 for size in scene.sizes:
                     self.assertTrue(Path(scene.layout_path(size)).is_file())
                     layout=load_layout(f'{scene.prefix}-{size}')

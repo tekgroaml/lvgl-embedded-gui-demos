@@ -1,12 +1,25 @@
 # 单线双屏汽车与工业仪表演示
 
-**v0.5.0 软件预览版**：已按统一规范提供./app入口，默认采用原生Python+GTK/Cairo，和圆形触摸看板使用同类运行方式。无需浏览器、WebKit、LVGL、Pygame、pip或虚拟环境；只有旧run.sh路径需要另装Pygame。
+**v0.6.1 软件预览版**：已按统一规范提供./app入口，默认采用原生Python+GTK/Cairo，和圆形触摸看板使用同类运行方式。无需浏览器、WebKit、LVGL、Pygame、pip或虚拟环境；只有旧run.sh路径需要另装Pygame。
 
 ![原生双屏离屏预览](docs/preview-native-sbs.png)
 
 [English](README.md) · [复制到Pi并通过SSH运行](docs/raspberry-pi-ssh.md) · [标准命令](docs/standard-app.md) · [遥测协议](docs/telemetry.md) · [验证记录](docs/verification.md) · [版本记录](CHANGELOG.md) · [双圆汽车](docs/automotive.md) · [场景目录与公共代码](docs/architecture.md)
 
-## 新增：电脑机箱状态屏
+## 新增：产品用途串联演示
+
+独立目录demos/product_showcase/，顺序展示“飞机仪表→汽车/摩托仪表→PC机箱监控”。每段图标与文案3秒，然后动态效果10秒，一轮39秒自动循环。全部模拟，一张全屏窗口连续切换。
+
+```bash
+./app stop --port 1
+./demos/product_showcase/demo check --port 1
+./demos/product_showcase/demo start --port 1
+./demos/product_showcase/demo stop --port 1
+```
+
+上面start用于开始拍摄，stop在结束后执行，不能整段一键粘贴后立即停止。详见[演示脚本与39秒预览](demos/product_showcase/README.md)。支持当前双480圆屏原生约62.825Hz，不新增运行依赖。
+
+## 电脑机箱状态屏
 
 --view pc-monitor，双圆左CPU/内存、右GPU/散热，可自主模拟，也可显示被监控PC的真实JSON。温度与风扇随负载有延迟地变化；缺传感器显示“—”，不会拿Pi数据冒充台式机数据。
 

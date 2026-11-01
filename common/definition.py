@@ -16,14 +16,18 @@ class SceneDefinition:
     native_dual480: bool = False
     sizes: tuple = (480,720,800)
     layout_versions: tuple = ()
+    package: str = None
+
+    @property
+    def owner_package(self):
+        return self.package or 'scenes.'+self.id.replace('-', '_')
 
     @property
     def sources(self):
         return ('demo','live') if self.live_factory else ('demo',)
 
     def layout_path(self,size):
-        directory=self.id.replace("-", "_")
-        return f"scenes/{directory}/layouts/{self.prefix}-{size}.json"
+        return f"{self.owner_package.replace('.', '/')}/layouts/{self.prefix}-{size}.json"
 
     def layout_version(self,size):
         return dict(self.layout_versions).get(size,'1.0.0')

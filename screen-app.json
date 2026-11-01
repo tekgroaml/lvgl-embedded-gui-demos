@@ -2,8 +2,8 @@
   "manifest_version": 1,
   "contract_version": 1,
   "id": "dual-instrument-dashboard",
-  "name": "单线双屏场景：机箱监控、汽车、飞行与泵站",
-  "version": "0.5.0",
+  "name": "单线双屏应用与产品用途演示",
+  "version": "0.6.1",
   "release_status": "preview",
   "repository_url": "https://github.com/tekgroaml/lvgl-embedded-gui-demos",
   "command": {
@@ -46,6 +46,12 @@
         "demo",
         "live"
       ]
+    },
+    {
+      "id": "product-showcase",
+      "data_sources": [
+        "demo"
+      ]
     }
   ],
   "content_modes": [
@@ -66,7 +72,10 @@
     "scenes/automotive/layouts/automotive-sbs-800.json",
     "scenes/pc_monitor/layouts/pc-monitor-sbs-480.json",
     "scenes/pc_monitor/layouts/pc-monitor-sbs-720.json",
-    "scenes/pc_monitor/layouts/pc-monitor-sbs-800.json"
+    "scenes/pc_monitor/layouts/pc-monitor-sbs-800.json",
+    "demos/product_showcase/layouts/product-showcase-sbs-480.json",
+    "demos/product_showcase/layouts/product-showcase-sbs-720.json",
+    "demos/product_showcase/layouts/product-showcase-sbs-800.json"
   ],
   "capabilities": {
     "multi_instance": true,
@@ -287,6 +296,45 @@
         "pc-monitor-sbs-720",
         "pc-monitor-sbs-800"
       ]
+    },
+    {
+      "id": "sbs-product-showcase",
+      "topology": "single-link-dual",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "product-showcase"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "different"
+      ],
+      "layout_ids": [
+        "product-showcase-sbs-480",
+        "product-showcase-sbs-720",
+        "product-showcase-sbs-800"
+      ]
     }
   ],
   "verification": {
@@ -298,7 +346,8 @@
       "Automotive dual480 accepts 60Hz and the observed native ~62.825226Hz without changing hardware modes. Its physical scene acceptance is pending.",
       "Flight/industrial/mixed commands remain compatible; prior physical flight evidence is historical and does not certify the new automotive scene.",
       "No touch or same-content support; no real OBD/vehicle control or automotive live protocol is declared.",
-      "PC-monitor scene: simulated linked CPU/GPU workloads or explicit JSON from a monitored computer; missing sensors are unavailable, not invented or replaced with local Pi metrics."
+      "PC-monitor scene: simulated linked CPU/GPU workloads or explicit JSON from a monitored computer; missing sensors are unavailable, not invented or replaced with local Pi metrics.",
+      "Product showcase is an independent demo-only playlist: flight, automotive, PC-monitor; title3s/effect10s; one39s loop in one surface. No live data or device control."
     ],
     "tested_configurations": [
       {

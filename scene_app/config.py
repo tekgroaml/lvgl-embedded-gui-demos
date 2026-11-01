@@ -143,4 +143,9 @@ def prepare(spec):
         path = path.resolve()
     # Demo explicitly ignores configured input_file; no implicit live source.
     source=definition(spec['view']).create_source(spec['data_source'],path)
+    if getattr(source,'requires_real_time',False) and speed!=1:
+        raise AppError('Product-presentation durations use wall time; demo_speed must be 1.',6)
+    source_digest=getattr(source,'configuration_digest',None)
+    if source_digest is not None:
+        digest=hashlib.sha256((digest+':'+source_digest).encode()).hexdigest()
     return config, digest, source

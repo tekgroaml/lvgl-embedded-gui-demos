@@ -4,8 +4,9 @@ from .flight.scene import SCENE as flight
 from .industrial.scene import SCENE as industrial
 from .automotive.scene import SCENE as automotive
 from .pc_monitor.scene import SCENE as pc_monitor
+from demos.product_showcase.scene import SCENE as product_showcase
 
-_registered=(mixed,flight,industrial,automotive,pc_monitor)
+_registered=(mixed,flight,industrial,automotive,pc_monitor,product_showcase)
 DEFINITIONS={scene.id:scene for scene in _registered}
 if len(DEFINITIONS)!=len(_registered):
     raise RuntimeError('Duplicate scene IDs')

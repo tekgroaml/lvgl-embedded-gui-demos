@@ -1,4 +1,4 @@
-# v0.5.0 双屏标准命令
+# v0.6.1 双屏标准命令
 
 本项目与圆形看板遵循相同./app接口，独立安装，不导入相邻项目。内部租约/socket/JSON协议保持一致；启动与停止都按app-id和instance-id识别归属。当前实现作为软件预览，不等于具体产品已实测。
 
@@ -93,3 +93,11 @@ SSH断开后start可继续运行，前提是同用户图形桌面保持登录；
 ```
 
 双圆左CPU/内存、右GPU/散热。live用examples/pc-monitor-live.json，读取目标电脑的专用schema_version1快照；要求来源pc_name和采样Unix时间，超过5秒或超前2秒视为过期。缺传感器为“—”，不使用Pi本地数据。PC480布局接受60和约62.825Hz，其他尺寸60Hz。详情与可选Windows采集见[PC指南](pc-monitor.md)。
+
+## 产品用途演示
+
+```bash
+./app start --port 1 --shape round --panels 2 --input none --view product-showcase --layout product-showcase-sbs-480 --content different --data-source demo
+```
+
+独立目录的./demos/product_showcase/demo start --port 1是此命令的简写。每段标题3秒/效果10秒，三场景39秒循环。只能demo，普通demo_speed必须1；文案/节奏通过playlist.json维护。复用同一租约与窗口，保持标准status/logs/stop接口；完整使用见[演示指南](../demos/product_showcase/README.md)。

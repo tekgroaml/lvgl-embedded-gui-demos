@@ -1,0 +1,31 @@
+{
+  "playlist_version": 1,
+  "intro_seconds": 3,
+  "effect_seconds": 10,
+  "stages": [
+    {
+      "view": "flight",
+      "icon": "aircraft",
+      "title": "FLIGHT SIMULATOR",
+      "subtitle": "Immersive cockpit displays",
+      "panel_labels": ["ATTITUDE / HEADING", "AIRSPEED / ALTITUDE"],
+      "demo_start_seconds": 35
+    },
+    {
+      "view": "automotive",
+      "icon": "vehicle",
+      "title": "CAR / MOTORCYCLE",
+      "subtitle": "Custom instrument displays",
+      "panel_labels": ["SPEED / RPM / GEAR", "ENGINE / FUEL / VOLTAGE"],
+      "demo_start_seconds": 28
+    },
+    {
+      "view": "pc-monitor",
+      "icon": "computer",
+      "title": "PC CASE MONITOR",
+      "subtitle": "Your build. Your dashboard.",
+      "panel_labels": ["CPU / MEMORY", "GPU / COOLING"],
+      "demo_start_seconds": 74
+    }
+  ]
+}

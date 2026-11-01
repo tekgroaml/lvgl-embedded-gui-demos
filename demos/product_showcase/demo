@@ -1,0 +1,8 @@
+#!/bin/sh
+set -eu
+showcase_root=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+export PYTHONPATH="$showcase_root${PYTHONPATH:+:$PYTHONPATH}"
+if [ "$(uname -s)" = Linux ]; then
+    exec /usr/bin/python3 -m demos.product_showcase.cli "$@"
+fi
+exec python3 -m demos.product_showcase.cli "$@"

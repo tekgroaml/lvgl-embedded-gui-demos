@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.6.1 — 2026-11-01 (distinct branding and application introduction panels)
+
+- Split each3s intro into a left brand/icon screen and a right application-description screen, explicitly demonstrating two different displays.
+- Keep all three10s effect pages pixel-identical, with unchanged playlist timing,39s loop and simulated data.
+- Regenerate intro/loop previews and add presentation-role regression coverage.
+
+## 0.6.0 — 2026-11-01 (product-use-case showcase)
+
+- Add an independent demos/product_showcase directory with editable playlist, native vector icons/copy cards and standard-command wrapper.
+- Loop flight instruments, car/motorcycle instrument use case and PC-case monitoring:3s title card +10s simulated effect each,39s total.
+- Reuse scene model/panel factories inside one leased GTK surface, without subprocess/window switching or desktop gaps by design.
+- Start the title clock after the first visible ready frame; keep presentation wall time independent of global demo_speed and prewarm effects to informative active states.
+- Include status-visible stage/phase, playlist configuration digest, validation, previews and regression tests. Physical/camera acceptance remains pending.
+
 ## 0.5.0 — 2026-11-01 (PC-case monitoring scene)
 
 - Add dual-round PC-monitor CPU/RAM and GPU/cooling pages, with480/720/800 layouts and native~62.825Hz acceptance on the480 layout.
