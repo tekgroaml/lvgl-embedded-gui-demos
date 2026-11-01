@@ -8,7 +8,7 @@
 
 Pi已经联网、启用SSH，并用同一普通用户登录Bookworm/labwc Wayland图形桌面。SSH/控制台本身不会创建桌面。驱动板已按产品资料配置正确输入与左右区域，100%缩放、不旋转整张画布。
 
-本项目当前左圆形汽车仪表、右方形工业面板，不支持双圆、触摸或同显。以双480软件布局举例，完整输入为960×480、60Hz；必须确认真实驱动板支持，不能只因有两块480面板就假设它接受960×480。
+本项目现有双圆flight、双方形industrial和左圆右方automotive-industrial三种独立布局，仍不支持触摸或同显。新场景demo会自动生成联动数据，不需要外部采集器。以双480软件布局举例，完整输入为960×480、60Hz；必须确认真实驱动板支持，不能只因有两块480面板就假设它接受960×480。
 
 下例pi@raspberrypi.local是部署占位，替换成自己的用户名、主机名/IP。第一次连接核对主机指纹并正常认证，不把密码写进命令。
 
@@ -50,7 +50,7 @@ chmod +x app setup.sh run.sh
 ./app info --json
 ```
 
-本版版本0.2.0。安装器只补缺失的发行版Python/GTK/Cairo/layer-shell/wlr-randr包；全部已有则无需下载。APT可能请求sudo，但运行app不要sudo。默认不安装Pygame，不创建虚拟环境，也不自动启动。
+本版版本0.3.1。安装器只补缺失的发行版Python/GTK/Cairo/layer-shell/wlr-randr包；全部已有则无需下载。APT可能请求sudo，但运行app不要sudo。默认不安装Pygame，不创建虚拟环境，也不自动启动。
 
 如果以前使用过旧文档的临时Pygame服务，先停止该服务；没有旧服务则跳过：
 
@@ -87,6 +87,25 @@ PY
 
 确认目标后设置实际的WAYLAND_DISPLAY，例如export WAYLAND_DISPLAY=wayland-0；无socket则先登录桌面，不猜DISPLAY=:0，不用ssh -X。仅有SSH连接不代表图形应用可用。
 
+### 双圆或双方形的实际命令
+
+下面仍在Pi项目目录执行；先停止同口旧场景，再从两个启动方案中选择一个。每面板480时完整画布为960×480。
+
+```bash
+./app stop --port 1
+# 双圆飞行仪表，自动爬升/巡航/下降/平飞
+./app start --port 1 --shape round --panels 2 --input none --view flight --layout flight-sbs-480 --content different --data-source demo
+```
+
+切换双方形泵站：
+
+```bash
+./app stop --port 1
+./app start --port 1 --shape square --panels 2 --input none --view industrial --layout industrial-sbs-480 --content different --data-source demo
+```
+
+每种另有720和800布局，完整输入仍须先按实际产品设置正确。数据联动、模拟周期和可选加速配置见[场景说明](scenarios.md)。
+
 ## 5. 状态、日志和停止
 
 ```bash
@@ -118,7 +137,7 @@ screen-test stop --screen 1
 
 ## 7. 真实遥测、更新与排查
 
-live通过--config指定的JSON中input_file读取采集快照，示例examples/live.json。路径相对该配置文件目录，需用户填写真实位置；六个字段须持续原子更新。examples/telemetry.json是静态样本，三秒后会变旧，不能作为真实采集器。首次无有效新鲜数据不ready，运行后失效标DATA STALE，不换模拟。完整协议见[数据文档](telemetry.md)。
+只有原有automotive-industrial混合视图支持live；新的flight/industrial仅demo，传入live会明确拒绝。混合视图live通过--config指定的JSON中input_file读取采集快照，示例examples/live.json。路径相对该配置文件目录，需用户填写真实位置；六个字段须持续原子更新。examples/telemetry.json是静态样本，三秒后会变旧，不能作为真实采集器。首次无有效新鲜数据不ready，运行后失效标DATA STALE，不换模拟。完整协议见[数据文档](telemetry.md)。
 
 更新先在Pi停止本项目，再回Mac重复rsync；重新SSH检查版本、布局和依赖，执行check/start。不要更新正在运行的代码后声称还能恢复旧二进制；保留采集器及私有配置。
 
@@ -127,7 +146,7 @@ live通过--config指定的JSON中input_file读取采集快照，示例examples/
 | 缺依赖 | 在Pi运行新版安装脚本；不要复制Mac的.venv或改用sudo运行 |
 | SSH能连但无桌面 | 确认同一用户已登录Wayland桌面，socket真实存在 |
 | 输出/模式不符 | 按实际产品资料先配置完整SBS信号，应用不会强制修改 |
-| 布局不支持 | 使用info声明的左圆右方布局，双圆/触摸/同显尚未实现 |
+| 布局不支持 | 使用info声明的形状/view/layout组合；触摸/同显尚未实现 |
 | 口被别的应用占用 | 用原项目正常stop，不能用本项目强制替换它 |
 | 旧临时服务冲突 | 停止tekgroaml-instruments.service；不重复创建旧systemd-run服务 |
 | 左右颠倒、边缘缺失 | 对照驱动板分区/排线；物理映射未认证，不能只凭软件PNG判断 |
@@ -143,3 +162,5 @@ python3 tests/render_native.py --size 480 --output /tmp/instruments-480.png
 离屏生成PNG不显示在实体面板，也不证明驱动板拆分正确。当前只有软件预览，物理双屏窗口及长期表现待验收。
 
 仍需原有Pygame时，显式./setup.sh --legacy-pygame，随后./run.sh automotive --sbs --size 480。这个旧路径仍依赖SDL从0枚举，不能将其--display直接按port减一映射；默认./app不使用它。详情见[标准命令](standard-app.md)。
+
+本次双480圆屏实测补充（2026-11-01）：实际完整输入960×480、约62.825Hz，flight-sbs-480布局1.1.0已接受该原生模式，不需要为了应用强制改60Hz。接口1的check/start已通过，实体分区边缘仍需物理观察。

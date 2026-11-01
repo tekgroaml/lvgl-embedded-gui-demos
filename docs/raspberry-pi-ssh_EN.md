@@ -8,7 +8,7 @@ This guide is self-contained. Copy application files, not a new TF-card image. N
 
 Use Raspberry Pi OS Bookworm Desktop/labwc with SSH enabled and the intended user already logged into the Wayland desktop. SSH/console login alone does not create that session. Configure the driver board's actual full input mode and panel splitting first, at 100% scale and normal rotation.
 
-The supported profile is left round automotive / right square industrial, two panels on one HDMI, no touch and different content. For the 480 layout, software requires 960×480@60; physical board support is not inferred from panel dimensions. Neither dual-round, touch nor same-content is implemented.
+The supported profile is left round automotive / right square industrial, two panels on one HDMI, no touch and different content. For the 480 layout, software requires 960×480@60; physical board support is not inferred from panel dimensions. Dual-round now uses the dedicated flight view; dual-square uses the dedicated industrial pump view. Touch and same-content are not implemented.
 
 Replace pi@raspberrypi.local with your real username and hostname/IP. Verify the host fingerprint and authenticate normally; do not put passwords in commands. Upload/SSH commands run on the Mac, then installation and app commands run inside the Pi SSH shell.
 
@@ -45,7 +45,7 @@ chmod +x app setup.sh run.sh
 ./app info --json
 ```
 
-This native preview is 0.2.0. Only missing distribution Python/GTK/Cairo/layer-shell/wlr-randr packages are installed; existing dependencies need no download. No Pygame, browser, pip, compilation or virtual environment is required. The installer may use sudo for APT; never use sudo for ./app.
+This native preview is 0.3.1. Only missing distribution Python/GTK/Cairo/layer-shell/wlr-randr packages are installed; existing dependencies need no download. No Pygame, browser, pip, compilation or virtual environment is required. The installer may use sudo for APT; never use sudo for ./app.
 
 If you previously launched the old transient service, stop it before the standard app:
 
@@ -82,6 +82,24 @@ PY
 
 Select the intended name explicitly if needed, for example export WAYLAND_DISPLAY=wayland-0 only when that is the real target. If no socket exists, log into the desktop first. Do not guess DISPLAY=:0 or use ssh -X.
 
+### Dedicated dual-round and dual-square views
+
+Choose one mode after stopping the previous instance on this output. Both examples use a verified-by-you 960×480 full input for two480 panels:
+
+```bash
+./app stop --port 1
+./app start --port 1 --shape round --panels 2 --input none --view flight --layout flight-sbs-480 --content different --data-source demo
+```
+
+Switch to the square pump-station demo:
+
+```bash
+./app stop --port 1
+./app start --port 1 --shape square --panels 2 --input none --view industrial --layout industrial-sbs-480 --content different --data-source demo
+```
+
+These demo-only views move autonomously using correlated scene data, not random independent needles. Both also have720/800 software mappings. See the [scenario reference](scenarios.md) for phase timing and optional demo_speed acceleration.
+
 ## 5. Manage and disconnect SSH
 
 ```bash
@@ -113,14 +131,14 @@ The test flag still names one full HDMI output. It is not a dependency or a per-
 
 ## 7. Data, updates and failures
 
-Use --data-source live --config <file> with examples/live.json. input_file resolves relative to that configuration, fps 10–60 affects rendering only. A real collector must continuously publish all six validated fields atomically. The bundled telemetry.json is static and becomes stale after three seconds. Initial invalid/stale data prevents readiness; later failure retains last values with DATA STALE/degraded health, never demo fallback.
+Only the original automotive-industrial view supports live JSON. New flight/industrial views explicitly reject live. Use --data-source live --config <file> with examples/live.json. input_file resolves relative to that configuration, fps 10–60 affects rendering only. A real collector must continuously publish all six validated fields atomically. The bundled telemetry.json is static and becomes stale after three seconds. Initial invalid/stale data prevents readiness; later failure retains last values with DATA STALE/degraded health, never demo fallback.
 
 Stop this app before updating. Repeat Mac rsync, reconnect, check the installed version, reinstall changed dependencies and run check/start. Preserve the collector and private configuration. Do not overwrite running code and claim old-binary rollback.
 
 - Missing runtime: install on the Pi; do not upload a Mac .venv or run the GUI with sudo.
 - No desktop: use the same user who owns a logged-in Wayland session.
 - Wrong mode/output: configure the exact full driver input first; the app does not force it.
-- Unsupported profile: only the declared left-round/right-square, no-touch, different-content combination works.
+- Unsupported profile: use a declared shape/view/layout combination; all views remain no-touch and different-content only.
 - Occupied output: use the original project's stop; cross-project forced replacement is rejected.
 - Old service conflict: stop tekgroaml-instruments.service instead of creating another old systemd-run unit.
 - Cropped/swapped physical images: verify board A/B layout, cabling and panel shapes; software PNGs cannot certify it.
@@ -136,3 +154,5 @@ python3 tests/render_native.py --size 480 --output /tmp/instruments-480.png
 The offscreen PNG creates no desktop window and does not prove physical splitting. On-screen dual-panel and long-duration acceptance remain pending.
 
 For the retained old renderer explicitly install ./setup.sh --legacy-pygame, then ./run.sh automotive --sbs --size 480. That optional path still uses zero-based SDL display indexes, which are not connector numbers. Standard ./app never launches it. See the telemetry reference for data protocol and hardware-integration boundaries.
+
+Observed product note (2026-11-01): flight-sbs-480 v1.1.0 also accepts the connected dual480 driver input at960×480/~62.825226Hz (±0.1Hz). The native mode is preserved, not forced to60Hz. Full Pi startup was confirmed; inspect physical splitting and edges separately.

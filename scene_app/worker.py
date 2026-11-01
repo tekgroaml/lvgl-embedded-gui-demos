@@ -15,8 +15,7 @@ from .config import normalize, prepare, load_layout
 from .errors import AppError
 from .painter import draw_scene
 from gauges.common import Telemetry
-from gauges.automotive_gauge import AutomotiveGauge
-from gauges.industrial_panel import IndustrialPanel
+from gauges.scenarios import make_scene
 
 
 class Worker:
@@ -28,8 +27,8 @@ class Worker:
         self.exit_code=0
         self.quitting=self.ready=self.drawn=self.polling=self.has_data=False
         self.control=self.window=self.executor=self.lease=None
-        self.data=Telemetry(stale=self.spec['data_source']=='live',simulated=self.spec['data_source']=='demo')
-        self.automotive,self.industrial=AutomotiveGauge(),IndustrialPanel()
+        self.views, initial_source=make_scene(self.spec['view'])
+        self.data=initial_source.read(0) if self.spec['data_source']=='demo' else Telemetry(stale=True,simulated=False)
         self.state={'app_id':APP_ID,'version':VERSION,'contract_version':1,'instance_id':self.instance_id,
                     'owner':os.getuid(),'port':self.port,'connector':f'HDMI-A-{self.port}',
                     'status':'starting','health':'starting','renderer':'python-gtk-cairo',
@@ -95,7 +94,7 @@ class Worker:
     def paint(self,area,context):
         if self.quitting:return False
         try:
-            draw_scene(context,self.layout,self.automotive,self.industrial,self.data)
+            draw_scene(context,self.layout,*self.views,self.data)
             self.drawn=True
             self.state['frames']+=1
             if not self.ready:self.GLib.idle_add(self.mark_ready)
@@ -106,7 +105,8 @@ class Worker:
     def animate(self):
         if self.quitting:return False
         now=time.monotonic();dt=min(now-self.previous,.1);self.previous=now
-        self.automotive.update(dt,self.data);self.industrial.update(dt,self.data)
+        if self.spec['data_source']=='demo':dt*=self.config['demo_speed']
+        for view in self.views:view.update(dt,self.data)
         self.area.queue_draw()
         return True
 
@@ -118,7 +118,9 @@ class Worker:
             try:value,error=future.result(),False
             except Exception:value,error=None,True
             if not self.quitting:self.GLib.idle_add(self.received,value,error)
-        self.executor.submit(self.source.read,time.monotonic()-self.begin).add_done_callback(completed)
+        elapsed=time.monotonic()-self.begin
+        if self.spec['data_source']=='demo':elapsed*=self.config['demo_speed']
+        self.executor.submit(self.source.read,elapsed).add_done_callback(completed)
         return True
 
     def received(self,value,error):
@@ -161,7 +163,7 @@ class Worker:
             display.test_conflict(self.port)
             output,self.target,self.expected=display.monitor(self.port,self.Gdk,self.layout)
             self.state.update(native_mode=output['mode'],viewport={'width':self.expected[2],'height':self.expected[3]},
-                              output_binding='gtk-layer-shell',profile_id='sbs-automotive-industrial')
+                              output_binding='gtk-layer-shell',profile_id=self.spec['profile_id'])
             self.executor=ThreadPoolExecutor(max_workers=1,thread_name_prefix='instrument-data')
             self.control=socket.socket(socket.AF_UNIX,socket.SOCK_STREAM)
             path=runtime.paths(self.port)['socket'];path.unlink(missing_ok=True)
@@ -184,7 +186,7 @@ class Worker:
             self.GLib.unix_signal_add(self.GLib.PRIORITY_DEFAULT,signal.SIGINT,self.quit)
             self.window.show_all();self.poll()
             self.GLib.timeout_add(max(1,round(1000/self.config['fps'])),self.animate)
-            self.GLib.timeout_add(200,self.poll);self.GLib.timeout_add_seconds(10,self.tick)
+            self.GLib.timeout_add(50 if self.spec['data_source']=='demo' else 200,self.poll);self.GLib.timeout_add_seconds(10,self.tick)
             self.Gtk.main()
         except AppError as exc:
             self.state.update(status='failed',health='failed',error=str(exc),error_code=exc.code)

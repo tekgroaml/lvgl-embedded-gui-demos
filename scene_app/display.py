@@ -68,8 +68,11 @@ def geometry(output, layout):
     if output["transform"] != "normal" or output["scale"] != 1:
         raise AppError("Use output rotation 0 and desktop scale 100% for SBS.", 3)
     signal = layout["signal_mode"]
-    if (mode["width"], mode["height"]) != (signal["width"], signal["height"]) or abs(mode["refresh_hz"] - signal["refresh_hz"]) > .1:
-        raise AppError(f"Layout requires {signal['width']}x{signal['height']}@{signal['refresh_hz']}; current output is {mode['width']}x{mode['height']}@{mode['refresh_hz']}. Configure the display first.", 3)
+    rates = signal.get("accepted_refresh_hz", [signal["refresh_hz"]])
+    if ((mode["width"], mode["height"]) != (signal["width"], signal["height"])
+            or not any(abs(mode["refresh_hz"] - rate) <= .1 for rate in rates)):
+        accepted = "/".join(str(rate) for rate in rates)
+        raise AppError(f"Layout requires {signal['width']}x{signal['height']} at {accepted}Hz; current output is {mode['width']}x{mode['height']}@{mode['refresh_hz']}. Configure the display first.", 3)
     return (*output["position"], mode["width"], mode["height"])
 
 

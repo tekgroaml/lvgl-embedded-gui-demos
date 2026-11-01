@@ -18,7 +18,7 @@ from . import runtime
 
 
 def parser():
-    p = argparse.ArgumentParser(prog="./app", description="Instruments: one HDMI output carrying automotive/industrial SBS panels")
+    p = argparse.ArgumentParser(prog="./app", description="Instruments: one HDMI output carrying flight, pump-station or legacy SBS panels")
     p.add_argument("--version", action="version", version=VERSION)
     commands = p.add_subparsers(dest="action", required=True)
     info = commands.add_parser("info", help="Show version, implemented profiles and verification limits")

@@ -1,4 +1,4 @@
-# v0.2.0 双屏标准命令
+# v0.3.1 双屏标准命令
 
 本项目与圆形看板遵循相同./app接口，独立安装，不导入相邻项目。内部租约/socket/JSON协议保持一致；启动与停止都按app-id和instance-id识别归属。当前实现作为软件预览，不等于具体产品已实测。
 
@@ -16,13 +16,31 @@
 ./app stop --port 1
 ```
 
-run接受同样启动参数，供前台调试，与start二选一。shape顺序为左round、右square；panels必须2；input none广播到两个面板；content必须different；view仅automotive-industrial；layout必须是三份已声明布局之一。单屏、双圆、touch和same明确拒绝，不静默换模式。
+run接受同样启动参数，供前台调试，与start二选一。panels必须2、input none广播到两面板、content必须different。三份独立profile要求shape、view和layout一致：
+
+| 形状 | --view | 布局前缀 | 数据源 |
+| --- | --- | --- | --- |
+| round,round（可简写round） | flight | flight-sbs-* | demo |
+| square,square（可简写square） | industrial | industrial-sbs-* | demo |
+| round,square | automotive-industrial | automotive-industrial-sbs-* | demo/live |
+
+省略--view时按明确的shape组合推导，文档建议显式写出。单屏、touch、same和跨场景布局组合拒绝，不静默变换。新场景逻辑见[双圆/双方形场景](scenarios.md)。
 
 port必须1/2，表示HDMI-A-1/2，而不是panel编号或旧SDL索引。双屏一根信号线使用一个端口，不能用两次单屏命令代替。
 
+## 本次双圆屏直接启动
+
+实际接在接口1，完整960×480@约62.825Hz，当前无需改显示信号：
+
+```bash
+./app start --port 1 --shape round --panels 2 --input none --view flight --layout flight-sbs-480 --content different --data-source demo
+```
+
+左姿态/航向，右空速/高度/升降率，自动演示。stop/status/logs仍使用--port 1。
+
 ## 软件布局与硬件
 
-480/720/800布局的单面板宽高分别480/720/800，完整画布960×480/1440×720/1600×800，信号60Hz（容差0.1Hz），scale1、输出normal。布局结构layout_version=1，具体映射version=1.0.0，scene restart锁定该版本，不自动套用变更后的映射。
+480/720/800布局的单面板宽高分别480/720/800，完整画布960×480/1440×720/1600×800，信号60Hz（容差0.1Hz），scale1、输出normal。布局结构layout_version=1，具体映射默认version=1.0.0；flight-sbs-480已升级为1.1.0，接受60Hz与本次EDID上报的约62.825226Hz（±0.1Hz），scene restart锁定该版本，不自动套用变更后的映射。
 
 verification.status=software-verified是明确的软件分区，只允许用户显式选择，不根据EDID自动匹配。hardware_verified=false、product_match=null表示尚无对应SKU/驱动板认证。与纯draft的任意布局不同，软件几何和绘图路径已有实现与检查，允许preview试用；是否支持此信号仍须按真实硬件确认。程序不强制改模式。
 
@@ -30,11 +48,11 @@ verification.status=software-verified是明确的软件分区，只允许用户�
 
 ## 配置与数据
 
-examples/demo.json和examples/live.json均config_version1。fps为10～60整数，默认30；只影响绘图，不改HDMI刷新。live的input_file相对配置文件目录解析，CLI --config相对调用目录。
+examples/demo.json和examples/live.json均config_version1。fps为10～60整数，默认30；demo_speed为0.25～4的有限数，默认1，只影响demo的共享模拟时间。examples/demo-fast.json为2倍速。这些都不改HDMI刷新。live的input_file相对配置文件目录解析，CLI --config相对调用目录。
 
-实时快照六个字段、范围、三秒新鲜度及原子更新规范见[遥测协议](telemetry.md)。demo不读取配置的input_file。live缺路径返回8，初次文件缺失/失效不报告ready，约30秒超时失败；运行后变旧显示DATA STALE、健康degraded并等待新鲜数据恢复，不回退模拟。
+原混合automotive-industrial视图的实时快照六个字段、范围、三秒新鲜度及原子更新规范见[遥测协议](telemetry.md)。demo不读取配置的input_file。live缺路径返回8，初次文件缺失/失效不报告ready，约30秒超时失败；运行后变旧显示DATA STALE、健康degraded并等待新鲜数据恢复，不回退模拟。
 
-数据以5Hz后台读取，波形按30Hz保留六秒，渲染帧率独立。FIFO/设备/目录等非普通文件被拒绝，不让GUI阻塞在特殊输入。场景只读，不写车辆/工业设备。
+混合live数据以5Hz后台读取，波形按30Hz保留六秒。demo每50ms更新同一场景状态，渲染帧率独立；flight有高度/VSI与航向/倾角关系，industrial有热惯性和累计流量。新场景拒绝live，避免将合成值冒充真实数据。FIFO/设备/目录等非普通文件被拒绝，不让GUI阻塞在特殊输入。场景只读，不写车辆/工业设备。
 
 ## 后台管理、归属与旧脚本
 

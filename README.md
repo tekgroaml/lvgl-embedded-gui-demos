@@ -1,12 +1,35 @@
 # Single-cable dual-panel instrumentation demos
 
-**v0.2.0 software preview.** A standard ./app entrypoint now renders the existing automotive and industrial views with native Python/GTK3/Cairo. No browser, WebKit, LVGL, Pygame, pip or virtual environment is required by this path. Legacy Pygame scripts remain optional.
+**v0.3.1 software preview.** A standard ./app entrypoint now renders the existing automotive and industrial views with native Python/GTK3/Cairo. No browser, WebKit, LVGL, Pygame, pip or virtual environment is required by this path. Legacy Pygame scripts remain optional.
 
 ![Native SBS offscreen preview](docs/preview-native-sbs.png)
 
 [中文](README_CN.md) · [Copy to Pi and run over SSH](docs/raspberry-pi-ssh_EN.md) · [Command reference](docs/standard-app.md) · [Telemetry protocol](docs/telemetry_EN.md) · [Verification](docs/verification.md)
 
-## Standard launch
+## Observed dual-480 input
+
+The connected dual-round product reports960×480 at approximately62.825Hz on HDMI-A-1, not60Hz. Its EDID detailed timing is44.43MHz with1360×520 total pixels. flight-sbs-480 layout v1.1.0 accepts both60Hz and this observed rate (±0.1Hz), without changing the display signal. Pi startup and actual surface binding succeeded; the user confirmed both physical circles complete, different content and automatic motion. This acceptance covers one setup only. See the verification record.
+
+## New autonomous scenarios
+
+| Shape | View | Two panels | Motion |
+| --- | --- | --- | --- |
+| round,round | flight | attitude/heading + airspeed/altitude/VSI | smooth climb/cruise/descent/level cycle with coordinated turns |
+| square,square | industrial | pump station + process trends/health | idle/start/run/unload/cooldown with delayed temperature and cumulative flow |
+
+```bash
+./app start --port 1 --shape round --panels 2 --input none --view flight --layout flight-sbs-480 --content different --data-source demo
+./app stop --port 1
+./app start --port 1 --shape square --panels 2 --input none --view industrial --layout industrial-sbs-480 --content different --data-source demo
+```
+
+Demo data moves automatically with a shared simulation clock, without external devices or interaction, and is visibly marked simulated. Flight altitude derivatives match VSI, bank and heading follow coordinated turns, and pump temperature lags load. The two new views are demo-only; live requests are rejected. Optional demo_speed=2 in examples/demo-fast.json accelerates the full cycle without changing HDMI refresh. See [scenario details and accelerated animated previews](docs/scenarios.md).
+
+![Dual-round flight](docs/preview-flight-480.png)
+
+![Dual-square pump station](docs/preview-industrial-480.png)
+
+## Original mixed-view launch
 
 On Raspberry Pi OS Bookworm Desktop/labwc, as the normal user who owns the logged-in Wayland session:
 
@@ -22,7 +45,7 @@ cd ~/apps/lvgl-embedded-gui-demos
 ./app stop --port 1
 ```
 
-Use port2 consistently if wired to HDMI-A-2; port1 is HDMI-A-1 (Pi4 board HDMI0), port2 is HDMI-A-2 (board HDMI1). Two panels share one HDMI canvas, not two connector instances. The profile is **left round/right square, no touch, different content**. Single-panel, dual-round, touch and same-content requests are rejected.
+Use port2 consistently if wired to HDMI-A-2; port1 is HDMI-A-1 (Pi4 board HDMI0), port2 is HDMI-A-2 (board HDMI1). Two panels share one HDMI canvas, not two connector instances. The profile is **left round/right square, no touch, different content**. Single-panel, touch and same-content requests are rejected. Dual-round uses the new flight view and dual-square uses industrial, with matching dedicated layouts.
 
 | Explicit software layout | Full input canvas at 60Hz | Each panel |
 | --- | --- | --- |
@@ -30,7 +53,7 @@ Use port2 consistently if wired to HDMI-A-2; port1 is HDMI-A-1 (Pi4 board HDMI0)
 | automotive-industrial-sbs-720 | 1440×720 | 720×720 |
 | automotive-industrial-sbs-800 | 1600×800 | 800×800 |
 
-These mappings describe software geometry, not a certified driver-board product. Confirm the actual full input mode and left/right splitting first. The industrial view uses square corners and is not round-safe. Normal rotation and100% scale are required; no timing, resolution, EDID or USB mapping is changed.
+New flight-sbs-* and industrial-sbs-* layouts use the same three canvas sizes. These mappings describe software geometry, not a certified driver-board product. Confirm the actual full input mode and left/right splitting first. The industrial view uses square corners and is not round-safe. Normal rotation and100% scale are required; no timing, resolution, EDID or USB mapping is changed.
 
 ## Minimal runtime and lifecycle
 
@@ -46,7 +69,7 @@ The optional screen-test tool can run first: stop any current app, run tap-cycle
 
 Demo is explicit and ignores any configured input file. Live uses --data-source live --config <file>, with examples/live.json specifying config_version=1, fps and input_file. Relative data paths resolve next to the configuration. Rendering fps 10–60 is separate from HDMI refresh.
 
-A real adapter must atomically update complete validated snapshots; the example telemetry JSON is static and becomes stale after three seconds. Missing/invalid/stale data never turns into demo. Initial live readiness requires a fresh valid snapshot; later failures retain last values, show DATA STALE and report degraded health. Background file reads do not block GTK drawing. This application reads telemetry only, sends no hardware control commands and is not an automotive or industrial protection system.
+Only the original automotive-industrial view accepts live JSON. A real adapter must atomically update complete validated snapshots; the example telemetry JSON is static and becomes stale after three seconds. Missing/invalid/stale data never turns into demo. Initial live readiness requires a fresh valid snapshot; later failures retain last values, show DATA STALE and report degraded health. Background file reads do not block GTK drawing. This application reads telemetry only, sends no hardware control commands and is not an automotive or industrial protection system.
 
 ## Legacy and validation
 
@@ -54,4 +77,4 @@ A real adapter must atomically update complete validated snapshots; the example 
 
 scene_app contains the CLI, lifecycle, configuration, output matching and Cairo painter; gauges preserves existing view/telemetry logic, layouts holds versioned SBS maps, and tests covers the standard contract and data/lifecycle regressions.
 
-25 tests passed on the development Mac; the 24-test base suite also passed in a temporary Pi directory. Actual Cairo offscreen rendering passed at960×480/1440×720/1600×800. The new on-screen dual-panel surface, physical driver-board mapping and long-duration performance remain unverified. See the self-contained SSH guide and verification record.
+The previous mixed-view release passed actual Pi Cairo offscreen checks at 960×480/1440×720/1600×800. The new release passed 38 unit tests, six scene/size offscreen renders and multi-phase animated-preview checks; see the verification record. The new on-screen dual-panel surface, physical driver-board mapping and long-duration performance remain unverified. See the self-contained SSH guide and verification record.

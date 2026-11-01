@@ -2,8 +2,8 @@
   "manifest_version": 1,
   "contract_version": 1,
   "id": "dual-instrument-dashboard",
-  "name": "单线双屏汽车与工业仪表异显",
-  "version": "0.2.0",
+  "name": "单线双屏场景仪表：飞行与泵站",
+  "version": "0.3.1",
   "release_status": "preview",
   "repository_url": "https://github.com/tekgroaml/lvgl-embedded-gui-demos",
   "command": {
@@ -21,6 +21,18 @@
         "demo",
         "live"
       ]
+    },
+    {
+      "id": "flight",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "industrial",
+      "data_sources": [
+        "demo"
+      ]
     }
   ],
   "content_modes": [
@@ -29,7 +41,13 @@
   "layouts": [
     "layouts/automotive-industrial-sbs-480.json",
     "layouts/automotive-industrial-sbs-720.json",
-    "layouts/automotive-industrial-sbs-800.json"
+    "layouts/automotive-industrial-sbs-800.json",
+    "layouts/flight-sbs-480.json",
+    "layouts/flight-sbs-720.json",
+    "layouts/flight-sbs-800.json",
+    "layouts/industrial-sbs-480.json",
+    "layouts/industrial-sbs-720.json",
+    "layouts/industrial-sbs-800.json"
   ],
   "capabilities": {
     "multi_instance": true,
@@ -93,16 +111,112 @@
         "automotive-industrial-sbs-720",
         "automotive-industrial-sbs-800"
       ]
+    },
+    {
+      "id": "sbs-flight",
+      "topology": "single-link-dual",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "round",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "flight"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "different"
+      ],
+      "layout_ids": [
+        "flight-sbs-480",
+        "flight-sbs-720",
+        "flight-sbs-800"
+      ]
+    },
+    {
+      "id": "sbs-industrial",
+      "topology": "single-link-dual",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "industrial"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "different"
+      ],
+      "layout_ids": [
+        "industrial-sbs-480",
+        "industrial-sbs-720",
+        "industrial-sbs-800"
+      ]
     }
   ],
   "verification": {
-    "status": "software-preview",
-    "hardware_verified": false,
+    "status": "dual480-user-verified-preview",
+    "hardware_verified": true,
     "notes": [
-      "Native Cairo adapter reuses existing automotive and industrial view logic; no browser, LVGL, Pygame, pip or virtual environment is needed for ./app.",
-      "A software-verified layout describes rendering geometry only, not a matched product or physical driver-board certification.",
-      "Only left-round/right-square SBS is declared. Dual-round, touch, same-content and arbitrary resolutions are rejected.",
-      "Legacy Pygame run.sh remains separate; its SDL indexes are not connector numbers."
+      "Native GTK/Cairo runtime, no browser, LVGL, Pygame, pip or virtual environment required.",
+      "Flight: dual-round, linked attitude/heading/airspeed/altitude/VSI, demo only.",
+      "Industrial: dual-square pump overview and process trends; linked duty cycle with pressure and thermal inertia, demo only.",
+      "Legacy automotive-industrial round/square supports demo and live JSON.",
+      "Explicit software SBS mappings only; physical driver-board mapping and signal support must be confirmed. No same-content or touch support.",
+      "flight-sbs-480 layout v1.1.0 also accepts the observed native ~62.825Hz EDID input without changing the display mode."
+    ],
+    "tested_configurations": [
+      {
+        "date": "2026-11-01",
+        "system": "Raspberry Pi OS Bookworm aarch64, labwc/Wayland",
+        "connector": "HDMI-A-1",
+        "view": "flight",
+        "layout": "flight-sbs-480",
+        "layout_version": "1.1.0",
+        "mode": "960x480@62.825001",
+        "panels": "two circular 480x480 panels, one HDMI cable",
+        "data_source": "demo",
+        "physical_observation": "User confirmed both panels complete, different content, and automatic data motion.",
+        "runtime_observation": "GTK layer-shell surface and 960x480 viewport confirmed; ongoing frames/healthy telemetry; get_throttled=0x0.",
+        "scope": "One physical setup; no universal SKU matching, touch or long-duration certification."
+      }
     ]
   }
 }

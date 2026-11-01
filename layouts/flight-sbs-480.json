@@ -1,0 +1,66 @@
+{
+  "layout_version": 1,
+  "id": "flight-sbs-480",
+  "version": "1.1.0",
+  "topology": "single-link-dual",
+  "coordinate_space": "output-signal-pixels",
+  "verification": {
+    "status": "software-verified",
+    "hardware_verified": false,
+    "note": "Explicit dual-round SBS geometry; accepts standard 60Hz and the observed 960x480 EDID timing at 44.43MHz / 1360x520 totals (~62.825226Hz). This is an application timing acceptance list, not an EDID override or universal product identifier.",
+    "tested_configurations": [
+      {
+        "date": "2026-11-01",
+        "mode": "960x480@62.825001",
+        "result": "One dual480 circular unit confirmed by user: both panels complete, distinct and animated.",
+        "scope": "Manual observation of one setup; not an automatic hardware match."
+      }
+    ]
+  },
+  "product_match": null,
+  "signal_mode": {
+    "width": 960,
+    "height": 480,
+    "refresh_hz": 60,
+    "accepted_refresh_hz": [
+      60,
+      62.825226
+    ]
+  },
+  "viewport": {
+    "width": 960,
+    "height": 480,
+    "scale": 1,
+    "rotation_deg": 0
+  },
+  "panels": [
+    {
+      "panel": 1,
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 480,
+        "height": 480
+      },
+      "shape": "round",
+      "input": "none",
+      "visual_rotation_deg": 0,
+      "safe_inset_percent": 0,
+      "view": "attitude"
+    },
+    {
+      "panel": 2,
+      "rect": {
+        "x": 480,
+        "y": 0,
+        "width": 480,
+        "height": 480
+      },
+      "shape": "round",
+      "input": "none",
+      "visual_rotation_deg": 0,
+      "safe_inset_percent": 0,
+      "view": "air-data"
+    }
+  ]
+}
