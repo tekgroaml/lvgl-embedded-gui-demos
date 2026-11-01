@@ -1,4 +1,4 @@
-# v0.6.1 双屏标准命令
+# v0.7.0 双屏标准命令
 
 本项目与圆形看板遵循相同./app接口，独立安装，不导入相邻项目。内部租约/socket/JSON协议保持一致；启动与停止都按app-id和instance-id识别归属。当前实现作为软件预览，不等于具体产品已实测。
 
@@ -101,3 +101,15 @@ SSH断开后start可继续运行，前提是同用户图形桌面保持登录；
 ```
 
 独立目录的./demos/product_showcase/demo start --port 1是此命令的简写。每段标题3秒/效果10秒，三场景39秒循环。只能demo，普通demo_speed必须1；文案/节奏通过playlist.json维护。复用同一租约与窗口，保持标准status/logs/stop接口；完整使用见[演示指南](../demos/product_showcase/README.md)。
+
+## 方形双屏产品演示（0.7.0）
+
+```bash
+./app stop --port 1
+./demos/square_showcase/demo check --port 1
+./demos/square_showcase/demo start --port 1
+```
+
+单独启动用--shape square、--panels 2、--input none、--content different、--data-source demo：smart-home搭配smart-home-sbs-480，pc-monitor-square搭配pc-monitor-square-sbs-480，industrial搭配industrial-sbs-480。完整命令、安装与播放列表见[方形演示](../demos/square_showcase/README.md)。
+
+统一演示入口也接受./demos/product_showcase/demo start --port 1 --shape square。round默认保持不变。两种演示切换前先stop。方形480布局接受60和约62.825Hz，industrial-sbs-480映射版本升为1.1.0；保存的旧版本映射不自动迁移，升级后用显式start重新选择。

@@ -3,7 +3,7 @@
   "contract_version": 1,
   "id": "dual-instrument-dashboard",
   "name": "单线双屏应用与产品用途演示",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "release_status": "preview",
   "repository_url": "https://github.com/tekgroaml/lvgl-embedded-gui-demos",
   "command": {
@@ -52,6 +52,24 @@
       "data_sources": [
         "demo"
       ]
+    },
+    {
+      "id": "smart-home",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "pc-monitor-square",
+      "data_sources": [
+        "demo"
+      ]
+    },
+    {
+      "id": "product-showcase-square",
+      "data_sources": [
+        "demo"
+      ]
     }
   ],
   "content_modes": [
@@ -75,7 +93,16 @@
     "scenes/pc_monitor/layouts/pc-monitor-sbs-800.json",
     "demos/product_showcase/layouts/product-showcase-sbs-480.json",
     "demos/product_showcase/layouts/product-showcase-sbs-720.json",
-    "demos/product_showcase/layouts/product-showcase-sbs-800.json"
+    "demos/product_showcase/layouts/product-showcase-sbs-800.json",
+    "scenes/smart_home/layouts/smart-home-sbs-480.json",
+    "scenes/smart_home/layouts/smart-home-sbs-720.json",
+    "scenes/smart_home/layouts/smart-home-sbs-800.json",
+    "scenes/pc_monitor_square/layouts/pc-monitor-square-sbs-480.json",
+    "scenes/pc_monitor_square/layouts/pc-monitor-square-sbs-720.json",
+    "scenes/pc_monitor_square/layouts/pc-monitor-square-sbs-800.json",
+    "demos/square_showcase/layouts/product-showcase-square-sbs-480.json",
+    "demos/square_showcase/layouts/product-showcase-square-sbs-720.json",
+    "demos/square_showcase/layouts/product-showcase-square-sbs-800.json"
   ],
   "capabilities": {
     "multi_instance": true,
@@ -334,6 +361,123 @@
         "product-showcase-sbs-480",
         "product-showcase-sbs-720",
         "product-showcase-sbs-800"
+      ]
+    },
+    {
+      "id": "sbs-smart-home",
+      "topology": "single-link-dual",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "smart-home"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "different"
+      ],
+      "layout_ids": [
+        "smart-home-sbs-480",
+        "smart-home-sbs-720",
+        "smart-home-sbs-800"
+      ]
+    },
+    {
+      "id": "sbs-pc-monitor-square",
+      "topology": "single-link-dual",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "pc-monitor-square"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "different"
+      ],
+      "layout_ids": [
+        "pc-monitor-square-sbs-480",
+        "pc-monitor-square-sbs-720",
+        "pc-monitor-square-sbs-800"
+      ]
+    },
+    {
+      "id": "sbs-product-showcase-square",
+      "topology": "single-link-dual",
+      "panel_count": 2,
+      "panels": [
+        {
+          "panel": 1,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        },
+        {
+          "panel": 2,
+          "shape": "square",
+          "input": "none",
+          "min_viewport": {
+            "width": 480,
+            "height": 480
+          }
+        }
+      ],
+      "views": [
+        "product-showcase-square"
+      ],
+      "data_sources": [
+        "demo"
+      ],
+      "content_modes": [
+        "different"
+      ],
+      "layout_ids": [
+        "product-showcase-square-sbs-480",
+        "product-showcase-square-sbs-720",
+        "product-showcase-square-sbs-800"
       ]
     }
   ],

@@ -1,10 +1,22 @@
 # Single-cable dual-panel instrumentation demos
 
-**v0.6.1 software preview.** A standard ./app entrypoint now renders the existing automotive and industrial views with native Python/GTK3/Cairo. No browser, WebKit, LVGL, Pygame, pip or virtual environment is required by this path. Legacy Pygame scripts remain optional.
+**v0.7.0 software preview.** A standard ./app entrypoint now renders the existing automotive and industrial views with native Python/GTK3/Cairo. No browser, WebKit, LVGL, Pygame, pip or virtual environment is required by this path. Legacy Pygame scripts remain optional.
 
 ![Native SBS offscreen preview](docs/preview-native-sbs.png)
 
 [中文](README_CN.md) · [Copy to Pi and run over SSH](docs/raspberry-pi-ssh_EN.md) · [Command reference](docs/standard-app.md) · [Telemetry protocol](docs/telemetry_EN.md) · [Verification](docs/verification.md)
+
+## Dual-square product showcase
+
+Smart home (climate/energy), PC case (CPU/GPU cooling), and industrial monitoring (pump/trends). Each chapter shows a3s brand/application split introduction followed by10s of different animated content on each screen, looping every39s. All data is simulated.
+
+```bash
+./app stop --port 1
+./demos/square_showcase/demo check --port 1
+./demos/square_showcase/demo start --port 1
+```
+
+[Square showcase: installation, standalone scenes and previews](demos/square_showcase/README_EN.md). Default: two480×480 panels in one960×480 signal at60 or~62.825Hz. Existing round commands remain available. Stop before switching shapes.
 
 ## Product-use-case showcase
 
@@ -83,7 +95,7 @@ cd ~/apps/lvgl-embedded-gui-demos
 ./app stop --port 1
 ```
 
-Use port2 consistently if wired to HDMI-A-2; port1 is HDMI-A-1 (Pi4 board HDMI0), port2 is HDMI-A-2 (board HDMI1). Two panels share one HDMI canvas, not two connector instances. The profile is **left round/right square, no touch, different content**. Single-panel, touch and same-content requests are rejected. Dual-round uses the new flight view and dual-square uses industrial, with matching dedicated layouts.
+Use port2 consistently if wired to HDMI-A-2; port1 is HDMI-A-1 (Pi4 board HDMI0), port2 is HDMI-A-2 (board HDMI1). Two panels share one HDMI canvas, not two connector instances. The profile is **left round/right square, no touch, different content**. Single-panel, touch and same-content requests are rejected. Dual-round uses flight/automotive/pc-monitor; dual-square uses smart-home/pc-monitor-square/industrial, with matching dedicated layouts.
 
 | Explicit software layout | Full input canvas at 60Hz | Each panel |
 | --- | --- | --- |

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.0 — 2026-11-01 (dual-square product showcase)
+
+- Add square smart-home climate/energy and PC-case CPU/GPU dashboards; reuse the existing pump-station scene for the third use case.
+- Add demos/square_showcase with its own playlist:3s distinct brand/application introductions +10s effects,39s loop. Keep round defaults and the original round playlist.
+- Share timing, title roles, icons, scene factories, PC thermal simulation and square drawing helpers; no new runtime dependency.
+- Add explicit --shape square to the common showcase wrapper, separate standard scene commands, bounded histories and energy-balance checks.
+- Accept the observed960×480~62.825Hz input in square480 layouts without changing signals; industrial480 mapping moves to1.1.0. Stop old instances before upgrading.
+
 ## 0.6.1 — 2026-11-01 (distinct branding and application introduction panels)
 
 - Split each3s intro into a left brand/icon screen and a right application-description screen, explicitly demonstrating two different displays.

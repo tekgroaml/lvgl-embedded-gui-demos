@@ -22,7 +22,7 @@ def seconds(value,low,high):
     return type(value) in (int,float) and math.isfinite(value) and low<=value<=high
 
 
-def load_playlist(path=PLAYLIST):
+def load_playlist(path=PLAYLIST,views=VIEWS,icons=ICONS):
     try:
         data,_=read_snapshot(path)
         if (set(data)!={'playlist_version','intro_seconds','effect_seconds','stages'}
@@ -31,11 +31,11 @@ def load_playlist(path=PLAYLIST):
         if not seconds(data['intro_seconds'],.2,600) or not seconds(data['effect_seconds'],.2,600):
             raise ValueError()
         stages=data['stages']
-        if not isinstance(stages,list) or len(stages)!=3 or tuple(s['view'] for s in stages)!=VIEWS:
+        if not isinstance(stages,list) or len(stages)!=3 or tuple(s['view'] for s in stages)!=views:
             raise ValueError()
         for stage in stages:
             if set(stage)!={'view','icon','title','subtitle','panel_labels','demo_start_seconds'}:raise ValueError()
-            if stage['icon']!=ICONS[stage['view']]:raise ValueError()
+            if stage['icon']!=icons[stage['view']]:raise ValueError()
             if not printable(stage['title'],24) or not printable(stage['subtitle'],36):raise ValueError()
             labels=stage['panel_labels']
             if not isinstance(labels,list) or len(labels)!=2 or not all(printable(v,28) for v in labels):raise ValueError()
@@ -43,7 +43,7 @@ def load_playlist(path=PLAYLIST):
         digest=hashlib.sha256(json.dumps(data,sort_keys=True,ensure_ascii=False,allow_nan=False).encode()).hexdigest()
         return data,digest
     except (OSError,ValueError,TypeError,KeyError):
-        raise AppError('Invalid product showcase playlist. Check demos/product_showcase/playlist.json.',6) from None
+        raise AppError(f'Invalid product showcase playlist: {Path(path).name}.',6) from None
 
 
 @dataclass
@@ -86,9 +86,13 @@ class ShowcaseSource:
     """Always simulation, with no subprocess switching, live files or sensors."""
     path=None
     requires_real_time=True
+    shapes=('round','round')
+
+    def load_configuration(self):
+        return load_playlist()
 
     def __init__(self):
-        self.playlist,self.configuration_digest=load_playlist()
+        self.playlist,self.configuration_digest=self.load_configuration()
         self.timeline=Timeline(self.playlist)
         self.origin=0.
         self.current=None
@@ -109,8 +113,8 @@ class ShowcaseSource:
         stage=self.playlist['stages'][index]
         if token!=self.current or shown<self.last_elapsed:
             scene=definition(stage['view'])
-            if scene.shapes!=('round','round') or 'demo' not in scene.sources:
-                raise AppError('The showcase requires the three declared round/round demo scenes.',3)
+            if scene.shapes!=self.shapes or 'demo' not in scene.sources:
+                raise AppError('Showcase scenes must match its declared panel shapes and support demo data.',3)
             self.source=scene.create_source('demo')
             self.current=token
         scene_elapsed=stage['demo_start_seconds']+(phase_elapsed if phase=='effect' else 0)

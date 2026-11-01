@@ -132,3 +132,13 @@ python3 tests/render_native.py --size 800 --output /tmp/instruments-800.png
 ```
 
 Mac未安装Cairo时可运行标准库测试；离屏绘图需实际Cairo库。实体启动另需要已登录的GTK layer-shell桌面及正确HDMI布局。
+
+## 2026-11-01 — v0.7.0方形双屏产品演示
+
+- 新增smart-home、pc-monitor-square；复用industrial泵站，独立square_showcase播放列表。旧round命令和播放列表继续通过回归测试。
+- Mac和目标Pi各89项标准库测试通过，manifest与registry一致。覆盖3秒/10秒边界、39秒循环、源重置、形状/信号拒绝、能源平衡、PC模型复用和趋势内存上限。
+- 在目标Pi实际Cairo绘制480/720/800尺寸的六个介绍/效果阶段及39秒边界，共21张PNG；确认方形角落可用、左右像素不同。480的六张预览保存在demos/square_showcase/。
+- 读到接口1当前960×480@62.825001Hz；EDID名称不能用来判断物理形状或尺寸。应用布局接受该已配置输入，未修改时序、像素时钟、缩放或刷新率。
+- 布局hardware_verified保持false；软件绘图与运行状态不能替代用户对两块实体方屏的完整性、映射和闪烁验收。
+
+目标Pi已从旧版本正常停止、备份并升级到0.7.0，接口1启动product-showcase-square成功。连续43秒监测覆盖全部六个场景/阶段、进入下一轮、帧数持续增加，状态始终running/ok；输入保持960×480@62.825001Hz。此结果确认运行状态，实体显示仍待用户观察。

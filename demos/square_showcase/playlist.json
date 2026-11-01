@@ -1,0 +1,40 @@
+{
+  "playlist_version": 1,
+  "intro_seconds": 3,
+  "effect_seconds": 10,
+  "stages": [
+    {
+      "view": "smart-home",
+      "icon": "home",
+      "title": "SMART HOME",
+      "subtitle": "Comfort meets energy awareness",
+      "panel_labels": [
+        "CLIMATE / LIGHTING",
+        "SOLAR / HOME / GRID"
+      ],
+      "demo_start_seconds": 50
+    },
+    {
+      "view": "pc-monitor-square",
+      "icon": "computer",
+      "title": "PC CASE MONITOR",
+      "subtitle": "Your build. Your dashboard.",
+      "panel_labels": [
+        "CPU / MEMORY / LOAD",
+        "GPU / TEMPERATURE / FANS"
+      ],
+      "demo_start_seconds": 71
+    },
+    {
+      "view": "industrial",
+      "icon": "factory",
+      "title": "INDUSTRIAL MONITOR",
+      "subtitle": "Process insight at a glance",
+      "panel_labels": [
+        "PUMP / PRESSURE / FLOW",
+        "TRENDS / DEVICE HEALTH"
+      ],
+      "demo_start_seconds": 24
+    }
+  ]
+}

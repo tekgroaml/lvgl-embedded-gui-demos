@@ -1,0 +1,58 @@
+{
+  "layout_version": 1,
+  "id": "pc-monitor-square-sbs-480",
+  "version": "1.0.0",
+  "topology": "single-link-dual",
+  "coordinate_space": "output-signal-pixels",
+  "verification": {
+    "status": "software-verified",
+    "hardware_verified": false,
+    "note": "Square SBS software geometry; preserve the configured HDMI signal. Physical panel acceptance requires observation."
+  },
+  "product_match": null,
+  "signal_mode": {
+    "width": 960,
+    "height": 480,
+    "refresh_hz": 60,
+    "accepted_refresh_hz": [
+      60,
+      62.825226
+    ]
+  },
+  "viewport": {
+    "width": 960,
+    "height": 480,
+    "scale": 1,
+    "rotation_deg": 0
+  },
+  "panels": [
+    {
+      "panel": 1,
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 480,
+        "height": 480
+      },
+      "shape": "square",
+      "input": "none",
+      "visual_rotation_deg": 0,
+      "safe_inset_percent": 0,
+      "view": "pc-system"
+    },
+    {
+      "panel": 2,
+      "rect": {
+        "x": 480,
+        "y": 0,
+        "width": 480,
+        "height": 480
+      },
+      "shape": "square",
+      "input": "none",
+      "visual_rotation_deg": 0,
+      "safe_inset_percent": 0,
+      "view": "pc-cooling"
+    }
+  ]
+}

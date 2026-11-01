@@ -13,6 +13,7 @@ def fitted_text(p,text,xy,size,max_width,color=TEXT):
 
 
 class ShowcasePanel:
+    display_label='DUAL ROUND DISPLAYS'
     def __init__(self,index):
         self.index=index
         self.token=None
@@ -43,17 +44,20 @@ class ShowcasePanel:
         else:
             self.draw_application(p,data)
 
-    def draw_brand(self,p,data):
+    def frame(self,p):
         round_frame(p,'')
+
+    def draw_brand(self,p,data):
+        self.frame(p)
         fitted_text(p,'TEKGROAML',(240,90),34,328,TEXT)
         draw_icon(p,data.icon)
         fitted_text(p,'YOUR IDEAS. ON DISPLAY.',(240,344),18,292,CYAN)
-        p.text('DUAL ROUND DISPLAYS',(240,378),15,MUTED)
+        p.text(self.display_label,(240,378),15,MUTED)
         p.text(f'{data.stage_index+1:02d} / 03',(240,408),14,AMBER)
         p.text('PRODUCT DEMO · SIMULATED DATA',(240,431),11,MUTED)
 
     def draw_application(self,p,data):
-        round_frame(p,'')
+        self.frame(p)
         p.text('APPLICATION SCENARIO',(240,94),16,CYAN)
         fitted_text(p,data.title,(240,164),28,326,TEXT)
         fitted_text(p,data.subtitle,(240,206),17,320,MUTED)

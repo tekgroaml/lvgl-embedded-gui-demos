@@ -80,3 +80,11 @@ v0.5.0新增pc_monitor，demo/live均由本目录model.py实现；真实数据�
 product-showcase仅demo，数据源按单调时钟生成标题或效果状态，效果页用原场景工厂取得模型/面板。三段共享一个surface，不通过sleep和逐个启动子进程切换。可选on_ready数据源钩子让首张标题卡从可见就绪后起算；其他场景没有此钩子，原来时间规则不变。
 
 播放文件摘要参与幂等配置；requires_real_time让普通demo_speed无法意外缩短产品拍摄时长。来源和场景顺序经过校验，不执行客户提供的shell或live数据。详见[脚本目录说明](../demos/product_showcase/README.md)。
+
+## v0.7.0方形产品演示
+
+scenes/smart_home和scenes/pc_monitor_square拥有方形面板及布局，industrial保留泵站实现。PC方屏通过本目录命名的demo工厂复用pc_monitor模型，不复制散热积分。common/square.py共享页头、风扇、条形指标与10秒有界历史。
+
+demos/square_showcase独立保存playlist及方形介绍框，继承已有产品时间轴、source与品牌／用途分屏介绍。形状校验随source声明，仍只允许各自固定三种demo，禁止递归编排。新的product-showcase-square注册声明有独立布局，worker不加场景分支。原product-showcase默认round不变。
+
+industrial-sbs-480布局升为1.1.0，增加当前输入约62.825Hz的接受；其余映射和全局信号设置不变。不同app版本先stop旧实例，再更新并显式start。

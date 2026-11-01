@@ -4,6 +4,8 @@
 
 | 目录 | --view | 形状 | 数据 |
 | --- | --- | --- | --- |
+| smart_home/ | smart-home | 双方形 | 家居环境与能源平衡demo |
+| pc_monitor_square/ | pc-monitor-square | 双方形 | 共享PC负载与散热模型demo |
 | pc_monitor/ | pc-monitor | 双圆 | PC负载联动demo／目标电脑JSON，可选Windows采集 |
 | automotive/ | automotive | 双圆 | 汽车联动demo |
 | flight/ | flight | 双圆 | 飞行联动demo |
@@ -13,3 +15,5 @@
 scenes/registry.py显式登记scene.py导出的SCENE。运行器通过统一工厂取得两个面板和数据源，不加入按场景名分支。common/提供配色、绘图组件、SBS裁剪、公共数据读取和声明类型。
 
 新增场景步骤见[架构与扩展规范](../docs/architecture.md)。
+
+方形场景串联见[demos/square_showcase](../demos/square_showcase/README.md)。pc_monitor_square显式复用pc_monitor的数据模型，方形面板独立实现。

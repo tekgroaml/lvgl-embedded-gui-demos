@@ -50,7 +50,7 @@ chmod +x app setup.sh run.sh
 ./app info --json
 ```
 
-本版版本0.6.1。安装器只补缺失的发行版Python/GTK/Cairo/layer-shell/wlr-randr包；全部已有则无需下载。APT可能请求sudo，但运行app不要sudo。默认不安装Pygame，不创建虚拟环境，也不自动启动。
+本版版本0.7.0。安装器只补缺失的发行版Python/GTK/Cairo/layer-shell/wlr-randr包；全部已有则无需下载。APT可能请求sudo，但运行app不要sudo。默认不安装Pygame，不创建虚拟环境，也不自动启动。
 
 如果以前使用过旧文档的临时Pygame服务，先停止该服务；没有旧服务则跳过：
 
@@ -199,3 +199,15 @@ python3 tests/render_native.py --size 480 --output /tmp/instruments-480.png
 ```
 
 按飞机仪表→汽车/摩托仪表→PC机箱顺序，每段图标文案3秒、模拟效果10秒，一轮39秒循环，同一窗口无意图性桌面切换。拍摄结束单独执行./demos/product_showcase/demo stop --port 1。文案与时长、预览见[独立演示目录说明](../demos/product_showcase/README.md)。全部模拟，不会控制真实设备或读取真实PC数据。
+
+## 方形双屏串联演示（0.7.0）
+
+先在旧版本正常停止，再按上文更新完整项目，SSH中：
+
+```bash
+cd ~/apps/lvgl-embedded-gui-demos
+./demos/square_showcase/demo check --port 1
+./demos/square_showcase/demo start --port 1
+```
+
+智能家居→PC机箱→工业泵站，每段3秒品牌／应用分屏介绍、10秒动态效果，一轮39秒。[完整方屏说明](../demos/square_showcase/README.md)。停止时单独执行./demos/square_showcase/demo stop --port 1。

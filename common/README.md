@@ -6,6 +6,7 @@
 | theme.py | 公共配色 |
 | drawing.py | CairoPainter、整张SBS画布与各面板形状裁剪 |
 | components.py | 圆形底框、模拟标记和指标卡片 |
+| square.py | 方屏页头、模拟标记、负载条、风扇与有界10秒趋势 |
 | simulation.py | 平滑函数与模拟时间有效性检查 |
 | snapshots.py | 公共有界普通JSON快照读取，拒绝FIFO/设备和超大文件 |
 | telemetry.py | 原混合视图的遥测类型、有界普通JSON文件读取、校验与新鲜度 |

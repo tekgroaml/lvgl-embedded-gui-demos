@@ -45,7 +45,7 @@ chmod +x app setup.sh run.sh
 ./app info --json
 ```
 
-This native preview is 0.6.1. Only missing distribution Python/GTK/Cairo/layer-shell/wlr-randr packages are installed; existing dependencies need no download. No Pygame, browser, pip, compilation or virtual environment is required. The installer may use sudo for APT; never use sudo for ./app.
+This native preview is 0.7.0. Only missing distribution Python/GTK/Cairo/layer-shell/wlr-randr packages are installed; existing dependencies need no download. No Pygame, browser, pip, compilation or virtual environment is required. The installer may use sudo for APT; never use sudo for ./app.
 
 If you previously launched the old transient service, stop it before the standard app:
 
@@ -191,3 +191,15 @@ After updating the complete project including demos/, use this in the Pi SSH she
 ```
 
 The script loops flight → car/motorcycle → PC-case. Each title/icon lasts3s and each simulated effect10s,39s per loop, in one continuous surface. Later stop with ./demos/product_showcase/demo stop --port 1. See the [independent demonstration guide](../demos/product_showcase/README_EN.md) for copy/timing customization and preview. It does not use real devices or PC telemetry.
+
+## Dual-square showcase (0.7.0)
+
+After stopping the old version and updating the complete project, use:
+
+```bash
+cd ~/apps/lvgl-embedded-gui-demos
+./demos/square_showcase/demo check --port 1
+./demos/square_showcase/demo start --port 1
+```
+
+Smart home → PC case → industrial pump,3s split introduction +10s effects each,39s loop. [Full square instructions](../demos/square_showcase/README_EN.md). Stop separately with./demos/square_showcase/demo stop --port 1.

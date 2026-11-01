@@ -1,7 +1,7 @@
 {
   "layout_version": 1,
   "id": "industrial-sbs-480",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "topology": "single-link-dual",
   "coordinate_space": "output-signal-pixels",
   "verification": {
@@ -13,7 +13,11 @@
   "signal_mode": {
     "width": 960,
     "height": 480,
-    "refresh_hz": 60
+    "refresh_hz": 60,
+    "accepted_refresh_hz": [
+      60,
+      62.825226
+    ]
   },
   "viewport": {
     "width": 960,

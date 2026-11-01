@@ -66,3 +66,7 @@ playback.py implements the timeline, panels.py delegates existing effects and dr
 ## v0.6.1 split introduction screens
 
 During each3s introduction, the left panel exclusively presents the TEKGROAML wordmark, use-case icon and brand tagline. The right panel presents the application title/subtitle, both panels' metric roles and the countdown, without duplicating the icon/brand page. All three10s effect renders are pixel-identical to the previous implementation; the39s loop, simulated data and display signal are unchanged.
+
+## Square panels
+
+Use the[separate square showcase](../square_showcase/README_EN.md), or./demos/product_showcase/demo start --port 1 --shape square. Stop before switching. The original default remains round.

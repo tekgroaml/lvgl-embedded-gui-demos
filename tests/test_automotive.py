@@ -40,8 +40,8 @@ class AutomotiveContractTests(unittest.TestCase):
                 'mode':{'width':960,'height':480,'refresh_hz':62.825001}}
         self.assertEqual(geometry(output,load_layout('automotive-sbs-480')),(0,0,960,480))
         self.assertEqual(geometry(output,load_layout('flight-sbs-480')),(0,0,960,480))
-        for lid in ('industrial-sbs-480','automotive-industrial-sbs-480'):
-            with self.assertRaises(AppError):geometry(output,load_layout(lid))
+        self.assertEqual(geometry(output,load_layout('industrial-sbs-480')),(0,0,960,480))
+        with self.assertRaises(AppError):geometry(output,load_layout('automotive-industrial-sbs-480'))
         output['mode']['refresh_hz']=75
         with self.assertRaises(AppError):geometry(output,load_layout('automotive-sbs-480'))
 

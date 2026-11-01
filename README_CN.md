@@ -1,10 +1,22 @@
 # 单线双屏汽车与工业仪表演示
 
-**v0.6.1 软件预览版**：已按统一规范提供./app入口，默认采用原生Python+GTK/Cairo，和圆形触摸看板使用同类运行方式。无需浏览器、WebKit、LVGL、Pygame、pip或虚拟环境；只有旧run.sh路径需要另装Pygame。
+**v0.7.0 软件预览版**：已按统一规范提供./app入口，默认采用原生Python+GTK/Cairo，和圆形触摸看板使用同类运行方式。无需浏览器、WebKit、LVGL、Pygame、pip或虚拟环境；只有旧run.sh路径需要另装Pygame。
 
 ![原生双屏离屏预览](docs/preview-native-sbs.png)
 
 [English](README.md) · [复制到Pi并通过SSH运行](docs/raspberry-pi-ssh.md) · [标准命令](docs/standard-app.md) · [遥测协议](docs/telemetry.md) · [验证记录](docs/verification.md) · [版本记录](CHANGELOG.md) · [双圆汽车](docs/automotive.md) · [场景目录与公共代码](docs/architecture.md)
+
+## 新增：方形双屏三用途演示
+
+智能家居（环境／能源）→PC机箱（CPU／GPU散热）→工业设备（泵站／趋势），每段3秒品牌与应用分屏介绍＋10秒动态效果，一轮39秒循环。页面使用完整方形区域，数据自动变化并明确标为模拟。
+
+```bash
+./app stop --port 1
+./demos/square_showcase/demo check --port 1
+./demos/square_showcase/demo start --port 1
+```
+
+[方形演示、安装、独立场景命令和预览](demos/square_showcase/README.md)。默认两块480×480／一个960×480信号，接受60Hz或约62.825Hz，不改显示设置。圆屏原有命令保留；切换前先stop。
 
 ## 新增：产品用途串联演示
 
@@ -77,7 +89,7 @@
 
 一根HDMI信号线连接双屏驱动板，一个完整画布分成左右两块：左边汽车速度/转速仪表，右边工业波形/指标面板。两个面板显示不同内容，但可使用同一份遥测数据。
 
-原有混合组合为round,square + automotive-industrial；新的双圆使用flight视图，新的双方形使用industrial视图，各有专用绘图而非简单裁切。单屏、触摸和同显暂不支持，传入这些请求会明确拒绝。
+原有混合组合为round,square + automotive-industrial；新的双圆使用flight视图，双方形可用smart-home、pc-monitor-square或industrial视图，各有专用绘图而非简单裁切。单屏、触摸和同显暂不支持，传入这些请求会明确拒绝。
 
 仓库名保留lvgl-embedded-gui-demos，不代表使用LVGL。标准入口重新使用原有仪表/遥测业务代码，通过Cairo绘图适配器渲染；旧Pygame入口仍保留。
 

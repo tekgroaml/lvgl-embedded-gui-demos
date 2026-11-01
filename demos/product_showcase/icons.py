@@ -50,8 +50,29 @@ def computer(p):
     p.line(CYAN,(207,282),(207,291),4);p.line(CYAN,(274,282),(274,291),4)
 
 
+def home(p):
+    for a,b in (((161,196),(240,133)),((240,133),(319,196)),
+                ((176,186),(176,277)),((176,277),(304,277)),((304,277),(304,186))):
+        p.line(CYAN,a,b,5)
+    p.rect(AMBER,(219,227,42,50),width=3,radius=3)
+    p.rect(CYAN,(193,193,25,23),width=3,radius=3)
+    p.rect(CYAN,(263,193,25,23),width=3,radius=3)
+    p.circle(AMBER,(316,135),15,width=3)
+
+
+def factory(p):
+    points=[(164,276),(164,205),(204,183),(204,205),(245,181),(245,205),
+            (277,186),(277,143),(300,143),(308,276),(164,276)]
+    for a,b in zip(points,points[1:]):p.line(CYAN,a,b,4)
+    for x in (184,221,258):p.rect(AMBER,(x,231,18,20),width=2,radius=2)
+    p.line(AMBER,(284,128),(295,116),3)
+    p.line(AMBER,(299,124),(310,112),3)
+
+
 def draw_icon(p,name):
     if name=='aircraft':aircraft(p)
     elif name=='vehicle':car(p);motorcycle(p)
     elif name=='computer':computer(p)
+    elif name=='home':home(p)
+    elif name=='factory':factory(p)
     else:raise ValueError('Unknown product icon')
