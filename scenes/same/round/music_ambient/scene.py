@@ -13,4 +13,4 @@ CLONE_SCENE=SceneDefinition('music-ambient-clone','Hardware-cloned dual-round mu
                       ('round','round'),'music-ambient-clone',('music','music'),
                       SCENE.panel_factories,SCENE.demo_factory,
                       package='scenes.same.round.music_ambient',content_modes=('same',),
-                      topology='single-link-clone',refresh_overrides=((480,(60,62.811001)),))
+                      topology='single-link-clone',refresh_overrides=((480,(60,62.811001,71.295249)),),layout_versions=((480,'1.1.0'),))

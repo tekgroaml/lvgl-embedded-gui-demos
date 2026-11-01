@@ -13,8 +13,10 @@ cd ~/apps/lvgl-embedded-gui-demos
 ./app start --port 1 --shape square --panels 2 --input none --view parcel-status-clone --layout parcel-status-clone-480 --content same --data-source demo
 ```
 
-这是单幅480×480、60Hz输入的硬件同显布局，由驱动板复制到两屏。SBS板改为view=parcel-status、layout=parcel-status-sbs-480，完整输入960×480、60Hz。720/800布局须驱动板支持相应单幅或双宽输入；软件不修改信号。方形硬件尚未实测，不沿用圆屏板的62.811Hz。
+这是单幅480×480、60Hz或约62.811Hz输入的硬件同显布局，由驱动板复制到两屏。SBS板改为view=parcel-status、layout=parcel-status-sbs-480，完整输入960×480、60Hz。720/800布局须驱动板支持相应单幅或双宽输入；软件不修改信号。clone-480按此次实际输入接受约62.811Hz，实体显示仍需单独确认；其他布局不扩大刷新率范围。
 
 停止用./app stop --port 1，查看用./app status --port 1。SSH退出后仍后台运行，桌面会话须保持登录。无新增依赖、无触摸、音频或网络访问。
 
 代码独立为scene.py、model.py、panels.py和layouts；公共方屏组件在common/signage.py。[三用途串联演示](../../../../demos/same/square/README.md)。
+
+0.10.1的clone-480映射为1.1.0，接受本次观察到的62.811001Hz；SBS和其他尺寸仍60Hz。

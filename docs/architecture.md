@@ -46,7 +46,7 @@ demos/
 - single-link-dual：完整输入2×size宽，两个不重叠左右矩形。different分别绘制；same绘制一次光栅，再以整数偏移复制，避免两份时钟／亚像素误差。
 - single-link-clone：完整输入size×size，两面板引用相同矩形且必须same、形状一致。渲染器去重矩形，图像只画一次，由驱动板复制到实体面板。
 
-布局加载严格检查topology、宽高、矩形、content、版本、刷新率、shape/view归属。SBS和clone不能静默互换。旧布局未写content_mode时按different处理。硬件clone不会被误当成双宽输入；方形同显只声明60Hz，圆形实测的附加刷新率不自动通用于其他形状。
+布局加载严格检查topology、宽高、矩形、content、版本、刷新率、shape/view归属。SBS和clone不能静默互换。旧布局未写content_mode时按different处理。硬件clone不会被误当成双宽输入；0.10.1按新接入方形板实际输入，为480的clone布局增加62.811001Hz覆盖，映射升为1.1.0；其他方形布局仍60Hz。
 
 应用不修改EDID、分辨率、时序、缩放或触摸映射。输出必须scale1、正常方向。单光栅像素一致不等于实体扫描相位认证。
 

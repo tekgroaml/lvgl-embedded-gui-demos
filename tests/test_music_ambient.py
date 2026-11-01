@@ -164,6 +164,17 @@ class HardwareCloneTests(unittest.TestCase):
         with self.assertRaises(AppError):geometry(output,layout)
         with self.assertRaises(AppError):request(view='music-ambient-clone',layout='music-ambient-clone-480',content='different')
 
+    def test_new_round_clone_preferred_rate_is_scoped_to_480_round_boards(self):
+        output={'enabled':True,'position':[0,0],'scale':1,'transform':'normal',
+                'mode':{'width':480,'height':480,'refresh_hz':71.294998}}
+        for layout_id in ('music-ambient-clone-480','ambient-light-clone-480',
+                          'ambient-clock-clone-480','product-showcase-same-clone-480'):
+            layout=load_layout(layout_id)
+            self.assertEqual(geometry(output,layout),(0,0,480,480))
+            self.assertEqual(layout['version'],'1.1.0')
+        for layout_id in ('product-showcase-same-square-clone-480','music-ambient-sbs-480'):
+            with self.assertRaises(AppError):geometry(output,load_layout(layout_id))
+
     def test_clone_rectangles_cannot_be_silently_changed_to_sbs(self):
         layout=load_layout('music-ambient-clone-480')
         layout['panels'][1]['rect']['x']=480

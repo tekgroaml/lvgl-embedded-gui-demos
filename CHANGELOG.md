@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.10.2 — 2026-11-01 (observed round-clone preferred rate)
+
+- Accept the newly connected round board's EDID-preferred480×480@~71.295Hz for round same-content clone480 profiles, preserving display timings.
+- Bump the four affected round-clone480 mappings to1.1.0; retain60/~62.811Hz and keep square/SBS/other sizes unchanged.
+
+## 0.10.1 — 2026-11-01 (observed square-clone input)
+
+- Accept the newly observed480×480@62.811001Hz hardware-clone input for square same-content applications and their showcase, preserving display timings.
+- Bump the four square-clone480 layout mappings to1.1.0; SBS and other sizes keep their declared rates. Stop old versions before upgrading.
+
 ## 0.10.0 — 2026-11-01 (same/different grouping and square same-content use cases)
 
 - Organize canonical applications under scenes/same/{round,square} and scenes/different; organize four independent showcase scripts under demos/{same,different}/{round,square}.

@@ -6,7 +6,7 @@ SCENE=SceneDefinition('product-showcase-same','Same-content round product showca
                       ('demos.same.round.panels:SamePanel','demos.same.round.panels:SamePanel'),
                       'demos.same.round.playback:SameShowcaseSource',package='demos.same.round',
                       content_modes=('same',),topology='single-link-clone',
-                      refresh_overrides=((480,(60,62.811001)),))
+                      refresh_overrides=((480,(60,62.811001,71.295249)),),layout_versions=((480,'1.1.0'),))
 SBS_SCENE=SceneDefinition('product-showcase-same-sbs','Software-duplicated round product showcase',
                       SCENE.shapes,'product-showcase-same-sbs',SCENE.panel_ids,SCENE.panel_factories,SCENE.demo_factory,
                       native_dual480=True,package='demos.same.round',content_modes=('same',))

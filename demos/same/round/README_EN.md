@@ -2,7 +2,7 @@
 
 [中文](README.md) · [SSH installation](../../../docs/raspberry-pi-ssh_EN.md)
 
-Version0.10.0. Music visualization → RGB ambient lighting → desktop information clock. Each chapter has a3s introduction and10s effect, looping every39s. Introductions and effects are identical on both panels, using vivid neon colors.
+Version0.10.2. Music visualization → RGB ambient lighting → desktop information clock. Each chapter has a3s introduction and10s effect, looping every39s. Introductions and effects are identical on both panels, using vivid neon colors.
 
 [Complete39s software preview](preview-loop.gif). Audio levels, brightness, time and weather are simulated. No sound playback/capture, weather service or physical lighting control is included.
 
@@ -34,7 +34,7 @@ Verify0.10.0 or a later version containing this showcase. Existing system Python
 
 ## Launch over SSH
 
-The default is the current hardware-clone board: one480×480 input at60 or approximately62.811Hz, duplicated by the board.
+The default is the current hardware-clone board: one480×480 input at60, approximately62.811 or71.295Hz, duplicated by the board.
 
 ```bash
 ./demos/same/round/demo check --port 1
@@ -59,7 +59,7 @@ For SBS boards that split960×480 into two480×480 regions, stop first, then add
 
 | --signal | --size | Full input | Refresh |
 | --- | --- | --- | --- |
-| clone (default) | 480 (default) | 480×480 | 60 or~62.811Hz |
+| clone (default) | 480 (default) | 480×480 | 60/~62.811/~71.295Hz |
 | sbs | 480 | 960×480 | 60 or~62.825Hz |
 | clone | 720 / 800 | 720×720 / 800×800 | 60Hz |
 | sbs | 720 / 800 | 1440×720 / 1600×800 | 60Hz |

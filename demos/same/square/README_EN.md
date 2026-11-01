@@ -2,9 +2,9 @@
 
 [中文](README.md) · [Four demo families](../../README.md) · [SSH installation](../../../docs/raspberry-pi-ssh_EN.md)
 
-Version0.10.0. Square-specific use cases: retail promotion, meeting-room availability and parcel pickup status. These differ from the round music/lighting/clock lineup. Each shows a3s brand/icon/use-case introduction then10s of automatic effects;39s loop. Both screens show identical introductions and effects.
+Version0.10.2. Square-specific use cases: retail promotion, meeting-room availability and parcel pickup status. These differ from the round music/lighting/clock lineup. Each shows a3s brand/icon/use-case introduction then10s of automatic effects;39s loop. Both screens show identical introductions and effects.
 
-All business data is simulated. No real prices, calendar, orders, customer data, touch, audio or network integration. This release is locally rendered only; the disconnected Pi display was not updated or started.
+All business data is simulated. No real prices, calendar, orders, customer data, touch, audio or network integration. Initially rendered locally in0.10.0;0.10.1 was subsequently deployed and launched at user request. Physical panel observation remains separate.
 
 ## Install and run over SSH
 
@@ -25,7 +25,7 @@ cd ~/apps/lvgl-embedded-gui-demos
 ./demos/same/square/demo start --port 1
 ```
 
-Default: one480×480 at60Hz input, duplicated by a hardware-clone board. SBS boards require960×480; add --signal sbs to check/start. Other --size 720/800 layouts require matching square or double-width inputs at60Hz and supporting hardware. Square boards have not been physically verified; round-board refresh rates are not assumed. Output scale1 and normal rotation are checked. No EDID/timing configuration is changed.
+Default: one480×480 at60Hz or the newly observed~62.811Hz input, duplicated by a hardware-clone board. SBS boards require960×480; add --signal sbs to check/start. Other --size 720/800 layouts require matching square or double-width inputs at60Hz and supporting hardware. Only480 clone additionally accepts the newly observed62.811001Hz input; other square profiles keep60Hz. Physical observation is separate. Output scale1 and normal rotation are checked. No EDID/timing configuration is changed.
 
 Use status --port 1, logs --port 1 --follow, or restart --port 1. start survives SSH disconnection while the desktop stays logged in. Stop separately:
 

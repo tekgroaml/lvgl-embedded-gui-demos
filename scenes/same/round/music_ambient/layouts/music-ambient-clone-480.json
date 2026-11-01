@@ -1,13 +1,13 @@
 {
   "layout_version": 1,
   "id": "music-ambient-clone-480",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "topology": "single-link-clone",
   "coordinate_space": "output-signal-pixels",
   "verification": {
     "status": "software-verified",
     "hardware_verified": false,
-    "note": "One square input is duplicated by the hardware driver board. The application draws one circle; physical display acceptance requires observation."
+    "note": "Round clone mapping accepts the observed480x480~71.295Hz preferred input, as well as60/~62.811Hz, without changing timing. Physical display observation is separate."
   },
   "product_match": null,
   "signal_mode": {
@@ -16,7 +16,8 @@
     "refresh_hz": 60,
     "accepted_refresh_hz": [
       60,
-      62.811001
+      62.811001,
+      71.295249
     ]
   },
   "viewport": {

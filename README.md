@@ -1,6 +1,6 @@
 # TEKGROAML Raspberry Pi dual-display applications
 
-**v0.10.0** groups same-content and different-content code, with separate round and square use cases and showcase scripts. Native system Python/GTK/Cairo; no browser, WebKit, LVGL, pip or virtual environment is needed. The repository retains its historical name; the Pygame path remains optional.
+**v0.10.2** groups same-content and different-content code, with separate round and square use cases and showcase scripts. Native system Python/GTK/Cairo; no browser, WebKit, LVGL, pip or virtual environment is needed. The repository retains its historical name; the Pygame path remains optional.
 
 [中文](README_CN.md) · [Install and run over SSH](docs/raspberry-pi-ssh_EN.md) · [Standard commands](docs/standard-app.md) · [Demo catalog](demos/README.md) · [Scenes](scenes/README.md) · [Architecture](docs/architecture.md) · [Verification](docs/verification.md) · [Changelog](CHANGELOG.md)
 
@@ -13,7 +13,7 @@
 
 Each chapter introduces the brand and use case for3s, then runs the effect for10s;39s loop. Same-content introductions and effects are identical on both screens. Different-content introductions retain brand/icon on the left and use-case copy on the right. Square same-content applications are distinct businesses with full-square layouts, not cropped round pages.
 
-All showcases use labeled simulated data. No audio playback, real prices, calendars, shipment/customer data or weather services. This release's directory migration and new square same-content scenes were tested locally only; the display is disconnected and the Pi was not updated or started.
+All showcases use labeled simulated data. No audio playback, real prices, calendars, shipment/customer data or weather services. Square same-content passed Pi runtime checks; round same-content was updated and launched with the newly observed~71.295Hz input. Runtime evidence does not replace physical panel acceptance.
 
 ![Square same-content preview](demos/same/square/preview-store.png)
 
@@ -42,7 +42,7 @@ Both physical panels share one HDMI cable and driver board. port1/2 mapsHDMI-A-1
 - Same-content --signal sbs: one960×480 input, software copies the same raster to each half.
 - Different-content: one960×480 input with different left/right panels.
 
---size 480/720/800 layouts require supporting hardware. Square same-content profiles declare60Hz only and have no physical acceptance evidence. Round480 clone/SBS profiles additionally accept previously observed~62.811/~62.825Hz rates. Other sizes require60Hz. Scale1 and normal output rotation are required; no timing, EDID, resolution or touch configuration is changed. Panel dimensions alone do not establish driver-board compatibility.
+--size 480/720/800 layouts require supporting hardware. Square same-content480 clone profiles accept60Hz and the newly observed~62.811Hz input; other square profiles remain60Hz. Physical acceptance is separate. Round480 clone accepts60/~62.811/~71.295Hz; round480 SBS accepts60/~62.825Hz. Other sizes require60Hz. Scale1 and normal output rotation are required; no timing, EDID, resolution or touch configuration is changed. Panel dimensions alone do not establish driver-board compatibility.
 
 ## Code organization and compatibility
 

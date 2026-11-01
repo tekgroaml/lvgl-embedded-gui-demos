@@ -6,4 +6,5 @@ SCENE=SceneDefinition('parcel-status','Square parcel pickup status',('square','s
                       'scenes.same.square.parcel_status.model:ParcelDemo',content_modes=('same',))
 CLONE_SCENE=SceneDefinition('parcel-status-clone','Hardware-cloned square parcel pickup status',SCENE.shapes,
                       'parcel-status-clone',SCENE.panel_ids,SCENE.panel_factories,SCENE.demo_factory,
-                      package='scenes.same.square.parcel_status',content_modes=('same',),topology='single-link-clone')
+                      package='scenes.same.square.parcel_status',content_modes=('same',),topology='single-link-clone',
+                      refresh_overrides=((480,(60,62.811001)),),layout_versions=((480,'1.1.0'),))

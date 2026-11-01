@@ -6,4 +6,5 @@ SCENE=SceneDefinition('store-signage','Square retail promotion',('square','squar
                       'scenes.same.square.store_signage.model:StoreDemo',content_modes=('same',))
 CLONE_SCENE=SceneDefinition('store-signage-clone','Hardware-cloned square retail promotion',SCENE.shapes,
                       'store-signage-clone',SCENE.panel_ids,SCENE.panel_factories,SCENE.demo_factory,
-                      package='scenes.same.square.store_signage',content_modes=('same',),topology='single-link-clone')
+                      package='scenes.same.square.store_signage',content_modes=('same',),topology='single-link-clone',
+                      refresh_overrides=((480,(60,62.811001)),),layout_versions=((480,'1.1.0'),))

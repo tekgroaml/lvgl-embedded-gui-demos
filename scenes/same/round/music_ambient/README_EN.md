@@ -19,7 +19,7 @@ Some two-panel boards duplicate one square signal in hardware. If the connected 
 ./app start --port 1 --shape round --panels 2 --input none --view music-ambient-clone --layout music-ambient-clone-480 --content same --data-source demo
 ```
 
-The app draws one circle; the board duplicates it. topology=single-link-clone differs from the double-width SBS layouts below. Do not force960×480 on a480×480 board. Clone480 accepts60 or~62.811Hz; optional720/800 clone layouts require matching square inputs at60Hz and supporting hardware. No timing or EDID changes are made.
+The app draws one circle; the board duplicates it. topology=single-link-clone differs from the double-width SBS layouts below. Do not force960×480 on a480×480 board. Clone480 in0.10.2 accepts60/~62.811/~71.295Hz; optional720/800 clone layouts require matching square inputs at60Hz and supporting hardware. No timing or EDID changes are made.
 
 ## Install the complete project later
 

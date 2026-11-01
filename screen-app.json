@@ -3,7 +3,7 @@
   "contract_version": 1,
   "id": "dual-instrument-dashboard",
   "name": "单线双屏应用与产品用途演示",
-  "version": "0.10.0",
+  "version": "0.10.2",
   "release_status": "preview",
   "repository_url": "https://github.com/tekgroaml/lvgl-embedded-gui-demos",
   "command": {
@@ -1263,7 +1263,7 @@
       "Product showcase is an independent demo-only playlist: flight, automotive, PC-monitor; title3s/effect10s; one39s loop in one surface. No live data or device control.",
       "Music scenes use simulated beat envelopes with no audio capture/output. SBS copies one raster to two round regions; clone uses one square input duplicated by the hardware board. Physical acceptance is separate from software checks.",
       "Same-content showcase: simulated music, RGB light and demo time/weather;3s identical intros +10s effects,39s loop. Default hardware clone or explicit SBS. No audio, network weather or physical lighting control.",
-      "Version0.10.0 groups canonical code by same/different content and shape. Square same-content uses retail promotions, room status and parcel pickup; all simulated,60Hz mappings, no physical square acceptance. Legacy command/import adapters preserve IDs. Local-only validation; no Pi deployment this release."
+      "Version0.10.0 groups canonical code by same/different content and shape. Square same-content uses retail promotions, room status and parcel pickup; all simulated; square480 clone additionally accepts the newly observed62.811001Hz input in0.10.1, other square mappings remain60Hz. Physical observation is separate. Legacy command/import adapters preserve IDs. Local-only validation; no Pi deployment this release."
     ],
     "tested_configurations": [
       {

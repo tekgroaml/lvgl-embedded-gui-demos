@@ -1,13 +1,13 @@
 {
   "layout_version": 1,
   "id": "product-showcase-same-square-clone-480",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "topology": "single-link-clone",
   "coordinate_space": "output-signal-pixels",
   "verification": {
     "status": "software-verified",
     "hardware_verified": false,
-    "note": "Software-only square same-content mapping. 60Hz input requires hardware support; no square-board physical acceptance is recorded."
+    "note": "Square clone showcase accepts the observed480x480@62.811001Hz input without changing timing. Physical panel observation is separate."
   },
   "product_match": null,
   "signal_mode": {
@@ -15,7 +15,8 @@
     "height": 480,
     "refresh_hz": 60,
     "accepted_refresh_hz": [
-      60
+      60,
+      62.811001
     ]
   },
   "viewport": {

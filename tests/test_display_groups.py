@@ -65,7 +65,8 @@ class GroupArchitectureTests(unittest.TestCase):
                 'demos/product_showcase/demo','demos/square_showcase/demo','demos/same_showcase/demo'):
    result=subprocess.run([str(root/entry),'--version'],cwd='/tmp',capture_output=True,text=True,timeout=10)
    self.assertEqual(result.returncode,0,(entry,result.stderr))
-   self.assertEqual(result.stdout.strip(),'0.10.0')
+   from scene_app import VERSION
+   self.assertEqual(result.stdout.strip(),VERSION)
 
  def test_four_command_families_keep_distinct_views_and_shapes(self):
   configs=(('different','round','product-showcase'),('different','square','product-showcase-square'),
@@ -125,7 +126,11 @@ class SquareSameBehaviorTests(unittest.TestCase):
     self.assertEqual(geometry(output,layout),(0,0,output['mode']['width'],size))
     self.assertEqual(spec['shape'],['square','square'])
     output['mode']['refresh_hz']=62.811001
-    with self.assertRaises(AppError):geometry(output,layout)
+    if kind=='clone' and size==480:
+     self.assertEqual(geometry(output,layout),(0,0,size,size))
+     self.assertEqual(layout['version'],'1.1.0')
+    else:
+     with self.assertRaises(AppError):geometry(output,layout)
   for change in ({'shape':'round'},{'content':'different'},{'data_source':'live'},
                  {'layout':'product-showcase-same-clone-480'}):
    with self.assertRaises(AppError):request(**change)

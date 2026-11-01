@@ -59,7 +59,7 @@ cd ~/apps/lvgl-embedded-gui-demos
 
 Default --signal clone sends one480×480 frame duplicated by hardware. Add --signal sbs to both commands for960×480 SBS boards. Different-content scripts always use SBS. --size 480/720/800 describes each panel; full input is size×size for clone or2×size wide by size high for SBS. Supporting hardware is required.
 
-Square same-content declares60Hz only and has no physical verification. Round480 profiles additionally accept historical~62.811Hz clone or~62.825Hz SBS. Scale1 and normal output rotation are required. port1/2 mapsHDMI-A-1/2 (Pi4 boardHDMI0/1), not the two panels. Two panels share one cable.
+Square same-content480 clone profiles in0.10.1 accept60Hz and the newly observed~62.811Hz; other square layouts remain60Hz. Physical observation is separate. Round480 clone profiles in0.10.2 accept60/~62.811/~71.295Hz; round480 SBS accepts60/~62.825Hz. Scale1 and normal output rotation are required. port1/2 mapsHDMI-A-1/2 (Pi4 boardHDMI0/1), not the two panels. Two panels share one cable.
 
 ## Manage the running app
 

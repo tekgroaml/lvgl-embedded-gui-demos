@@ -22,7 +22,7 @@ cd ~/apps/lvgl-embedded-gui-demos
 ./app start --port 1 --shape round --panels 2 --input none --view music-ambient-clone --layout music-ambient-clone-480 --content same --data-source demo
 ```
 
-同口已有应用时先正常./app stop --port 1。该布局topology=single-link-clone，两个物理面板共用一个480×480输入区域，软件只画一次，硬件负责复制。480布局接受60Hz或约62.811Hz；另有music-ambient-clone-720/800、单幅720×720/800×800、60Hz的软件布局，须硬件支持才可使用。
+同口已有应用时先正常./app stop --port 1。该布局topology=single-link-clone，两个物理面板共用一个480×480输入区域，软件只画一次，硬件负责复制。0.10.2的480布局接受60Hz、约62.811Hz或约71.295Hz；另有music-ambient-clone-720/800、单幅720×720/800×800、60Hz的软件布局，须硬件支持才可使用。
 
 下方music-ambient-sbs-*命令适用于左右分区板，两种布局按实际信号选择，不按EDID显示器名称判断。程序不更改时序、EDID或信号尺寸。
 
